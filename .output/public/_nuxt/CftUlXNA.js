@@ -1,0 +1,1 @@
+import{_ as o}from"./C6tkjcSg.js";import{c as r,x as s,o as n}from"./DA0MKmI1.js";const t={},c={class:"rounded-box border border-base-300 bg-base-100 p-6"};function _(e,a){return n(),r("section",c,[s(e.$slots,"default")])}const l=Object.assign(o(t,[["render",_]]),{__name:"SurfacePanel"});export{l as _};
