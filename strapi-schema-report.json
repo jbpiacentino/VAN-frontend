@@ -1,0 +1,748 @@
+{
+  "generatedAt": "2026-02-21T11:09:09.643Z",
+  "baseUrl": "http://10.1.5.125:8080",
+  "apiPrefix": "/api",
+  "collections": {
+    "vendors": {
+      "ok": true,
+      "endpoint": "http://10.1.5.125:8080/api/vendors?populate=*&pagination%5Bpage%5D=1&pagination%5BpageSize%5D=1",
+      "sampleCount": 1,
+      "total": 9,
+      "fields": {
+        "id": {
+          "type": "number",
+          "nullable": false
+        },
+        "documentId": {
+          "type": "string",
+          "nullable": false
+        },
+        "name": {
+          "type": "string",
+          "nullable": false
+        },
+        "slug": {
+          "type": "string",
+          "nullable": false
+        },
+        "visibility_policy": {
+          "type": "string",
+          "nullable": false
+        },
+        "website": {
+          "type": "string",
+          "nullable": false
+        },
+        "description": {
+          "type": "string",
+          "nullable": false
+        },
+        "createdAt": {
+          "type": "string",
+          "nullable": false
+        },
+        "updatedAt": {
+          "type": "string",
+          "nullable": false
+        },
+        "publishedAt": {
+          "type": "string",
+          "nullable": false
+        },
+        "locale": {
+          "type": "string",
+          "nullable": false
+        },
+        "short_description": {
+          "type": "string",
+          "nullable": false
+        },
+        "logo": {
+          "type": "media",
+          "nullable": false
+        },
+        "solutions": {
+          "type": "relation-many",
+          "items": "relation-one",
+          "nullable": false
+        },
+        "areas_of_focus": {
+          "type": "relation-many",
+          "items": "relation-one",
+          "nullable": false
+        },
+        "regions": {
+          "type": "relation-many",
+          "items": "relation-one",
+          "nullable": false
+        },
+        "seo": {
+          "type": "array",
+          "items": "unknown",
+          "nullable": false
+        },
+        "links": {
+          "type": "array",
+          "items": "unknown",
+          "nullable": false
+        },
+        "localizations": {
+          "type": "array",
+          "items": "unknown",
+          "nullable": false
+        }
+      },
+      "note": null
+    },
+    "solutions": {
+      "ok": true,
+      "endpoint": "http://10.1.5.125:8080/api/solutions?populate=*&pagination%5Bpage%5D=1&pagination%5BpageSize%5D=1",
+      "sampleCount": 1,
+      "total": 10,
+      "fields": {
+        "id": {
+          "type": "number",
+          "nullable": false
+        },
+        "documentId": {
+          "type": "string",
+          "nullable": false
+        },
+        "name": {
+          "type": "string",
+          "nullable": false
+        },
+        "slug": {
+          "type": "string",
+          "nullable": false
+        },
+        "solution_type": {
+          "type": "string",
+          "nullable": false
+        },
+        "integration_patterns": {
+          "type": "string",
+          "nullable": false
+        },
+        "licensing_model": {
+          "type": "string",
+          "nullable": false
+        },
+        "description": {
+          "type": "string",
+          "nullable": false
+        },
+        "visibility_level": {
+          "type": "string",
+          "nullable": false
+        },
+        "workflow": {
+          "type": "string",
+          "nullable": false
+        },
+        "createdAt": {
+          "type": "string",
+          "nullable": false
+        },
+        "updatedAt": {
+          "type": "string",
+          "nullable": false
+        },
+        "publishedAt": {
+          "type": "string",
+          "nullable": false
+        },
+        "locale": {
+          "type": "string",
+          "nullable": false
+        },
+        "short_description": {
+          "type": "string",
+          "nullable": false
+        },
+        "official_docs": {
+          "type": "array",
+          "items": "unknown",
+          "nullable": false
+        },
+        "seo": {
+          "type": "array",
+          "items": "unknown",
+          "nullable": false
+        },
+        "solution_guides": {
+          "type": "relation-many",
+          "items": "relation-one",
+          "nullable": false
+        },
+        "vendor": {
+          "type": "relation-one",
+          "nullable": false
+        },
+        "solution_briefs": {
+          "type": "array",
+          "items": "unknown",
+          "nullable": false
+        },
+        "kb_articles": {
+          "type": "array",
+          "items": "unknown",
+          "nullable": false
+        },
+        "compatibility_records": {
+          "type": "array",
+          "items": "unknown",
+          "nullable": false
+        },
+        "localizations": {
+          "type": "array",
+          "items": "unknown",
+          "nullable": false
+        }
+      },
+      "note": null
+    },
+    "solution-guides": {
+      "ok": true,
+      "endpoint": "http://10.1.5.125:8080/api/solution-guides?populate=*&pagination%5Bpage%5D=1&pagination%5BpageSize%5D=1",
+      "sampleCount": 1,
+      "total": 4,
+      "fields": {
+        "id": {
+          "type": "number",
+          "nullable": false
+        },
+        "documentId": {
+          "type": "string",
+          "nullable": false
+        },
+        "title": {
+          "type": "string",
+          "nullable": false
+        },
+        "slug": {
+          "type": "string",
+          "nullable": false
+        },
+        "workflow": {
+          "type": "string",
+          "nullable": false
+        },
+        "summary": {
+          "type": "string",
+          "nullable": false
+        },
+        "body": {
+          "type": "string",
+          "nullable": false
+        },
+        "createdAt": {
+          "type": "string",
+          "nullable": false
+        },
+        "updatedAt": {
+          "type": "string",
+          "nullable": false
+        },
+        "publishedAt": {
+          "type": "string",
+          "nullable": false
+        },
+        "locale": {
+          "type": "string",
+          "nullable": false
+        },
+        "attachments": {
+          "type": "null",
+          "nullable": true
+        },
+        "seo": {
+          "type": "array",
+          "items": "unknown",
+          "nullable": false
+        },
+        "products": {
+          "type": "relation-many",
+          "items": "relation-one",
+          "nullable": false
+        },
+        "solutions": {
+          "type": "relation-many",
+          "items": "relation-one",
+          "nullable": false
+        },
+        "solution_briefs": {
+          "type": "array",
+          "items": "unknown",
+          "nullable": false
+        },
+        "localizations": {
+          "type": "array",
+          "items": "unknown",
+          "nullable": false
+        }
+      },
+      "note": null
+    },
+    "solution-briefs": {
+      "ok": true,
+      "endpoint": "http://10.1.5.125:8080/api/solution-briefs?populate=*&pagination%5Bpage%5D=1&pagination%5BpageSize%5D=1",
+      "sampleCount": 1,
+      "total": 5,
+      "fields": {
+        "id": {
+          "type": "number",
+          "nullable": false
+        },
+        "documentId": {
+          "type": "string",
+          "nullable": false
+        },
+        "title": {
+          "type": "string",
+          "nullable": false
+        },
+        "slug": {
+          "type": "string",
+          "nullable": false
+        },
+        "workflow": {
+          "type": "string",
+          "nullable": false
+        },
+        "short_description": {
+          "type": "string",
+          "nullable": false
+        },
+        "integration_type": {
+          "type": "string",
+          "nullable": false
+        },
+        "supported_capabilities": {
+          "type": "string",
+          "nullable": false
+        },
+        "requirements": {
+          "type": "string",
+          "nullable": false
+        },
+        "limitations": {
+          "type": "string",
+          "nullable": false
+        },
+        "createdAt": {
+          "type": "string",
+          "nullable": false
+        },
+        "updatedAt": {
+          "type": "string",
+          "nullable": false
+        },
+        "publishedAt": {
+          "type": "string",
+          "nullable": false
+        },
+        "locale": {
+          "type": "string",
+          "nullable": false
+        },
+        "description": {
+          "type": "string",
+          "nullable": false
+        },
+        "quickstart": {
+          "type": "array",
+          "items": "unknown",
+          "nullable": false
+        },
+        "references": {
+          "type": "array",
+          "items": "unknown",
+          "nullable": false
+        },
+        "seo": {
+          "type": "null",
+          "nullable": true
+        },
+        "product": {
+          "type": "relation-one",
+          "nullable": false
+        },
+        "solution": {
+          "type": "relation-one",
+          "nullable": false
+        },
+        "related_guides": {
+          "type": "null",
+          "nullable": true
+        },
+        "kb_articles": {
+          "type": "array",
+          "items": "unknown",
+          "nullable": false
+        },
+        "compatibility_record": {
+          "type": "null",
+          "nullable": true
+        },
+        "localizations": {
+          "type": "array",
+          "items": "unknown",
+          "nullable": false
+        }
+      },
+      "note": null
+    },
+    "kb-articles": {
+      "ok": true,
+      "endpoint": "http://10.1.5.125:8080/api/kb-articles?populate=*&pagination%5Bpage%5D=1&pagination%5BpageSize%5D=1",
+      "sampleCount": 1,
+      "total": 3,
+      "fields": {
+        "id": {
+          "type": "number",
+          "nullable": false
+        },
+        "documentId": {
+          "type": "string",
+          "nullable": false
+        },
+        "title": {
+          "type": "string",
+          "nullable": false
+        },
+        "slug": {
+          "type": "null",
+          "nullable": true
+        },
+        "type": {
+          "type": "string",
+          "nullable": false
+        },
+        "severity": {
+          "type": "string",
+          "nullable": false
+        },
+        "workflow": {
+          "type": "string",
+          "nullable": false
+        },
+        "symptoms": {
+          "type": "null",
+          "nullable": true
+        },
+        "root_cause": {
+          "type": "null",
+          "nullable": true
+        },
+        "last_validated": {
+          "type": "null",
+          "nullable": true
+        },
+        "createdAt": {
+          "type": "string",
+          "nullable": false
+        },
+        "updatedAt": {
+          "type": "string",
+          "nullable": false
+        },
+        "publishedAt": {
+          "type": "string",
+          "nullable": false
+        },
+        "locale": {
+          "type": "string",
+          "nullable": false
+        },
+        "resolution_step": {
+          "type": "array",
+          "items": "unknown",
+          "nullable": false
+        },
+        "resolution_steps": {
+          "type": "array",
+          "items": "unknown",
+          "nullable": false
+        },
+        "workaround": {
+          "type": "array",
+          "items": "unknown",
+          "nullable": false
+        },
+        "affected_scope": {
+          "type": "array",
+          "items": "unknown",
+          "nullable": false
+        },
+        "references": {
+          "type": "array",
+          "items": "unknown",
+          "nullable": false
+        },
+        "attachments": {
+          "type": "null",
+          "nullable": true
+        },
+        "seo": {
+          "type": "array",
+          "items": "unknown",
+          "nullable": false
+        },
+        "products": {
+          "type": "array",
+          "items": "unknown",
+          "nullable": false
+        },
+        "solutions": {
+          "type": "array",
+          "items": "unknown",
+          "nullable": false
+        },
+        "solution_briefs": {
+          "type": "array",
+          "items": "unknown",
+          "nullable": false
+        },
+        "compatibility_record": {
+          "type": "null",
+          "nullable": true
+        },
+        "localizations": {
+          "type": "array",
+          "items": "unknown",
+          "nullable": false
+        }
+      },
+      "note": null
+    },
+    "compatibility-records": {
+      "ok": true,
+      "endpoint": "http://10.1.5.125:8080/api/compatibility-records?populate=*&pagination%5Bpage%5D=1&pagination%5BpageSize%5D=1",
+      "sampleCount": 1,
+      "total": 3,
+      "fields": {
+        "id": {
+          "type": "number",
+          "nullable": false
+        },
+        "documentId": {
+          "type": "string",
+          "nullable": false
+        },
+        "workflow": {
+          "type": "string",
+          "nullable": false
+        },
+        "product_version": {
+          "type": "null",
+          "nullable": true
+        },
+        "solution_version": {
+          "type": "null",
+          "nullable": true
+        },
+        "date_tested": {
+          "type": "null",
+          "nullable": true
+        },
+        "constraints": {
+          "type": "null",
+          "nullable": true
+        },
+        "createdAt": {
+          "type": "string",
+          "nullable": false
+        },
+        "updatedAt": {
+          "type": "string",
+          "nullable": false
+        },
+        "publishedAt": {
+          "type": "string",
+          "nullable": false
+        },
+        "locale": {
+          "type": "string",
+          "nullable": false
+        },
+        "title": {
+          "type": "null",
+          "nullable": true
+        },
+        "slug": {
+          "type": "null",
+          "nullable": true
+        },
+        "product": {
+          "type": "null",
+          "nullable": true
+        },
+        "solution": {
+          "type": "null",
+          "nullable": true
+        },
+        "environment_profile": {
+          "type": "array",
+          "items": "unknown",
+          "nullable": false
+        },
+        "evidence_links": {
+          "type": "array",
+          "items": "unknown",
+          "nullable": false
+        },
+        "evidence_files": {
+          "type": "null",
+          "nullable": true
+        },
+        "seo": {
+          "type": "array",
+          "items": "unknown",
+          "nullable": false
+        },
+        "solution_brief": {
+          "type": "array",
+          "items": "unknown",
+          "nullable": false
+        },
+        "kb_articles": {
+          "type": "array",
+          "items": "unknown",
+          "nullable": false
+        },
+        "localizations": {
+          "type": "array",
+          "items": "unknown",
+          "nullable": false
+        }
+      },
+      "note": null
+    },
+    "products": {
+      "ok": true,
+      "endpoint": "http://10.1.5.125:8080/api/products?populate=*&pagination%5Bpage%5D=1&pagination%5BpageSize%5D=1",
+      "sampleCount": 1,
+      "total": 10,
+      "fields": {
+        "id": {
+          "type": "number",
+          "nullable": false
+        },
+        "documentId": {
+          "type": "string",
+          "nullable": false
+        },
+        "name": {
+          "type": "string",
+          "nullable": false
+        },
+        "slug": {
+          "type": "string",
+          "nullable": false
+        },
+        "createdAt": {
+          "type": "string",
+          "nullable": false
+        },
+        "updatedAt": {
+          "type": "string",
+          "nullable": false
+        },
+        "publishedAt": {
+          "type": "string",
+          "nullable": false
+        },
+        "locale": {
+          "type": "string",
+          "nullable": false
+        },
+        "seo": {
+          "type": "array",
+          "items": "unknown",
+          "nullable": false
+        },
+        "solution_guides": {
+          "type": "relation-many",
+          "items": "relation-one",
+          "nullable": false
+        },
+        "solution_briefs": {
+          "type": "relation-many",
+          "items": "relation-one",
+          "nullable": false
+        },
+        "kb_articles": {
+          "type": "relation-many",
+          "items": "relation-one",
+          "nullable": false
+        },
+        "compatibility_records": {
+          "type": "relation-many",
+          "items": "relation-one",
+          "nullable": false
+        },
+        "localizations": {
+          "type": "array",
+          "items": "unknown",
+          "nullable": false
+        }
+      },
+      "note": null
+    },
+    "VAN-members": {
+      "ok": true,
+      "endpoint": "http://10.1.5.125:8080/api/VAN-members?populate=*&pagination%5Bpage%5D=1&pagination%5BpageSize%5D=1",
+      "sampleCount": 1,
+      "total": 7,
+      "fields": {
+        "id": {
+          "type": "number",
+          "nullable": false
+        },
+        "documentId": {
+          "type": "string",
+          "nullable": false
+        },
+        "tier": {
+          "type": "string",
+          "nullable": false
+        },
+        "registered_at": {
+          "type": "string",
+          "nullable": false
+        },
+        "expires_at": {
+          "type": "string",
+          "nullable": false
+        },
+        "createdAt": {
+          "type": "string",
+          "nullable": false
+        },
+        "updatedAt": {
+          "type": "string",
+          "nullable": false
+        },
+        "publishedAt": {
+          "type": "string",
+          "nullable": false
+        },
+        "locale": {
+          "type": "string",
+          "nullable": false
+        },
+        "vendor": {
+          "type": "relation-one",
+          "nullable": false
+        },
+        "localizations": {
+          "type": "array",
+          "items": "unknown",
+          "nullable": false
+        }
+      },
+      "note": null
+    }
+  }
+}

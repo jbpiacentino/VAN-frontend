@@ -1,0 +1,27 @@
+/* :root {
+  color-scheme: light;
+  --bg: #f6f7f4;
+  --bg-strong: #e7ebdc;
+  --surface: #ffffff;
+  --text: #1f2a1d;
+  --muted: #66705f;
+  --brand: #24543d;
+  --brand-soft: #dbe8df;
+  --border: #d5dbd0;
+} */
+
+/* * {
+  box-sizing: border-box;
+} */
+
+/* body {
+  margin: 0;
+  font-family: "Source Sans 3", "Segoe UI", sans-serif;
+  background: radial-gradient(circle at 20% -20%, #dfead9, transparent 40%), var(--bg);
+  color: var(--text);
+} */
+
+/* a {
+  color: var(--brand);
+  text-decoration: none;
+} */
