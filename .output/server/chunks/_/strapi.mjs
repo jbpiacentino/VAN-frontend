@@ -1,4 +1,4 @@
-import { u as useRuntimeConfig, e as createError } from '../nitro/nitro.mjs';
+import { u as useRuntimeConfig, c as createError } from '../nitro/nitro.mjs';
 
 function toArray(value) {
   if (!value) return [];
@@ -45,8 +45,17 @@ function mediaUrl(media) {
   const { baseUrl } = getStrapiConfig();
   const url = (media == null ? void 0 : media.url) || ((_b = (_a = media == null ? void 0 : media.formats) == null ? void 0 : _a.thumbnail) == null ? void 0 : _b.url) || "";
   if (!url) return "";
-  if (String(url).startsWith("http://") || String(url).startsWith("https://")) return String(url);
-  return `${baseUrl}${url}`;
+  const absoluteUrl = String(url).startsWith("http://") || String(url).startsWith("https://") ? String(url) : `${baseUrl}${url}`;
+  try {
+    const sourceOrigin = new URL(baseUrl).origin;
+    const targetOrigin = new URL(absoluteUrl).origin;
+    if (sourceOrigin === targetOrigin) {
+      return `/api/media?u=${encodeURIComponent(absoluteUrl)}`;
+    }
+  } catch {
+    return absoluteUrl;
+  }
+  return absoluteUrl;
 }
 function pickComponentValue(item, keys) {
   if (!item || typeof item !== "object") return "";
@@ -163,5 +172,5 @@ function levenshtein(a, b) {
   return dp[rows - 1][cols - 1];
 }
 
-export { strapiFetchAll as a, buildMembershipMap as b, markdownToPreviewText as c, relationItems as d, fuzzyIncludes as f, levenshtein as l, mapVendor as m, relationFirst as r, strapiFetch as s, words as w };
+export { strapiFetch as a, relationFirst as b, buildMembershipMap as c, markdownToPreviewText as d, fuzzyIncludes as f, getStrapiConfig as g, levenshtein as l, mapVendor as m, relationItems as r, strapiFetchAll as s, words as w };
 //# sourceMappingURL=strapi.mjs.map

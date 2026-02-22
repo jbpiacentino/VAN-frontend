@@ -10,6 +10,10 @@ import { RuntimeConfig as UserRuntimeConfig, PublicRuntimeConfig as UserPublicRu
       cdnURL: string,
    },
 
+   protectedAccess: string,
+
+   protectedAccessPwd: string,
+
    strapiToken: string,
 
    strapiApiPrefix: string,

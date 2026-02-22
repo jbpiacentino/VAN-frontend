@@ -1,5 +1,5 @@
 import { d as defineEventHandler } from '../../nitro/nitro.mjs';
-import { a as strapiFetchAll } from '../../_/strapi.mjs';
+import { s as strapiFetchAll } from '../../_/strapi.mjs';
 import 'node:http';
 import 'node:https';
 import 'node:events';

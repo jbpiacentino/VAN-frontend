@@ -49,8 +49,22 @@ export function mediaUrl(media: any) {
   const { baseUrl } = getStrapiConfig();
   const url = media?.url || media?.formats?.thumbnail?.url || '';
   if (!url) return '';
-  if (String(url).startsWith('http://') || String(url).startsWith('https://')) return String(url);
-  return `${baseUrl}${url}`;
+  const absoluteUrl =
+    String(url).startsWith('http://') || String(url).startsWith('https://')
+      ? String(url)
+      : `${baseUrl}${url}`;
+
+  try {
+    const sourceOrigin = new URL(baseUrl).origin;
+    const targetOrigin = new URL(absoluteUrl).origin;
+    if (sourceOrigin === targetOrigin) {
+      return `/api/media?u=${encodeURIComponent(absoluteUrl)}`;
+    }
+  } catch {
+    return absoluteUrl;
+  }
+
+  return absoluteUrl;
 }
 
 export function pickComponentValue(item: any, keys: string[]) {

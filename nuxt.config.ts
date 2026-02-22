@@ -8,6 +8,8 @@ export default defineNuxtConfig({
     plugins: [tailwindcss()],
   },
   runtimeConfig: {
+    protectedAccess: process.env.PROTECTED_ACCESS || '',
+    protectedAccessPwd: process.env.PROTECTED_ACCESS_PWD || '',
     strapiToken:
       process.env.VITE_STRAPI_API_TOKEN ||
       process.env.STRAPI_API_TOKEN ||
@@ -20,13 +22,7 @@ export default defineNuxtConfig({
         process.env.NUXT_PUBLIC_STRAPI_BASE_URL || process.env.VITE_STRAPI_BASE_URL || '',
     },
   },
-  routeRules: {
-    '/': { swr: 300 },
-    '/program': { prerender: true },
-    '/solutions': { swr: 600 },
-    '/van-finder': { swr: 120 },
-    '/vendors/**': { swr: 300 },
-  },
+  routeRules: {},
   app: {
     head: {
       title: 'Vates Alliance Network',

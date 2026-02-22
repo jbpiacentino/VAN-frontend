@@ -17,6 +17,7 @@ interface _GlobalComponents {
   ErrorState: typeof import("../../components/ErrorState.vue")['default']
   LoadingState: typeof import("../../components/LoadingState.vue")['default']
   MarkdownContent: typeof import("../../components/MarkdownContent.vue")['default']
+  PagerControls: typeof import("../../components/PagerControls.vue")['default']
   SurfacePanel: typeof import("../../components/SurfacePanel.vue")['default']
   VanFinderControls: typeof import("../../components/VanFinderControls.vue")['default']
   VanFinderVendorCard: typeof import("../../components/VanFinderVendorCard.vue")['default']
@@ -46,6 +47,7 @@ interface _GlobalComponents {
   LazyErrorState: LazyComponent<typeof import("../../components/ErrorState.vue")['default']>
   LazyLoadingState: LazyComponent<typeof import("../../components/LoadingState.vue")['default']>
   LazyMarkdownContent: LazyComponent<typeof import("../../components/MarkdownContent.vue")['default']>
+  LazyPagerControls: LazyComponent<typeof import("../../components/PagerControls.vue")['default']>
   LazySurfacePanel: LazyComponent<typeof import("../../components/SurfacePanel.vue")['default']>
   LazyVanFinderControls: LazyComponent<typeof import("../../components/VanFinderControls.vue")['default']>
   LazyVanFinderVendorCard: LazyComponent<typeof import("../../components/VanFinderVendorCard.vue")['default']>

@@ -10,31 +10,41 @@
   />
 
   <section class="space-y-4">
-    <div class="flex items-center justify-between gap-3">
-      <!-- <h2 class="text-3xl font-bold text-base-content">{{ total }} match your search</h2> -->
+    <div class="flex justify-end">
       <label class="label cursor-pointer gap-2">
-        <span class="label-text">{{ t('finder.includeNonMembers') }}</span>
-        <input v-model="includeNonMembers" type="checkbox" class="toggle toggle-sm" />
+        <span class="label-text text-xs">{{ t('finder.includeNonMembers') }}</span>
+        <input v-model="includeNonMembers" type="checkbox" class="toggle toggle-xs" />
       </label>
     </div>
 
     <LoadingState v-if="pending" />
     <ErrorState v-else-if="error" :message="error.message" />
 
-    <section v-else-if="items.length" class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-      <VanFinderVendorCard
-        v-for="vendor in items"
-        :key="vendor.documentId || vendor.id || vendor.slug"
-        :vendor="vendor"
-        :tier-badge="tierBadge(vendor)"
-        :description="vendor.descriptionPreview"
-        :resources="visibleResources(vendor)"
-      />
-    </section>
+    <template v-else>
+      <section v-if="items.length" class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <VanFinderVendorCard
+          v-for="vendor in items"
+          :key="vendor.documentId || vendor.id || vendor.slug"
+          :vendor="vendor"
+          :tier-badge="tierBadge(vendor)"
+          :description="vendor.descriptionPreview"
+          :resources="visibleResources(vendor)"
+        />
+      </section>
 
-    <SurfacePanel v-else>
-      <p>{{ t('finder.noResults') }}</p>
-    </SurfacePanel>
+      <SurfacePanel v-else-if="total === 0">
+        <p>{{ t('finder.noResults') }}</p>
+      </SurfacePanel>
+
+      <PagerControls
+        v-if="items.length"
+        :page="page"
+        :page-size="pageSize"
+        :total-pages="totalPages"
+        @update:page="page = $event"
+        @update:page-size="pageSize = $event"
+      />
+    </template>
   </section>
 </template>
 
@@ -50,6 +60,8 @@
   const query = ref('');
   const selectedFocuses = ref<string[]>([]);
   const includeNonMembers = ref(false);
+  const page = ref(1);
+  const pageSize = ref(10);
   const debouncedQuery = ref('');
 
   let timer: ReturnType<typeof setTimeout> | null = null;
@@ -64,8 +76,8 @@
     q: debouncedQuery.value,
     focuses: selectedFocuses.value.join(','),
     includeNonMembers: includeNonMembers.value ? 'true' : 'false',
-    page: '1',
-    pageSize: '30',
+    page: String(page.value),
+    pageSize: String(pageSize.value),
   }));
 
   const { data, pending, error, refresh } = await useFetch('/api/van-finder/vendors', {
@@ -76,7 +88,26 @@
 
   const items = computed(() => data.value?.items || []);
   const total = computed(() => Number(data.value?.meta?.total || 0));
+  const totalPages = computed(() =>
+    Math.max(1, Math.ceil(total.value / Math.max(1, Number(pageSize.value || 20))))
+  );
   const focusOptions = computed(() => data.value?.focusOptions || []);
+
+  watch([debouncedQuery, selectedFocuses, includeNonMembers, pageSize], () => {
+    page.value = 1;
+  });
+
+  watch(totalPages, (next) => {
+    if (page.value > next) {
+      page.value = next;
+    }
+  });
+
+  watch([items, total, page, totalPages], ([nextItems, nextTotal, nextPage, nextTotalPages]) => {
+    if (nextTotal > 0 && nextItems.length === 0 && nextPage > nextTotalPages) {
+      page.value = nextTotalPages;
+    }
+  });
 
   function clearQuery() {
     query.value = '';

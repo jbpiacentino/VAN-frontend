@@ -142,6 +142,15 @@ function toArray(value) {
   return [value];
 }
 
+function relationFirst(value) {
+  if (!value) return null;
+  if (Array.isArray(value)) return value[0] || null;
+  if (Array.isArray(value?.data)) return value.data[0] || null;
+  if (value?.data && typeof value.data === 'object') return value.data;
+  if (typeof value === 'object') return value;
+  return null;
+}
+
 function isStringArray(value) {
   return Array.isArray(value) && value.every((item) => typeof item === 'string');
 }
@@ -332,6 +341,12 @@ function buildClient() {
       });
       return json?.data || null;
     },
+    async remove(collection, identifier) {
+      await fetchJson(`${root}/${collection}/${identifier}`, {
+        method: 'DELETE',
+        headers
+      });
+    },
     async listAll(collection, pageSize = 100) {
       const rows = [];
       let page = 1;
@@ -450,6 +465,51 @@ async function findByFingerprint(client, collection, payload) {
   return records.find((record) => matchesFingerprint(record, payload, fields)) || null;
 }
 
+async function findVanMemberByVendorRef(client, item, registry, verbose = false) {
+  const vendorRef = item?.relations?.vendor;
+  if (!isRelationReference(vendorRef)) return null;
+
+  const parsed = parseReference(vendorRef);
+  const target = registry.get(registryKey(parsed.collection, parsed.key));
+  if (!target) return null;
+
+  const targetDocumentId = String(target.documentId || '');
+  const targetId = Number(target.id || 0);
+  if (!targetDocumentId && !targetId) return null;
+
+  const rows = await client.listAll('VAN-members');
+  const matches = rows.filter((row) => {
+    const vendor = relationFirst(row?.vendor);
+    const vendorDocumentId = String(vendor?.documentId || '');
+    const vendorId = Number(vendor?.id || 0);
+
+    if (targetDocumentId && vendorDocumentId) {
+      return vendorDocumentId === targetDocumentId;
+    }
+    if (targetId && vendorId) {
+      return vendorId === targetId;
+    }
+    return false;
+  });
+
+  if (matches.length > 1) {
+    const [keep, ...duplicates] = matches;
+    for (const duplicate of duplicates) {
+      const identifier = duplicate?.documentId || duplicate?.id;
+      if (!identifier) continue;
+      await client.remove('VAN-members', identifier);
+    }
+    if (verbose) {
+      console.log(
+        `[VAN-members] removed ${duplicates.length} duplicate membership record(s) for vendor ${parsed.key}`
+      );
+    }
+    return keep || null;
+  }
+
+  return matches[0] || null;
+}
+
 async function resolveMediaAsset(client, mediaConfig) {
   if (!mediaConfig) return null;
   const fileName = mediaConfig.fileName || path.basename(mediaConfig.filePath || mediaConfig.sourceUrl || '');
@@ -563,6 +623,9 @@ async function upsertBaseEntries({ client, collections, dryRun, verbose, vendorC
       if (verbose) {
         if (key) {
           console.log(`[${collection}] upsert by ${key.field}=${key.value}`);
+        } else if (collection === 'VAN-members' && isRelationReference(item?.relations?.vendor)) {
+          const parsed = parseReference(item.relations.vendor);
+          console.log(`[${collection}] upsert by vendor=${parsed.key}`);
         } else {
           console.log(`[${collection}] create (no filterable unique key found)`);
         }
@@ -577,9 +640,11 @@ async function upsertBaseEntries({ client, collections, dryRun, verbose, vendorC
         continue;
       }
 
-      const existing = key
-        ? await client.findByField(collection, key.field, key.value)
-        : await findByFingerprint(client, collection, relationFreePayload);
+      const existing = collection === 'VAN-members'
+        ? await findVanMemberByVendorRef(client, item, registry, verbose)
+        : key
+          ? await client.findByField(collection, key.field, key.value)
+          : await findByFingerprint(client, collection, relationFreePayload);
 
       const normalizedPayload =
         collection === 'vendors'

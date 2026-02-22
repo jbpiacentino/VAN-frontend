@@ -3,11 +3,29 @@ import type { Serialize, Simplify } from "nitropack/types";
 declare module "nitropack/types" {
   type Awaited<T> = T extends PromiseLike<infer U> ? Awaited<U> : T
   interface InternalApi {
+    '/api/access/login': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/access/login.post').default>>>>
+    }
+    '/api/kb-articles/:slug': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/kb-articles/[slug].get').default>>>>
+    }
     '/api/landing': {
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/landing.get').default>>>>
     }
+    '/api/media': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/media.get').default>>>>
+    }
+    '/api/solution-briefs/:slug': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/solution-briefs/[slug].get').default>>>>
+    }
+    '/api/solution-guides/:slug': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/solution-guides/[slug].get').default>>>>
+    }
     '/api/solutions': {
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/solutions.get').default>>>>
+    }
+    '/api/solutions/:slug': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/solutions/[slug].get').default>>>>
     }
     '/api/van-finder/vendors': {
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/van-finder/vendors.get').default>>>>

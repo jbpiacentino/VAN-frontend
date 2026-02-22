@@ -1,5 +1,5 @@
 import process from 'node:process';globalThis._importMeta_={url:import.meta.url,env:process.env};import { tmpdir } from 'node:os';
-import { defineEventHandler, handleCacheHeaders, splitCookiesString, createEvent, fetchWithEvent, isEvent, eventHandler, setHeaders, sendRedirect, proxyRequest, getRequestHeader, setResponseHeaders, setResponseStatus, send, getRequestHeaders, setResponseHeader, appendResponseHeader, getRequestURL, getResponseHeader, removeResponseHeader, createError, getQuery as getQuery$1, readBody, createApp, createRouter as createRouter$1, toNodeListener, lazyEventHandler, getResponseStatus, getRouterParam, getResponseStatusText } from 'file:///Users/jb/code/VAN-frontend/node_modules/h3/dist/index.mjs';
+import { defineEventHandler, handleCacheHeaders, splitCookiesString, createEvent, fetchWithEvent, isEvent, eventHandler, setHeaders, sendRedirect, proxyRequest, getRequestHeader, setResponseHeaders, setResponseStatus, send, getRequestHeaders, setResponseHeader, appendResponseHeader, getRequestURL, getResponseHeader, removeResponseHeader, createError, getCookie, getQuery as getQuery$1, readBody, createApp, createRouter as createRouter$1, toNodeListener, lazyEventHandler, getResponseStatus, getRouterParam, setCookie, getResponseStatusText } from 'file:///Users/jb/code/VAN-frontend/node_modules/h3/dist/index.mjs';
 import { Server } from 'node:http';
 import { resolve, dirname, join } from 'node:path';
 import nodeCrypto from 'node:crypto';
@@ -634,37 +634,6 @@ const _inlineRuntimeConfig = {
       "/__nuxt_error": {
         "cache": false
       },
-      "/": {
-        "swr": 300,
-        "cache": {
-          "swr": true,
-          "maxAge": 300
-        }
-      },
-      "/program": {
-        "prerender": true
-      },
-      "/solutions": {
-        "swr": 600,
-        "cache": {
-          "swr": true,
-          "maxAge": 600
-        }
-      },
-      "/van-finder": {
-        "swr": 120,
-        "cache": {
-          "swr": true,
-          "maxAge": 120
-        }
-      },
-      "/vendors/**": {
-        "swr": 300,
-        "cache": {
-          "swr": true,
-          "maxAge": 300
-        }
-      },
       "/_nuxt/builds/meta/**": {
         "headers": {
           "cache-control": "public, max-age=31536000, immutable"
@@ -674,33 +643,14 @@ const _inlineRuntimeConfig = {
         "headers": {
           "cache-control": "public, max-age=1, immutable"
         }
-      },
-      "//_payload.json": {
-        "cache": {
-          "swr": true,
-          "maxAge": 300
-        }
-      },
-      "/program/_payload.json": {
-        "prerender": true
-      },
-      "/solutions/_payload.json": {
-        "cache": {
-          "swr": true,
-          "maxAge": 600
-        }
-      },
-      "/van-finder/_payload.json": {
-        "cache": {
-          "swr": true,
-          "maxAge": 120
-        }
       }
     }
   },
   "public": {
     "strapiBaseUrl": "http://10.1.5.125:8080"
   },
+  "protectedAccess": "true",
+  "protectedAccessPwd": "ridethevan",
   "strapiToken": "5c778e37320d71add404affe13c6344480413384e90724babe2fe8af162ef0936e0d030f8fad0944078aa3beffd0ce61c655fa5020a3aba592c5fa9bbd14ad7467af006b63bccb31c965470061f3b2c840dd904d28ce20d4d44227876733c38f3697a3ad3284894698ebc6c8918b04ea18a5f3e80dfc6b2a96e34e17f931705c",
   "strapiApiPrefix": "/api",
   "landingSingleType": "landing-page"
@@ -2194,7 +2144,22 @@ const plugins = [
 _UXxgNMdnWc4VrIlQzbgM08kn4DKwnfw2fUy8nUxZRU
 ];
 
-const assets = {};
+const assets = {
+  "/index.mjs": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"246c4-oG8wGC8S8e6VCoaXo7DNulUQ4MY\"",
+    "mtime": "2026-02-22T09:18:14.042Z",
+    "size": 149188,
+    "path": "index.mjs"
+  },
+  "/index.mjs.map": {
+    "type": "application/json",
+    "etag": "\"91ca1-GYrRHAZVaIVL50IIKYy8r1p9kWs\"",
+    "mtime": "2026-02-22T09:18:14.042Z",
+    "size": 597153,
+    "path": "index.mjs.map"
+  }
+};
 
 function readAsset (id) {
   const serverDir = dirname$1(fileURLToPath(globalThis._importMeta_.url));
@@ -2283,6 +2248,53 @@ const _mhWRXP = eventHandler((event) => {
   return readAsset(id);
 });
 
+function isPublicPath(pathname) {
+  if (pathname === "/access") return true;
+  if (pathname.startsWith("/api/access")) return true;
+  if (pathname.startsWith("/_nuxt")) return true;
+  if (pathname.startsWith("/__nuxt")) return true;
+  if (pathname.startsWith("/@vite")) return true;
+  if (pathname.startsWith("/@id")) return true;
+  if (pathname === "/__vite_ping") return true;
+  if (pathname === "/favicon.ico") return true;
+  if (pathname === "/robots.txt") return true;
+  if (pathname === "/site.webmanifest") return true;
+  if (pathname === "/manifest.webmanifest") return true;
+  if (pathname.startsWith("/assets/")) return true;
+  return false;
+}
+function isEnabled$1(value) {
+  const raw = String(value || "").trim().toLowerCase();
+  return raw === "1" || raw === "true" || raw === "yes" || raw === "on";
+}
+const _b83Lag = defineEventHandler((event) => {
+  const config = useRuntimeConfig(event);
+  const protectionEnabled = isEnabled$1(config.protectedAccess);
+  const url = getRequestURL(event);
+  const path = url.pathname;
+  const accessGranted = getCookie(event, "van_access") === "1";
+  if (!protectionEnabled) {
+    if (path === "/access") {
+      return sendRedirect(event, "/", 302);
+    }
+    return;
+  }
+  if (isPublicPath(path)) {
+    if (path === "/access" && accessGranted) {
+      const redirect = String(url.searchParams.get("redirect") || "/");
+      const target = redirect.startsWith("/") && !redirect.startsWith("/access") ? redirect : "/";
+      return sendRedirect(event, target, 302);
+    }
+    return;
+  }
+  if (accessGranted) return;
+  if (path.startsWith("/api/")) {
+    throw createError({ statusCode: 401, statusMessage: "Access denied" });
+  }
+  const requested = `${url.pathname}${url.search || ""}`;
+  return sendRedirect(event, `/access?redirect=${encodeURIComponent(requested)}`, 302);
+});
+
 const VueResolver = (_, value) => {
   return isRef(value) ? toValue(value) : value;
 };
@@ -2304,6 +2316,8 @@ function vueInstall(head) {
 function resolveUnrefHeadInput(input) {
   return walkResolver(input, VueResolver);
 }
+
+const NUXT_RUNTIME_PAYLOAD_EXTRACTION = false;
 
 // @__NO_SIDE_EFFECTS__
 function createHead(options = {}) {
@@ -2640,27 +2654,33 @@ async function getIslandContext(event) {
 	return ctx;
 }
 
+const _lazy_vxLBOH = () => Promise.resolve().then(function () { return login_post$1; });
+const _lazy_hOwsJU = () => Promise.resolve().then(function () { return _slug__get$9; });
 const _lazy_HlyFAM = () => Promise.resolve().then(function () { return landing_get$1; });
+const _lazy_9MOt71 = () => Promise.resolve().then(function () { return media_get$1; });
+const _lazy_t6UOVe = () => Promise.resolve().then(function () { return _slug__get$7; });
+const _lazy_fX5Rt0 = () => Promise.resolve().then(function () { return _slug__get$5; });
 const _lazy_Prfbdt = () => Promise.resolve().then(function () { return solutions_get$1; });
+const _lazy_J9r0Co = () => Promise.resolve().then(function () { return _slug__get$3; });
 const _lazy_QmYC87 = () => Promise.resolve().then(function () { return vendors_get$1; });
 const _lazy_dqTxFW = () => Promise.resolve().then(function () { return _slug__get$1; });
 const _lazy_0EeiPC = () => Promise.resolve().then(function () { return renderer$1; });
 
 const handlers = [
   { route: '', handler: _mhWRXP, lazy: false, middleware: true, method: undefined },
+  { route: '', handler: _b83Lag, lazy: false, middleware: true, method: undefined },
+  { route: '/api/access/login', handler: _lazy_vxLBOH, lazy: true, middleware: false, method: "post" },
+  { route: '/api/kb-articles/:slug', handler: _lazy_hOwsJU, lazy: true, middleware: false, method: "get" },
   { route: '/api/landing', handler: _lazy_HlyFAM, lazy: true, middleware: false, method: "get" },
+  { route: '/api/media', handler: _lazy_9MOt71, lazy: true, middleware: false, method: "get" },
+  { route: '/api/solution-briefs/:slug', handler: _lazy_t6UOVe, lazy: true, middleware: false, method: "get" },
+  { route: '/api/solution-guides/:slug', handler: _lazy_fX5Rt0, lazy: true, middleware: false, method: "get" },
   { route: '/api/solutions', handler: _lazy_Prfbdt, lazy: true, middleware: false, method: "get" },
+  { route: '/api/solutions/:slug', handler: _lazy_J9r0Co, lazy: true, middleware: false, method: "get" },
   { route: '/api/van-finder/vendors', handler: _lazy_QmYC87, lazy: true, middleware: false, method: "get" },
   { route: '/api/vendors/:slug', handler: _lazy_dqTxFW, lazy: true, middleware: false, method: "get" },
   { route: '/__nuxt_error', handler: _lazy_0EeiPC, lazy: true, middleware: false, method: undefined },
   { route: '/__nuxt_island/**', handler: _SxA8c9, lazy: false, middleware: false, method: undefined },
-  { route: '/', handler: _lazy_0EeiPC, lazy: true, middleware: false, method: undefined },
-  { route: '/solutions', handler: _lazy_0EeiPC, lazy: true, middleware: false, method: undefined },
-  { route: '/van-finder', handler: _lazy_0EeiPC, lazy: true, middleware: false, method: undefined },
-  { route: '/vendors/**', handler: _lazy_0EeiPC, lazy: true, middleware: false, method: undefined },
-  { route: '//_payload.json', handler: _lazy_0EeiPC, lazy: true, middleware: false, method: undefined },
-  { route: '/solutions/_payload.json', handler: _lazy_0EeiPC, lazy: true, middleware: false, method: undefined },
-  { route: '/van-finder/_payload.json', handler: _lazy_0EeiPC, lazy: true, middleware: false, method: undefined },
   { route: '/**', handler: _lazy_0EeiPC, lazy: true, middleware: false, method: undefined }
 ];
 
@@ -3001,6 +3021,40 @@ const styles$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   default: styles
 }, Symbol.toStringTag, { value: 'Module' }));
 
+function isEnabled(value) {
+  const raw = String(value || "").trim().toLowerCase();
+  return raw === "1" || raw === "true" || raw === "yes" || raw === "on";
+}
+const login_post = defineEventHandler(async (event) => {
+  const body = await readBody(event);
+  const input = String((body == null ? void 0 : body.password) || "");
+  const config = useRuntimeConfig(event);
+  const protectionEnabled = isEnabled(config.protectedAccess);
+  const expected = String(config.protectedAccessPwd || "");
+  if (!protectionEnabled) {
+    return { ok: true, disabled: true };
+  }
+  if (!expected) {
+    throw createError({ statusCode: 500, statusMessage: "Missing PROTECTED_ACCESS_PWD" });
+  }
+  if (!input || input !== expected) {
+    throw createError({ statusCode: 401, statusMessage: "Invalid password" });
+  }
+  setCookie(event, "van_access", "1", {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: false,
+    path: "/",
+    maxAge: 60 * 60 * 12
+  });
+  return { ok: true };
+});
+
+const login_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: login_post
+}, Symbol.toStringTag, { value: 'Module' }));
+
 function toArray(value) {
   if (!value) return [];
   return Array.isArray(value) ? value : [value];
@@ -3046,8 +3100,17 @@ function mediaUrl(media) {
   const { baseUrl } = getStrapiConfig();
   const url = (media == null ? void 0 : media.url) || ((_b = (_a = media == null ? void 0 : media.formats) == null ? void 0 : _a.thumbnail) == null ? void 0 : _b.url) || "";
   if (!url) return "";
-  if (String(url).startsWith("http://") || String(url).startsWith("https://")) return String(url);
-  return `${baseUrl}${url}`;
+  const absoluteUrl = String(url).startsWith("http://") || String(url).startsWith("https://") ? String(url) : `${baseUrl}${url}`;
+  try {
+    const sourceOrigin = new URL(baseUrl).origin;
+    const targetOrigin = new URL(absoluteUrl).origin;
+    if (sourceOrigin === targetOrigin) {
+      return `/api/media?u=${encodeURIComponent(absoluteUrl)}`;
+    }
+  } catch {
+    return absoluteUrl;
+  }
+  return absoluteUrl;
 }
 function pickComponentValue(item, keys) {
   if (!item || typeof item !== "object") return "";
@@ -3164,16 +3227,386 @@ function levenshtein(a, b) {
   return dp[rows - 1][cols - 1];
 }
 
+const _slug__get$8 = defineEventHandler(async (event) => {
+  const slug = String(getRouterParam(event, "slug") || "").trim();
+  if (!slug) {
+    throw createError({ statusCode: 400, statusMessage: "Missing KB article slug" });
+  }
+  const rows = await strapiFetchAll("kb-articles", {
+    populate: "*",
+    "filters[slug][$eq]": slug,
+    "pagination[pageSize]": 1
+  });
+  const kb = rows[0];
+  if (!kb) {
+    throw createError({ statusCode: 404, statusMessage: "KB article not found" });
+  }
+  const solutions = [
+    ...relationItems(kb == null ? void 0 : kb.solution),
+    ...relationItems(kb == null ? void 0 : kb.solutions)
+  ].filter(
+    (item, index, arr) => arr.findIndex((other) => String((other == null ? void 0 : other.documentId) || "") === String((item == null ? void 0 : item.documentId) || "")) === index
+  ).map((item) => ({
+    id: item.id,
+    documentId: item.documentId,
+    slug: item.slug,
+    name: item.name || item.title,
+    shortDescription: item.short_description
+  }));
+  const products = [
+    ...relationItems(kb == null ? void 0 : kb.product),
+    ...relationItems(kb == null ? void 0 : kb.products)
+  ].filter(
+    (item, index, arr) => arr.findIndex((other) => String((other == null ? void 0 : other.documentId) || "") === String((item == null ? void 0 : item.documentId) || "")) === index
+  ).map((item) => ({
+    id: item.id,
+    documentId: item.documentId,
+    slug: item.slug,
+    name: item.name || item.title
+  }));
+  return {
+    article: {
+      id: kb.id,
+      documentId: kb.documentId,
+      slug: kb.slug,
+      title: kb.title,
+      type: kb.type,
+      severity: kb.severity,
+      workflow: kb.workflow,
+      symptoms: kb.symptoms,
+      rootCause: kb.root_cause,
+      resolution: kb.resolution,
+      notes: kb.notes,
+      body: kb.body,
+      summary: kb.summary
+    },
+    solutions,
+    products
+  };
+});
+
+const _slug__get$9 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: _slug__get$8
+}, Symbol.toStringTag, { value: 'Module' }));
+
+function asRecord(value) {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return {};
+  return value;
+}
+function withAttributes(value) {
+  const base = asRecord(value);
+  const attrs = asRecord(base.attributes);
+  return { ...attrs, ...base };
+}
+function normalizeString(value, trim = true) {
+  if (typeof value !== "string") return "";
+  const normalized = value.replace(/\\n/g, "\n");
+  return trim ? normalized.trim() : normalized;
+}
+function childNodes(node) {
+  if (!node || typeof node !== "object") return [];
+  if (Array.isArray(node.children)) return node.children;
+  if (Array.isArray(node.content)) return node.content;
+  return [];
+}
+function applyInlineMarks(text, node) {
+  var _a;
+  let output = text;
+  const marks = Array.isArray(node == null ? void 0 : node.marks) ? node.marks : [];
+  for (const mark of marks) {
+    const markType = normalizeString(mark == null ? void 0 : mark.type).toLowerCase();
+    if (markType === "strong" || markType === "bold") output = `**${output}**`;
+    if (markType === "em" || markType === "italic") output = `*${output}*`;
+    if (markType === "underline") output = `<u>${output}</u>`;
+    if (markType === "strike" || markType === "strikethrough") output = `~~${output}~~`;
+    if (markType === "code") output = `\`${output}\``;
+    if (markType === "link") {
+      const href = normalizeString(((_a = mark == null ? void 0 : mark.attrs) == null ? void 0 : _a.href) || (mark == null ? void 0 : mark.href) || (mark == null ? void 0 : mark.url));
+      if (href) output = `[${output}](${href})`;
+    }
+  }
+  if (node == null ? void 0 : node.code) output = `\`${output}\``;
+  if (node == null ? void 0 : node.bold) output = `**${output}**`;
+  if (node == null ? void 0 : node.italic) output = `*${output}*`;
+  if (node == null ? void 0 : node.underline) output = `<u>${output}</u>`;
+  if (node == null ? void 0 : node.strikethrough) output = `~~${output}~~`;
+  return output;
+}
+function inlineNodeToMd(node) {
+  var _a;
+  if (!node) return "";
+  if (typeof node === "string") return normalizeString(node, false);
+  if (Array.isArray(node)) return node.map((item) => inlineNodeToMd(item)).join("");
+  const type = normalizeString(node.type).toLowerCase();
+  if (type === "hardbreak" || type === "hard_break" || type === "br") {
+    return "\n";
+  }
+  if (typeof node.text === "string") {
+    return applyInlineMarks(normalizeString(node.text, false), node);
+  }
+  const children = childNodes(node);
+  const child = children.map((item) => inlineNodeToMd(item)).join("");
+  const href = normalizeString(node.url || node.href || ((_a = node == null ? void 0 : node.attrs) == null ? void 0 : _a.href));
+  if ((type === "link" || href) && child) {
+    return href ? `[${child}](${href})` : child;
+  }
+  return child;
+}
+function blockListToMd(children, ordered) {
+  return children.map((item, index) => {
+    const raw = blockNodeToMd(item).trim();
+    if (!raw) return "";
+    const prefix = ordered ? `${index + 1}.` : "-";
+    return `${prefix} ${raw.replace(/\n/g, "\n  ")}`;
+  }).filter(Boolean).join("\n");
+}
+function blockNodeToMd(node) {
+  var _a, _b;
+  if (!node) return "";
+  if (typeof node === "string") return normalizeString(node);
+  if (Array.isArray(node)) return node.map((item) => blockNodeToMd(item)).filter(Boolean).join("\n\n");
+  const type = normalizeString(node.type).toLowerCase();
+  const children = childNodes(node);
+  const text = inlineNodeToMd(children.length ? children : node).trim();
+  if (type === "doc") {
+    return children.map((item) => blockNodeToMd(item)).filter(Boolean).join("\n\n");
+  }
+  if (type === "heading") {
+    const level = Number(node.level || ((_a = node == null ? void 0 : node.attrs) == null ? void 0 : _a.level) || 2);
+    const safe = Number.isFinite(level) ? Math.min(6, Math.max(1, level)) : 2;
+    return `${"#".repeat(safe)} ${text}`.trim();
+  }
+  if (type === "paragraph") return text;
+  if (type === "quote" || type === "blockquote") return text ? `> ${text.replace(/\n/g, "\n> ")}` : "";
+  if (type === "list" || type === "orderedlist" || type === "bulletlist") {
+    const ordered = type === "orderedlist" || normalizeString(node.format).toLowerCase() === "ordered" || normalizeString((_b = node == null ? void 0 : node.attrs) == null ? void 0 : _b.listType).toLowerCase() === "ordered";
+    return blockListToMd(children, ordered);
+  }
+  if (type === "list-item" || type === "listitem") {
+    if (children.length) {
+      return children.map((item) => blockNodeToMd(item)).filter(Boolean).join("\n").trim();
+    }
+    return text;
+  }
+  if (type === "code" || type === "codeblock" || type === "code_block") {
+    const lang = normalizeString(node.language);
+    return `\`\`\`${lang}
+${text || inlineNodeToMd(children).trim()}
+\`\`\``;
+  }
+  if (type === "horizontalrule" || type === "thematicbreak") {
+    return "---";
+  }
+  if (text) return text;
+  const blocks = asRecord(node).blocks;
+  if (Array.isArray(blocks)) return blocks.map((item) => blockNodeToMd(item)).filter(Boolean).join("\n\n");
+  return "";
+}
+function toMarkdown(value) {
+  const plain = normalizeString(value);
+  if (plain) return plain;
+  if (Array.isArray(value)) {
+    return value.map((item) => blockNodeToMd(item)).filter(Boolean).join("\n\n").trim();
+  }
+  if (!value || typeof value !== "object") return "";
+  const obj = asRecord(value);
+  const isRichTextNode = typeof obj.type === "string" || Array.isArray(obj.content) || Array.isArray(obj.children);
+  if (isRichTextNode) {
+    const md = blockNodeToMd(obj).trim();
+    if (md) return md;
+  }
+  const directKeys = [
+    "content",
+    "blocks",
+    "children",
+    "body",
+    "markdown",
+    "text"
+  ];
+  for (const key of directKeys) {
+    const md = toMarkdown(obj[key]);
+    if (md) return md;
+  }
+  return blockNodeToMd(obj).trim();
+}
+function pickTitle(entry) {
+  const titleKeys = ["title", "name", "heading", "Heading", "label"];
+  for (const key of titleKeys) {
+    const value = normalizeString(entry[key]);
+    if (value) return value;
+  }
+  return "Alliance Network";
+}
+function pickContent(entry) {
+  return toMarkdown(entry.content);
+}
 const landing_get = defineEventHandler(async () => {
   const config = useRuntimeConfig();
   const singleType = String(config.landingSingleType || "landing-page");
   const response = await strapiFetch(`/${singleType}`, { populate: "*" });
-  return (response == null ? void 0 : response.data) || null;
+  const raw = withAttributes((response == null ? void 0 : response.data) || null);
+  if (!raw || Object.keys(raw).length === 0) return null;
+  return {
+    ...raw,
+    title: pickTitle(raw),
+    content: pickContent(raw)
+  };
 });
 
 const landing_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
   default: landing_get
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const media_get = defineEventHandler(async (event) => {
+  const query = getQuery$1(event);
+  let source = String(query.u || query.url || "").trim();
+  if (!source) {
+    throw createError({ statusCode: 400, statusMessage: "Missing media URL" });
+  }
+  const { baseUrl, token } = getStrapiConfig();
+  if (source.startsWith("/")) {
+    source = `${baseUrl}${source}`;
+  }
+  let sourceUrl;
+  let baseOrigin;
+  try {
+    sourceUrl = new URL(source);
+    baseOrigin = new URL(baseUrl).origin;
+  } catch {
+    throw createError({ statusCode: 400, statusMessage: "Invalid media URL" });
+  }
+  if (sourceUrl.origin !== baseOrigin) {
+    throw createError({ statusCode: 403, statusMessage: "Cross-origin media proxy is not allowed" });
+  }
+  const response = await fetch(sourceUrl.toString(), {
+    headers: token ? { Authorization: `Bearer ${token}` } : void 0
+  });
+  if (!response.ok) {
+    throw createError({
+      statusCode: response.status,
+      statusMessage: `Failed to fetch media (${response.status})`
+    });
+  }
+  const contentType = response.headers.get("content-type") || "application/octet-stream";
+  const cacheControl = response.headers.get("cache-control") || "public, max-age=300";
+  setResponseHeader(event, "content-type", contentType);
+  setResponseHeader(event, "cache-control", cacheControl);
+  const bytes = Buffer.from(await response.arrayBuffer());
+  return send(event, bytes);
+});
+
+const media_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: media_get
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const _slug__get$6 = defineEventHandler(async (event) => {
+  const slug = String(getRouterParam(event, "slug") || "").trim();
+  if (!slug) {
+    throw createError({ statusCode: 400, statusMessage: "Missing brief slug" });
+  }
+  const rows = await strapiFetchAll("solution-briefs", {
+    populate: "*",
+    "filters[slug][$eq]": slug,
+    "pagination[pageSize]": 1
+  });
+  const brief = rows[0];
+  if (!brief) {
+    throw createError({ statusCode: 404, statusMessage: "Solution brief not found" });
+  }
+  const solution = relationFirst(brief == null ? void 0 : brief.solution) || relationFirst(relationItems(brief == null ? void 0 : brief.solutions));
+  const vendor = relationFirst(solution == null ? void 0 : solution.vendor);
+  const product = relationFirst(brief == null ? void 0 : brief.product) || relationFirst(relationItems(brief == null ? void 0 : brief.products));
+  return {
+    brief: {
+      id: brief.id,
+      documentId: brief.documentId,
+      slug: brief.slug,
+      title: brief.title,
+      shortDescription: brief.short_description,
+      description: brief.description,
+      workflow: brief.workflow,
+      integrationType: brief.integration_type,
+      supportedCapabilities: brief.supported_capabilities,
+      requirements: brief.requirements,
+      limitations: brief.limitations,
+      solution: solution ? {
+        id: solution.id,
+        documentId: solution.documentId,
+        slug: solution.slug,
+        name: solution.name || solution.title
+      } : null,
+      vendor: vendor ? {
+        slug: vendor.slug,
+        name: vendor.name
+      } : null,
+      product: product ? {
+        slug: product.slug,
+        name: product.name || product.title
+      } : null
+    }
+  };
+});
+
+const _slug__get$7 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: _slug__get$6
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const _slug__get$4 = defineEventHandler(async (event) => {
+  const slug = String(getRouterParam(event, "slug") || "").trim();
+  if (!slug) {
+    throw createError({ statusCode: 400, statusMessage: "Missing guide slug" });
+  }
+  const rows = await strapiFetchAll("solution-guides", {
+    populate: "*",
+    "filters[slug][$eq]": slug,
+    "pagination[pageSize]": 1
+  });
+  const guide = rows[0];
+  if (!guide) {
+    throw createError({ statusCode: 404, statusMessage: "Solution guide not found" });
+  }
+  const solutions = relationItems(guide == null ? void 0 : guide.solutions).map((item) => {
+    const owner = relationFirst(item == null ? void 0 : item.vendor);
+    return {
+      id: item.id,
+      documentId: item.documentId,
+      slug: item.slug,
+      name: item.name || item.title,
+      shortDescription: item.short_description,
+      vendor: owner ? {
+        slug: owner.slug,
+        name: owner.name
+      } : null
+    };
+  });
+  const products = relationItems(guide == null ? void 0 : guide.products).map((item) => ({
+    id: item.id,
+    documentId: item.documentId,
+    slug: item.slug,
+    name: item.name || item.title
+  }));
+  return {
+    guide: {
+      id: guide.id,
+      documentId: guide.documentId,
+      slug: guide.slug,
+      title: guide.title,
+      summary: guide.summary,
+      body: guide.body,
+      workflow: guide.workflow
+    },
+    solutions,
+    products
+  };
+});
+
+const _slug__get$5 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: _slug__get$4
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const solutions_get = defineEventHandler(async () => {
@@ -3196,6 +3629,87 @@ const solutions_get = defineEventHandler(async () => {
 const solutions_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
   default: solutions_get
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const _slug__get$2 = defineEventHandler(async (event) => {
+  const slug = String(getRouterParam(event, "slug") || "").trim();
+  if (!slug) {
+    throw createError({ statusCode: 400, statusMessage: "Missing solution slug" });
+  }
+  const rows = await strapiFetchAll("solutions", {
+    populate: "*",
+    "filters[slug][$eq]": slug,
+    "pagination[pageSize]": 1
+  });
+  const solution = rows[0];
+  if (!solution) {
+    throw createError({ statusCode: 404, statusMessage: "Solution not found" });
+  }
+  const solutionId = String(solution.documentId || "");
+  const vendor = relationFirst(solution == null ? void 0 : solution.vendor);
+  const [allGuides, allBriefs, allKb] = await Promise.all([
+    strapiFetchAll("solution-guides", { populate: "*", "sort[0]": "title:asc", "pagination[pageSize]": 300 }),
+    strapiFetchAll("solution-briefs", { populate: "*", "sort[0]": "title:asc", "pagination[pageSize]": 300 }),
+    strapiFetchAll("kb-articles", { populate: "*", "sort[0]": "title:asc", "pagination[pageSize]": 300 })
+  ]);
+  const guides = allGuides.filter((row) => relationItems(row == null ? void 0 : row.solutions).some((rel) => String((rel == null ? void 0 : rel.documentId) || "") === solutionId)).map((row) => ({
+    id: row.id,
+    documentId: row.documentId,
+    slug: row.slug,
+    title: row.title,
+    summary: row.summary
+  }));
+  const briefs = allBriefs.filter((row) => relationItems(row == null ? void 0 : row.solution).some((rel) => String((rel == null ? void 0 : rel.documentId) || "") === solutionId)).map((row) => ({
+    id: row.id,
+    documentId: row.documentId,
+    slug: row.slug,
+    title: row.title,
+    shortDescription: row.short_description,
+    description: row.description,
+    integrationType: row.integration_type,
+    supportedCapabilities: row.supported_capabilities
+  }));
+  const kbArticles = allKb.filter((row) => {
+    const one = relationItems(row == null ? void 0 : row.solution);
+    const many = relationItems(row == null ? void 0 : row.solutions);
+    return [...one, ...many].some((rel) => String((rel == null ? void 0 : rel.documentId) || "") === solutionId);
+  }).map((row) => ({
+    id: row.id,
+    documentId: row.documentId,
+    slug: row.slug,
+    title: row.title,
+    type: row.type,
+    severity: row.severity
+  }));
+  return {
+    solution: {
+      id: solution.id,
+      documentId: solution.documentId,
+      slug: solution.slug,
+      name: solution.name || solution.title,
+      shortDescription: solution.short_description,
+      description: solution.description,
+      workflow: solution.workflow,
+      solutionType: solution.solution_type,
+      integrationPattern: solution.integration_patterns,
+      licensingModel: solution.licensing_model,
+      visibilityLevel: solution.visibility_level,
+      vendor: vendor ? {
+        id: vendor.id,
+        documentId: vendor.documentId,
+        slug: vendor.slug,
+        name: vendor.name
+      } : null
+    },
+    guides,
+    briefs,
+    kbArticles
+  };
+});
+
+const _slug__get$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: _slug__get$2
 }, Symbol.toStringTag, { value: 'Module' }));
 
 function fuzzyNameMatch(text, query) {
@@ -3292,6 +3806,10 @@ const vendors_get = cachedEventHandler(
     const start = (page - 1) * pageSize;
     const items = filtered.slice(start, start + pageSize);
     const countsByVendor = Object.fromEntries(items.map((vendor) => [vendor.documentId, resourceCountInit(vendor)]));
+    const solutionsByVendor = Object.fromEntries(items.map((vendor) => [vendor.documentId, []]));
+    const memberVendorIds = new Set(
+      items.filter((vendor) => vendor.isVanMember).map((vendor) => String(vendor.documentId || ""))
+    );
     if (items.length > 0) {
       const vendorSlugSet = new Set(items.map((vendor) => String(vendor.slug || "")).filter(Boolean));
       const allSolutions = await strapiFetchAll("solutions", {
@@ -3313,6 +3831,14 @@ const vendors_get = cachedEventHandler(
         solutionOwner.set(sid, owner);
         solutionIds.push(sid);
         if (countsByVendor[owner]) countsByVendor[owner].solutions += 1;
+        if (solutionsByVendor[owner]) {
+          solutionsByVendor[owner].push({
+            id: solution.id,
+            documentId: solution.documentId,
+            slug: solution.slug,
+            name: solution.name || solution.title
+          });
+        }
       }
       if (solutionIds.length > 0) {
         const solutionIdSet = new Set(solutionIds);
@@ -3343,6 +3869,7 @@ const vendors_get = cachedEventHandler(
               if (owner) owners.add(owner);
             }
             owners.forEach((owner) => {
+              if ((field === "guides" || field === "briefs") && !memberVendorIds.has(owner)) return;
               if (countsByVendor[owner]) countsByVendor[owner][field] += 1;
             });
           }
@@ -3358,7 +3885,8 @@ const vendors_get = cachedEventHandler(
         descriptionPreview: markdownToPreviewText(
           vendor.shortDescription || vendor.description || vendor.summary || "No description available."
         ),
-        resources: countsByVendor[vendor.documentId] || resourceCountInit(vendor)
+        resources: countsByVendor[vendor.documentId] || resourceCountInit(vendor),
+        solutions: (solutionsByVendor[vendor.documentId] || []).filter((entry) => String(entry.slug || "").trim()).sort((a, b) => String(a.name || "").localeCompare(String(b.name || "")))
       })),
       meta: {
         total,
@@ -3412,10 +3940,13 @@ const _slug__get = defineEventHandler(async (event) => {
     populate: "*",
     "pagination[pageSize]": 200
   });
-  const solutionIds = allSolutions.filter((solution) => {
-    var _a;
-    return String(((_a = relationFirst(solution == null ? void 0 : solution.vendor)) == null ? void 0 : _a.slug) || "") === slug;
-  }).map((solution) => String((solution == null ? void 0 : solution.documentId) || "")).filter(Boolean);
+  const ownedSolutions = allSolutions.filter(
+    (solution) => {
+      var _a;
+      return String(((_a = relationFirst(solution == null ? void 0 : solution.vendor)) == null ? void 0 : _a.slug) || "") === slug;
+    }
+  );
+  const solutionIds = ownedSolutions.map((solution) => String((solution == null ? void 0 : solution.documentId) || "")).filter(Boolean);
   const briefsParams = {
     populate: "*",
     "sort[0]": "title:asc",
@@ -3437,10 +3968,10 @@ const _slug__get = defineEventHandler(async (event) => {
     strapiFetchAll("kb-articles", kbParams)
   ]) : [[], [], []];
   const solutionIdSet = new Set(solutionIds);
-  const briefFiltered = briefsRows.filter(
+  const briefFilteredRaw = briefsRows.filter(
     (row) => relationItems(row == null ? void 0 : row.solution).some((rel) => solutionIdSet.has(String((rel == null ? void 0 : rel.documentId) || "")))
   );
-  const guideFiltered = guidesRows.filter(
+  const guideFilteredRaw = guidesRows.filter(
     (row) => relationItems(row == null ? void 0 : row.solutions).some((rel) => solutionIdSet.has(String((rel == null ? void 0 : rel.documentId) || "")))
   );
   const kbFiltered = kbRows.filter((row) => {
@@ -3450,6 +3981,8 @@ const _slug__get = defineEventHandler(async (event) => {
       (rel) => solutionIdSet.has(String((rel == null ? void 0 : rel.documentId) || ""))
     );
   });
+  const briefFiltered = vendor.isVanMember ? briefFilteredRaw : [];
+  const guideFiltered = vendor.isVanMember ? guideFilteredRaw : [];
   if (debug) {
     const debugPayload = {
       slug,
@@ -3491,7 +4024,17 @@ const _slug__get = defineEventHandler(async (event) => {
     console.log("[vendor-debug]", JSON.stringify(debugPayload));
   }
   const response = {
-    vendor,
+    vendor: {
+      ...vendor,
+      solutions: ownedSolutions.map((solution) => ({
+        id: solution.id,
+        documentId: solution.documentId,
+        slug: solution.slug,
+        name: solution.name || solution.title,
+        shortDescription: solution.short_description,
+        workflow: solution.workflow
+      }))
+    },
     briefs: briefFiltered.map((row) => ({
       id: row.id,
       documentId: row.documentId,
@@ -3628,7 +4171,7 @@ const renderer = defineRenderHandler(async (event) => {
 	// Get route options (for `ssr: false`, `isr`, `cache` and `noScripts`)
 	const routeOptions = getRouteRules(event);
 	// Whether we are prerendering route or using ISR/SWR caching
-	const _PAYLOAD_EXTRACTION = !ssrContext.noSSR && ((routeOptions.isr || routeOptions.cache));
+	const _PAYLOAD_EXTRACTION = !ssrContext.noSSR && (NUXT_RUNTIME_PAYLOAD_EXTRACTION);
 	const isRenderingPayload = (_PAYLOAD_EXTRACTION || routeOptions.prerender) && PAYLOAD_URL_RE.test(ssrContext.url);
 	if (isRenderingPayload) {
 		const url = ssrContext.url.substring(0, ssrContext.url.lastIndexOf("/")) || "/";

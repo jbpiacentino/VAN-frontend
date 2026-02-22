@@ -1,5 +1,8 @@
 <template>
-  <div class="prose max-w-none prose-headings:my-3 prose-p:my-2 prose-li:my-1" v-html="html"></div>
+  <div
+    class="prose max-w-none prose-headings:my-3 prose-p:my-2 prose-li:my-1 prose-a:link prose-a:link-primary"
+    v-html="html"
+  ></div>
 </template>
 
 <script setup lang="ts">

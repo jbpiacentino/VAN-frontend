@@ -1,5 +1,5 @@
 import { createRenderer, getRequestDependencies, getPreloadLinks, getPrefetchLinks } from 'vue-bundle-renderer/runtime';
-import { j as joinRelativeURL, u as useRuntimeConfig, f as getResponseStatusText, h as getResponseStatus, i as defineRenderHandler, a as getQuery, e as createError, k as destr, l as getRouteRules, m as joinURL, n as useNitroApp } from '../nitro/nitro.mjs';
+import { j as joinRelativeURL, u as useRuntimeConfig, i as getResponseStatusText, k as getResponseStatus, l as defineRenderHandler, a as getQuery, c as createError, m as destr, n as getRouteRules, o as joinURL, p as useNitroApp } from '../nitro/nitro.mjs';
 import { renderToString } from 'vue/server-renderer';
 import { createHead as createHead$1, propsToString, renderSSRHead } from 'unhead/server';
 import { stringify, uneval } from 'devalue';
@@ -86,6 +86,8 @@ function createHead(options = {}) {
   head.install = vueInstall(head);
   return head;
 }
+
+const NUXT_RUNTIME_PAYLOAD_EXTRACTION = false;
 
 const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"},{"name":"description","content":"Vates Alliance Network: members, solutions, guides, briefs, and knowledge resources."}],"link":[],"style":[],"script":[],"noscript":[],"title":"Vates Alliance Network"};
 
@@ -329,7 +331,7 @@ const renderer = defineRenderHandler(async (event) => {
 	// Get route options (for `ssr: false`, `isr`, `cache` and `noScripts`)
 	const routeOptions = getRouteRules(event);
 	// Whether we are prerendering route or using ISR/SWR caching
-	const _PAYLOAD_EXTRACTION = !ssrContext.noSSR && ((routeOptions.isr || routeOptions.cache));
+	const _PAYLOAD_EXTRACTION = !ssrContext.noSSR && (NUXT_RUNTIME_PAYLOAD_EXTRACTION);
 	const isRenderingPayload = (_PAYLOAD_EXTRACTION || false) && PAYLOAD_URL_RE.test(ssrContext.url);
 	if (isRenderingPayload) {
 		const url = ssrContext.url.substring(0, ssrContext.url.lastIndexOf("/")) || "/";

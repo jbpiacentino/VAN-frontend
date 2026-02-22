@@ -44,8 +44,10 @@ export default defineEventHandler(async (event) => {
       populate: '*',
       'pagination[pageSize]': 200,
     });
-    const solutionIds = allSolutions
-      .filter((solution: any) => String(relationFirst(solution?.vendor)?.slug || '') === slug)
+    const ownedSolutions = allSolutions.filter(
+      (solution: any) => String(relationFirst(solution?.vendor)?.slug || '') === slug
+    );
+    const solutionIds = ownedSolutions
       .map((solution: any) => String(solution?.documentId || ''))
       .filter(Boolean);
 
@@ -73,10 +75,10 @@ export default defineEventHandler(async (event) => {
         ])
       : [[], [], []];
     const solutionIdSet = new Set(solutionIds);
-    const briefFiltered = briefsRows.filter((row: any) =>
+    const briefFilteredRaw = briefsRows.filter((row: any) =>
       relationItems(row?.solution).some((rel) => solutionIdSet.has(String(rel?.documentId || '')))
     );
-    const guideFiltered = guidesRows.filter((row: any) =>
+    const guideFilteredRaw = guidesRows.filter((row: any) =>
       relationItems(row?.solutions).some((rel) => solutionIdSet.has(String(rel?.documentId || '')))
     );
     const kbFiltered = kbRows.filter((row: any) => {
@@ -86,6 +88,8 @@ export default defineEventHandler(async (event) => {
         solutionIdSet.has(String(rel?.documentId || ''))
       );
     });
+    const briefFiltered = vendor.isVanMember ? briefFilteredRaw : [];
+    const guideFiltered = vendor.isVanMember ? guideFilteredRaw : [];
 
     if (debug) {
       const debugPayload = {
@@ -129,7 +133,17 @@ export default defineEventHandler(async (event) => {
     }
 
     const response = {
-      vendor,
+      vendor: {
+        ...vendor,
+        solutions: ownedSolutions.map((solution: any) => ({
+          id: solution.id,
+          documentId: solution.documentId,
+          slug: solution.slug,
+          name: solution.name || solution.title,
+          shortDescription: solution.short_description,
+          workflow: solution.workflow,
+        })),
+      },
       briefs: briefFiltered.map((row: any) => ({
         id: row.id,
         documentId: row.documentId,

@@ -14,7 +14,7 @@
 const { data, pending, error } = await useFetch('/api/landing');
 
 const landingTitle = computed(() => data.value?.title || data.value?.name || 'Alliance Network');
-const landingContent = computed(() => data.value?.content || data.value?.body || '');
+const landingContent = computed(() => data.value?.content || '');
 
 useServerSeoMeta({
   title: 'Vates Alliance Network',

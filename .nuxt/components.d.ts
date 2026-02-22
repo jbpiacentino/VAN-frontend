@@ -17,6 +17,7 @@ type LazyComponent<T> = DefineComponent<HydrationStrategies, {}, {}, {}, {}, {},
 export const ErrorState: typeof import("../components/ErrorState.vue")['default']
 export const LoadingState: typeof import("../components/LoadingState.vue")['default']
 export const MarkdownContent: typeof import("../components/MarkdownContent.vue")['default']
+export const PagerControls: typeof import("../components/PagerControls.vue")['default']
 export const SurfacePanel: typeof import("../components/SurfacePanel.vue")['default']
 export const VanFinderControls: typeof import("../components/VanFinderControls.vue")['default']
 export const VanFinderVendorCard: typeof import("../components/VanFinderVendorCard.vue")['default']
@@ -46,6 +47,7 @@ export const NuxtIsland: typeof import("../node_modules/nuxt/dist/app/components
 export const LazyErrorState: LazyComponent<typeof import("../components/ErrorState.vue")['default']>
 export const LazyLoadingState: LazyComponent<typeof import("../components/LoadingState.vue")['default']>
 export const LazyMarkdownContent: LazyComponent<typeof import("../components/MarkdownContent.vue")['default']>
+export const LazyPagerControls: LazyComponent<typeof import("../components/PagerControls.vue")['default']>
 export const LazySurfacePanel: LazyComponent<typeof import("../components/SurfacePanel.vue")['default']>
 export const LazyVanFinderControls: LazyComponent<typeof import("../components/VanFinderControls.vue")['default']>
 export const LazyVanFinderVendorCard: LazyComponent<typeof import("../components/VanFinderVendorCard.vue")['default']>

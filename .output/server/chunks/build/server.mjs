@@ -1,5 +1,5 @@
-import process from 'node:process';globalThis._importMeta_=globalThis._importMeta_||{url:"file:///_entry.js",env:process.env};import { hasInjectionContext, inject, defineComponent, shallowRef, h, resolveComponent, getCurrentInstance, toRef, isRef, computed, ref, Suspense, Fragment, useSSRContext, createApp, provide, shallowReactive, watch, mergeProps, withCtx, createTextVNode, unref, toDisplayString, onErrorCaptured, onServerPrefetch, createVNode, resolveDynamicComponent, reactive, effectScope, defineAsyncComponent, getCurrentScope, isReadonly, isShallow, isReactive, toRaw } from 'vue';
-import { e as createError$1, p as parseQuery, o as hasProtocol, m as joinURL, q as parseURL, r as encodePath, s as decodePath, t as getContext, w as withQuery, v as isScriptProtocol, x as withTrailingSlash, y as withoutTrailingSlash, z as sanitizeStatusCode, $ as $fetch, A as createHooks, B as executeAsync, C as defu } from '../nitro/nitro.mjs';
+import process from 'node:process';globalThis._importMeta_=globalThis._importMeta_||{url:"file:///_entry.js",env:process.env};import { hasInjectionContext, inject, defineComponent, shallowRef, h, resolveComponent, toRef, isRef, getCurrentInstance, computed, ref, Suspense, Fragment, useSSRContext, createApp, provide, shallowReactive, watch, mergeProps, unref, withCtx, createTextVNode, toDisplayString, onErrorCaptured, onServerPrefetch, createVNode, resolveDynamicComponent, reactive, effectScope, defineAsyncComponent, getCurrentScope, isReadonly, isShallow, isReactive, toRaw } from 'vue';
+import { c as createError$1, q as parseQuery, t as hasProtocol, o as joinURL, v as parseURL, w as encodePath, x as decodePath, y as getContext, z as withQuery, A as isScriptProtocol, B as withTrailingSlash, C as withoutTrailingSlash, D as sanitizeStatusCode, $ as $fetch, E as createHooks, F as executeAsync, G as defu } from '../nitro/nitro.mjs';
 import { b as baseURL } from '../routes/renderer.mjs';
 import { RouterView, createMemoryHistory, createRouter, START_LOCATION } from 'vue-router';
 import { ssrRenderAttrs, ssrRenderComponent, ssrInterpolate, ssrRenderList, ssrRenderAttr, ssrIncludeBooleanAttr, ssrLooseContain, ssrLooseEqual, ssrRenderSuspense, ssrRenderVNode } from 'vue/server-renderer';
@@ -391,37 +391,15 @@ const unhead_k2P3m_ZDyjlr2mMYnoDPwavjsDN8hBlk9cFai0bbopU = /* @__PURE__ */ defin
 function toArray(value) {
   return Array.isArray(value) ? value : [value];
 }
-const matcher = /* @__PURE__ */ (() => {
-  const $0 = { payload: true, payload: true }, $1 = { prerender: true };
-  return (m, p) => {
-    let r = [];
-    if (p.charCodeAt(p.length - 1) === 47) p = p.slice(0, -1) || "/";
-    if (p === "/") {
-      r.unshift({ data: $0 });
-    }
-    if (p === "/program") {
-      r.unshift({ data: $1 });
-    }
-    if (p === "/solutions") {
-      r.unshift({ data: $0 });
-    }
-    if (p === "/van-finder") {
-      r.unshift({ data: $0 });
-    }
-    let s = p.split("/");
-    s.length - 1;
-    if (s[1] === "vendors") {
-      r.unshift({ data: $0, params: { "_": s.slice(2).join("/") } });
-    }
-    return r;
-  };
-})();
-const _routeRulesMatcher = (path) => defu({}, ...matcher("", path).map((r) => r.data).reverse());
-const routeRulesMatcher$1 = _routeRulesMatcher;
+const matcher = (m, p) => {
+  return [];
+};
+const _routeRulesMatcher = (path) => defu({}, ...matcher().map((r) => r.data).reverse());
+const routeRulesMatcher = _routeRulesMatcher;
 function getRouteRules(arg) {
   const path = typeof arg === "string" ? arg : arg.path;
   try {
-    return routeRulesMatcher$1(path);
+    return routeRulesMatcher(path);
   } catch (e) {
     console.error("[nuxt] Error matching route rules.", e);
     return {};
@@ -431,27 +409,54 @@ const _routes = [
   {
     name: "index",
     path: "/",
-    component: () => import('./index-B6RpcjG2.mjs')
+    component: () => import('./index-CPSPUBdz.mjs')
+  },
+  {
+    name: "access",
+    path: "/access",
+    component: () => import('./access-Bf8ImAUv.mjs')
   },
   {
     name: "program",
     path: "/program",
-    component: () => import('./program-BZCwP4Pl.mjs')
+    component: () => import('./program-DPdLWLRw.mjs')
   },
   {
     name: "solutions",
     path: "/solutions",
-    component: () => import('./solutions-CB2szVHp.mjs')
+    component: () => import('./solutions-B5QyHUHR.mjs'),
+    children: [
+      {
+        name: "solutions-slug",
+        path: ":slug()",
+        component: () => import('./_slug_-EPI9IjbJ.mjs')
+      }
+    ]
   },
   {
     name: "van-finder",
     path: "/van-finder",
-    component: () => import('./van-finder-DLaDcdLo.mjs')
+    component: () => import('./van-finder-DP_ldMfU.mjs')
   },
   {
     name: "vendors-slug",
     path: "/vendors/:slug()",
-    component: () => import('./_slug_-CByiNQdt.mjs')
+    component: () => import('./_slug_-BBeVkGdQ.mjs')
+  },
+  {
+    name: "kb-articles-slug",
+    path: "/kb-articles/:slug()",
+    component: () => import('./_slug_-BKzkJPrh.mjs')
+  },
+  {
+    name: "solution-briefs-slug",
+    path: "/solution-briefs/:slug()",
+    component: () => import('./_slug_-XuEAT9tE.mjs')
+  },
+  {
+    name: "solution-guides-slug",
+    path: "/solution-guides/:slug()",
+    component: () => import('./_slug_-DJJRehnp.mjs')
   }
 ];
 const ROUTE_KEY_PARENTHESES_RE = /(:\w+)\([^)]+\)/g;
@@ -578,7 +583,7 @@ const plugin = /* @__PURE__ */ defineNuxtPlugin({
     let __temp, __restore;
     let routerBase = (/* @__PURE__ */ useRuntimeConfig()).app.baseURL;
     const history = routerOptions.history?.(routerBase) ?? createMemoryHistory(routerBase);
-    const routes2 = routerOptions.routes ? ([__temp, __restore] = executeAsync(() => routerOptions.routes(_routes)), __temp = await __temp, __restore(), __temp) ?? _routes : _routes;
+    const routes = routerOptions.routes ? ([__temp, __restore] = executeAsync(() => routerOptions.routes(_routes)), __temp = await __temp, __restore(), __temp) ?? _routes : _routes;
     let startPosition;
     const router = createRouter({
       ...routerOptions,
@@ -599,7 +604,7 @@ const plugin = /* @__PURE__ */ defineNuxtPlugin({
         }
       },
       history,
-      routes: routes2
+      routes
     });
     nuxtApp.vueApp.use(router);
     const previousRoute = shallowRef(router.currentRoute.value);
@@ -790,24 +795,11 @@ const revive_payload_server_MVtmlZaQpj6ApFmshWfUWl5PehCebzaBf2NuRMiIbms = /* @__
 const components_plugin_4kY4pyzJIYX99vmMAAIorFf3CnAaptHitJgf7JxiED8 = /* @__PURE__ */ defineNuxtPlugin({
   name: "nuxt:global-components"
 });
-function useRequestEvent(nuxtApp) {
-  nuxtApp ||= useNuxtApp();
-  return nuxtApp.ssrContext?.event;
-}
-function useRequestFetch() {
-  return useRequestEvent()?.$fetch || globalThis.$fetch;
-}
-const prerender_server_sqIxOBipVr4FbVMA9kqWL0wT8FPop6sKAXLVfifsJzk = /* @__PURE__ */ defineNuxtPlugin(async () => {
-  {
-    return;
-  }
-});
 const plugins = [
   unhead_k2P3m_ZDyjlr2mMYnoDPwavjsDN8hBlk9cFai0bbopU,
   plugin,
   revive_payload_server_MVtmlZaQpj6ApFmshWfUWl5PehCebzaBf2NuRMiIbms,
-  components_plugin_4kY4pyzJIYX99vmMAAIorFf3CnAaptHitJgf7JxiED8,
-  prerender_server_sqIxOBipVr4FbVMA9kqWL0wT8FPop6sKAXLVfifsJzk
+  components_plugin_4kY4pyzJIYX99vmMAAIorFf3CnAaptHitJgf7JxiED8
 ];
 const firstNonUndefined = (...args) => args.find((arg) => arg !== void 0);
 // @__NO_SIDE_EFFECTS__
@@ -1214,6 +1206,11 @@ const messages = {
     "finder.title": "VAN Finder",
     "finder.includeNonMembers": "Include non VAN members",
     "finder.searchPlaceholder": "Type a member or solution name",
+    "finder.resultsCount": "{count} match your search",
+    "finder.perPage": "Per page",
+    "finder.pageStatus": "Page {page} of {totalPages}",
+    "finder.previous": "Previous",
+    "finder.next": "Next",
     "finder.noResults": "No matching vendor or solution found.",
     "finder.resourceSolutions": "Solutions",
     "finder.resourceBriefs": "Solution briefs",
@@ -1234,6 +1231,11 @@ const messages = {
     "finder.title": "Recherche VAN",
     "finder.includeNonMembers": "Inclure les non-membres VAN",
     "finder.searchPlaceholder": "Saisissez un nom de membre ou de solution",
+    "finder.resultsCount": "{count} resultat(s)",
+    "finder.perPage": "Par page",
+    "finder.pageStatus": "Page {page} sur {totalPages}",
+    "finder.previous": "Precedent",
+    "finder.next": "Suivant",
     "finder.noResults": "Aucun fournisseur ou solution correspondant.",
     "finder.resourceSolutions": "Solutions",
     "finder.resourceBriefs": "Briefs de solution",
@@ -1260,6 +1262,8 @@ const _sfc_main$2 = /* @__PURE__ */ defineComponent({
   __ssrInlineRender: true,
   setup(__props) {
     const { locale: localeModel, t } = useL10n();
+    const route = useRoute();
+    const isAccessPage = computed(() => route.path === "/access");
     const themes = [
       "light",
       "dark",
@@ -1300,75 +1304,87 @@ const _sfc_main$2 = /* @__PURE__ */ defineComponent({
     return (_ctx, _push, _parent, _attrs) => {
       const _component_NuxtLink = __nuxt_component_0;
       const _component_NuxtPage = __nuxt_component_1;
-      _push(`<div${ssrRenderAttrs(mergeProps({ class: "min-h-screen flex flex-col bg-base-100 text-base-content" }, _attrs))}><header class="navbar sticky top-0 z-40 border-b border-base-300 bg-base-100/90 px-0 backdrop-blur-md"><div class="mx-auto flex w-[min(1080px,92vw)] flex-wrap items-center justify-between gap-4 py-2">`);
-      _push(ssrRenderComponent(_component_NuxtLink, {
-        to: "/",
-        class: "btn btn-ghost px-2 text-lg font-bold tracking-[0.02em]"
-      }, {
-        default: withCtx((_, _push2, _parent2, _scopeId) => {
-          if (_push2) {
-            _push2(`Vates VAN`);
-          } else {
-            return [
-              createTextVNode("Vates VAN")
-            ];
-          }
-        }),
-        _: 1
-      }, _parent));
-      _push(`<nav class="flex flex-wrap gap-2">`);
-      _push(ssrRenderComponent(_component_NuxtLink, {
-        to: "/program",
-        class: "btn btn-ghost btn-sm"
-      }, {
-        default: withCtx((_, _push2, _parent2, _scopeId) => {
-          if (_push2) {
-            _push2(`${ssrInterpolate(unref(t)("nav.program"))}`);
-          } else {
-            return [
-              createTextVNode(toDisplayString(unref(t)("nav.program")), 1)
-            ];
-          }
-        }),
-        _: 1
-      }, _parent));
-      _push(ssrRenderComponent(_component_NuxtLink, {
-        to: "/van-finder",
-        class: "btn btn-ghost btn-sm"
-      }, {
-        default: withCtx((_, _push2, _parent2, _scopeId) => {
-          if (_push2) {
-            _push2(`${ssrInterpolate(unref(t)("nav.vanFinder"))}`);
-          } else {
-            return [
-              createTextVNode(toDisplayString(unref(t)("nav.vanFinder")), 1)
-            ];
-          }
-        }),
-        _: 1
-      }, _parent));
-      _push(ssrRenderComponent(_component_NuxtLink, {
-        to: "/solutions",
-        class: "btn btn-ghost btn-sm"
-      }, {
-        default: withCtx((_, _push2, _parent2, _scopeId) => {
-          if (_push2) {
-            _push2(`${ssrInterpolate(unref(t)("nav.solutions"))}`);
-          } else {
-            return [
-              createTextVNode(toDisplayString(unref(t)("nav.solutions")), 1)
-            ];
-          }
-        }),
-        _: 1
-      }, _parent));
-      _push(`</nav><div class="inline-flex items-center gap-3 text-sm text-base-content/70"><label for="theme-select" class="font-medium">${ssrInterpolate(unref(t)("common.theme"))}</label><select id="theme-select" class="select select-sm border-base-300 bg-base-100"><!--[-->`);
-      ssrRenderList(themes, (theme) => {
-        _push(`<option${ssrRenderAttr("value", theme)}${ssrIncludeBooleanAttr(Array.isArray(unref(themeModel)) ? ssrLooseContain(unref(themeModel), theme) : ssrLooseEqual(unref(themeModel), theme)) ? " selected" : ""}>${ssrInterpolate(theme)}</option>`);
-      });
-      _push(`<!--]--></select><label for="locale-select" class="font-medium">${ssrInterpolate(unref(t)("common.locale"))}</label><select id="locale-select" class="select select-sm border-base-300 bg-base-100"><option value="en"${ssrIncludeBooleanAttr(Array.isArray(unref(localeModel)) ? ssrLooseContain(unref(localeModel), "en") : ssrLooseEqual(unref(localeModel), "en")) ? " selected" : ""}>EN</option><option value="fr"${ssrIncludeBooleanAttr(Array.isArray(unref(localeModel)) ? ssrLooseContain(unref(localeModel), "fr") : ssrLooseEqual(unref(localeModel), "fr")) ? " selected" : ""}>FR</option></select></div></div></header><main class="mx-auto w-[min(1080px,92vw)] flex-1 py-10 max-[720px]:pt-6">`);
+      _push(`<div${ssrRenderAttrs(mergeProps({ class: "min-h-screen flex flex-col bg-base-100 text-base-content" }, _attrs))}>`);
+      if (!unref(isAccessPage)) {
+        _push(`<header class="navbar sticky top-0 z-40 border-b border-base-300 bg-base-100/90 px-0 backdrop-blur-md"><div class="mx-auto flex w-[min(1080px,92vw)] flex-wrap items-center justify-between gap-4 py-2">`);
+        _push(ssrRenderComponent(_component_NuxtLink, {
+          to: "/",
+          class: "btn btn-ghost px-2 text-lg font-bold tracking-[0.02em]"
+        }, {
+          default: withCtx((_, _push2, _parent2, _scopeId) => {
+            if (_push2) {
+              _push2(`Vates VAN`);
+            } else {
+              return [
+                createTextVNode("Vates VAN")
+              ];
+            }
+          }),
+          _: 1
+        }, _parent));
+        _push(`<nav class="flex flex-wrap gap-2">`);
+        _push(ssrRenderComponent(_component_NuxtLink, {
+          to: "/program",
+          class: "btn btn-ghost btn-sm"
+        }, {
+          default: withCtx((_, _push2, _parent2, _scopeId) => {
+            if (_push2) {
+              _push2(`${ssrInterpolate(unref(t)("nav.program"))}`);
+            } else {
+              return [
+                createTextVNode(toDisplayString(unref(t)("nav.program")), 1)
+              ];
+            }
+          }),
+          _: 1
+        }, _parent));
+        _push(ssrRenderComponent(_component_NuxtLink, {
+          to: "/van-finder",
+          class: "btn btn-ghost btn-sm"
+        }, {
+          default: withCtx((_, _push2, _parent2, _scopeId) => {
+            if (_push2) {
+              _push2(`${ssrInterpolate(unref(t)("nav.vanFinder"))}`);
+            } else {
+              return [
+                createTextVNode(toDisplayString(unref(t)("nav.vanFinder")), 1)
+              ];
+            }
+          }),
+          _: 1
+        }, _parent));
+        _push(ssrRenderComponent(_component_NuxtLink, {
+          to: "/solutions",
+          class: "btn btn-ghost btn-sm"
+        }, {
+          default: withCtx((_, _push2, _parent2, _scopeId) => {
+            if (_push2) {
+              _push2(`${ssrInterpolate(unref(t)("nav.solutions"))}`);
+            } else {
+              return [
+                createTextVNode(toDisplayString(unref(t)("nav.solutions")), 1)
+              ];
+            }
+          }),
+          _: 1
+        }, _parent));
+        _push(`</nav><div class="inline-flex items-center gap-3 text-sm text-base-content/70"><label for="theme-select" class="font-medium">${ssrInterpolate(unref(t)("common.theme"))}</label><select id="theme-select" class="select select-sm border-base-300 bg-base-100"><!--[-->`);
+        ssrRenderList(themes, (theme) => {
+          _push(`<option${ssrRenderAttr("value", theme)}${ssrIncludeBooleanAttr(Array.isArray(unref(themeModel)) ? ssrLooseContain(unref(themeModel), theme) : ssrLooseEqual(unref(themeModel), theme)) ? " selected" : ""}>${ssrInterpolate(theme)}</option>`);
+        });
+        _push(`<!--]--></select><label for="locale-select" class="font-medium">${ssrInterpolate(unref(t)("common.locale"))}</label><select id="locale-select" class="select select-sm border-base-300 bg-base-100"><option value="en"${ssrIncludeBooleanAttr(Array.isArray(unref(localeModel)) ? ssrLooseContain(unref(localeModel), "en") : ssrLooseEqual(unref(localeModel), "en")) ? " selected" : ""}>EN</option><option value="fr"${ssrIncludeBooleanAttr(Array.isArray(unref(localeModel)) ? ssrLooseContain(unref(localeModel), "fr") : ssrLooseEqual(unref(localeModel), "fr")) ? " selected" : ""}>FR</option></select></div></div></header>`);
+      } else {
+        _push(`<!---->`);
+      }
+      _push(`<main class="mx-auto w-[min(1080px,92vw)] flex-1 py-10 max-[720px]:pt-6">`);
       _push(ssrRenderComponent(_component_NuxtPage, null, null, _parent));
-      _push(`</main><footer class="footer border-t border-base-300 bg-base-100"><div class="mx-auto flex min-h-16 w-[min(1080px,92vw)] items-center text-base-content/70"><p>Vates Alliance Network (VAN)</p></div></footer></div>`);
+      _push(`</main>`);
+      if (!unref(isAccessPage)) {
+        _push(`<footer class="footer border-t border-base-300 bg-base-100"><div class="mx-auto flex min-h-16 w-[min(1080px,92vw)] items-center text-base-content/70"><p>Vates Alliance Network (VAN)</p></div></footer>`);
+      } else {
+        _push(`<!---->`);
+      }
+      _push(`</div>`);
     };
   }
 });
@@ -1392,8 +1408,8 @@ const _sfc_main$1 = {
     const statusText = _error.statusMessage ?? (is404 ? "Page Not Found" : "Internal Server Error");
     const description = _error.message || _error.toString();
     const stack = void 0;
-    const _Error404 = defineAsyncComponent(() => import('./error-404-CcCfMd7B.mjs'));
-    const _Error = defineAsyncComponent(() => import('./error-500-C2x9_q3N.mjs'));
+    const _Error404 = defineAsyncComponent(() => import('./error-404-qHHvoH-o.mjs'));
+    const _Error = defineAsyncComponent(() => import('./error-500-B-D_km6Z.mjs'));
     const ErrorTemplate = is404 ? _Error404 : _Error;
     return (_ctx, _push, _parent, _attrs) => {
       _push(ssrRenderComponent(unref(ErrorTemplate), mergeProps({ status: unref(status), statusText: unref(statusText), statusCode: unref(status), statusMessage: unref(statusText), description: unref(description), stack: unref(stack) }, _attrs), null, _parent));
@@ -1474,5 +1490,5 @@ let entry;
 }
 const entry_default = ((ssrContext) => entry(ssrContext));
 
-export { __nuxt_component_0 as _, useRoute as a, useNuxtApp as b, asyncDataDefaults as c, createError as d, entry_default as default, useRequestFetch as e, fetchDefaults as f, useL10n as u };
+export { __nuxt_component_0 as _, useL10n as a, useRouter as b, useNuxtApp as c, asyncDataDefaults as d, entry_default as default, createError as e, fetchDefaults as f, useRoute as u };
 //# sourceMappingURL=server.mjs.map

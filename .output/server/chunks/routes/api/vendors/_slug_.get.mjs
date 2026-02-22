@@ -1,5 +1,5 @@
-import { d as defineEventHandler, b as getRouterParam, a as getQuery, e as createError } from '../../../nitro/nitro.mjs';
-import { a as strapiFetchAll, m as mapVendor, b as buildMembershipMap, r as relationFirst, d as relationItems } from '../../../_/strapi.mjs';
+import { d as defineEventHandler, g as getRouterParam, a as getQuery, c as createError } from '../../../nitro/nitro.mjs';
+import { s as strapiFetchAll, m as mapVendor, c as buildMembershipMap, b as relationFirst, r as relationItems } from '../../../_/strapi.mjs';
 import 'node:http';
 import 'node:https';
 import 'node:events';
@@ -35,10 +35,13 @@ const _slug__get = defineEventHandler(async (event) => {
     populate: "*",
     "pagination[pageSize]": 200
   });
-  const solutionIds = allSolutions.filter((solution) => {
-    var _a;
-    return String(((_a = relationFirst(solution == null ? void 0 : solution.vendor)) == null ? void 0 : _a.slug) || "") === slug;
-  }).map((solution) => String((solution == null ? void 0 : solution.documentId) || "")).filter(Boolean);
+  const ownedSolutions = allSolutions.filter(
+    (solution) => {
+      var _a;
+      return String(((_a = relationFirst(solution == null ? void 0 : solution.vendor)) == null ? void 0 : _a.slug) || "") === slug;
+    }
+  );
+  const solutionIds = ownedSolutions.map((solution) => String((solution == null ? void 0 : solution.documentId) || "")).filter(Boolean);
   const briefsParams = {
     populate: "*",
     "sort[0]": "title:asc",
@@ -60,10 +63,10 @@ const _slug__get = defineEventHandler(async (event) => {
     strapiFetchAll("kb-articles", kbParams)
   ]) : [[], [], []];
   const solutionIdSet = new Set(solutionIds);
-  const briefFiltered = briefsRows.filter(
+  const briefFilteredRaw = briefsRows.filter(
     (row) => relationItems(row == null ? void 0 : row.solution).some((rel) => solutionIdSet.has(String((rel == null ? void 0 : rel.documentId) || "")))
   );
-  const guideFiltered = guidesRows.filter(
+  const guideFilteredRaw = guidesRows.filter(
     (row) => relationItems(row == null ? void 0 : row.solutions).some((rel) => solutionIdSet.has(String((rel == null ? void 0 : rel.documentId) || "")))
   );
   const kbFiltered = kbRows.filter((row) => {
@@ -73,6 +76,8 @@ const _slug__get = defineEventHandler(async (event) => {
       (rel) => solutionIdSet.has(String((rel == null ? void 0 : rel.documentId) || ""))
     );
   });
+  const briefFiltered = vendor.isVanMember ? briefFilteredRaw : [];
+  const guideFiltered = vendor.isVanMember ? guideFilteredRaw : [];
   if (debug) {
     const debugPayload = {
       slug,
@@ -114,7 +119,17 @@ const _slug__get = defineEventHandler(async (event) => {
     console.log("[vendor-debug]", JSON.stringify(debugPayload));
   }
   const response = {
-    vendor,
+    vendor: {
+      ...vendor,
+      solutions: ownedSolutions.map((solution) => ({
+        id: solution.id,
+        documentId: solution.documentId,
+        slug: solution.slug,
+        name: solution.name || solution.title,
+        shortDescription: solution.short_description,
+        workflow: solution.workflow
+      }))
+    },
     briefs: briefFiltered.map((row) => ({
       id: row.id,
       documentId: row.documentId,

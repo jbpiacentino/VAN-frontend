@@ -1,6 +1,7 @@
 <template>
   <div class="min-h-screen flex flex-col bg-base-100 text-base-content">
     <header
+      v-if="!isAccessPage"
       class="navbar sticky top-0 z-40 border-b border-base-300 bg-base-100/90 px-0 backdrop-blur-md"
     >
       <div
@@ -42,7 +43,7 @@
       <NuxtPage />
     </main>
 
-    <footer class="footer border-t border-base-300 bg-base-100">
+    <footer v-if="!isAccessPage" class="footer border-t border-base-300 bg-base-100">
       <div class="mx-auto flex min-h-16 w-[min(1080px,92vw)] items-center text-base-content/70">
         <p>Vates Alliance Network (VAN)</p>
       </div>
@@ -52,6 +53,8 @@
 
 <script setup lang="ts">
   const { locale: localeModel, t } = useL10n();
+  const route = useRoute();
+  const isAccessPage = computed(() => route.path === '/access');
 
   const themes = [
     'light',

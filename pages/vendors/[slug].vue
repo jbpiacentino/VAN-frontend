@@ -4,14 +4,22 @@
 
   <section v-else-if="vendor" class="space-y-6">
     <div class="hero rounded-box bg-base-300">
-      <div class="hero-content w-full flex-col items-start gap-6 px-6 py-8 md:flex-row md:items-center md:justify-between">
+      <div
+        class="hero-content w-full flex-col items-start gap-6 px-6 py-8 md:flex-row md:items-center md:justify-between"
+      >
         <div class="space-y-2">
-          <p class="text-xs uppercase tracking-wide text-base-content/60">Vendor profile</p>
+          <p class="text-xs uppercase tracking-wide text-primary">Vendor profile</p>
           <h1 class="text-4xl font-bold">{{ vendor.name }}</h1>
-          <p class="text-base-content/70">{{ vendor.shortDescription || 'Alliance partner profile and solution highlights.' }}</p>
+          <p class="text-base-content/70">
+            {{ vendor.shortDescription || 'Alliance partner profile and solution highlights.' }}
+          </p>
         </div>
         <div v-if="vendor.logoUrl" class="rounded-box border border-base-300 bg-base-100 p-4">
-          <img :src="vendor.logoUrl" :alt="`${vendor.name} logo`" class="h-20 w-auto object-contain" />
+          <img
+            :src="vendor.logoUrl"
+            :alt="`${vendor.name} logo`"
+            class="h-20 w-auto object-contain"
+          />
         </div>
       </div>
     </div>
@@ -42,14 +50,27 @@
           </div>
           <div>
             <p class="text-sm font-semibold">Website</p>
-            <a v-if="vendor.website" :href="vendor.website" target="_blank" rel="noreferrer" class="link link-primary break-all">{{ vendor.website }}</a>
+            <a
+              v-if="vendor.website"
+              :href="vendor.website"
+              target="_blank"
+              rel="noreferrer"
+              class="link link-primary break-all"
+              >{{ vendor.website }}</a
+            >
             <p v-else class="text-base-content/60">N/A</p>
           </div>
           <div>
             <p class="text-sm font-semibold">Links</p>
             <ul v-if="vendor.links?.length" class="space-y-1">
               <li v-for="link in vendor.links" :key="link.url">
-                <a :href="link.url" target="_blank" rel="noreferrer" class="link link-primary break-all">{{ link.label }}</a>
+                <a
+                  :href="link.url"
+                  target="_blank"
+                  rel="noreferrer"
+                  class="link link-primary break-all"
+                  >{{ link.label }}</a
+                >
               </li>
             </ul>
             <p v-else class="text-base-content/60">N/A</p>
@@ -59,42 +80,121 @@
     </div>
 
     <section class="space-y-3">
-      <h2 class="text-2xl font-bold">Solution Briefs</h2>
-      <div v-if="briefs.length" class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-        <article v-for="brief in briefs" :key="brief.documentId || brief.id || brief.slug || brief.title" class="card border border-base-300 bg-base-100">
+      <h2 class="text-2xl font-bold">Solutions</h2>
+      <div v-if="pagedSolutions.length" class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <NuxtLink
+          v-for="solution in pagedSolutions"
+          :key="solution.documentId || solution.id || solution.slug || solution.name"
+          :to="`/solutions/${solution.slug}`"
+          class="card border border-base-300 bg-base-100 transition hover:shadow-md"
+        >
           <div class="card-body">
-            <h3 class="card-title text-lg">{{ brief.title }}</h3>
-            <p class="text-sm text-base-content/80">{{ brief.shortDescription || brief.description || 'No summary available.' }}</p>
+            <h3 class="card-title line-clamp-2 text-lg">{{ solution.name }}</h3>
+            <p class="line-clamp-2 text-sm text-base-content/80">
+              {{ solution.shortDescription || 'No summary available.' }}
+            </p>
           </div>
-        </article>
+        </NuxtLink>
       </div>
-      <div v-else class="alert border border-base-300 bg-base-100"><span>No solution briefs linked to this vendor.</span></div>
+      <div v-else class="alert border border-base-300 bg-base-100">
+        <span>No solutions linked to this vendor.</span>
+      </div>
+      <PagerControls
+        v-if="solutions.length > solutionsPageSize"
+        :page="solutionsPage"
+        :page-size="solutionsPageSize"
+        :total-pages="solutionsTotalPages"
+        :show-page-size="false"
+        @update:page="solutionsPage = $event"
+      />
+    </section>
+
+    <section class="space-y-3">
+      <h2 class="text-2xl font-bold">Solution Briefs</h2>
+      <div v-if="pagedBriefs.length" class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <NuxtLink
+          v-for="brief in pagedBriefs"
+          :key="brief.documentId || brief.id || brief.slug || brief.title"
+          :to="`/solution-briefs/${brief.slug}`"
+          class="card border border-base-300 bg-base-100 transition hover:shadow-md"
+        >
+          <div class="card-body">
+            <h3 class="card-title line-clamp-2 text-lg">{{ brief.title }}</h3>
+            <p class="line-clamp-2 text-sm text-base-content/80">
+              {{ brief.shortDescription || brief.description || 'No summary available.' }}
+            </p>
+          </div>
+        </NuxtLink>
+      </div>
+      <div v-else class="alert border border-base-300 bg-base-100">
+        <span>No solution briefs linked to this vendor.</span>
+      </div>
+      <PagerControls
+        v-if="briefs.length > briefsPageSize"
+        :page="briefsPage"
+        :page-size="briefsPageSize"
+        :total-pages="briefsTotalPages"
+        :show-page-size="false"
+        @update:page="briefsPage = $event"
+      />
     </section>
 
     <section class="space-y-3">
       <h2 class="text-2xl font-bold">Solution Guides</h2>
-      <div v-if="guides.length" class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-        <article v-for="guide in guides" :key="guide.documentId || guide.id || guide.slug || guide.title" class="card border border-base-300 bg-base-100">
+      <div v-if="pagedGuides.length" class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <NuxtLink
+          v-for="guide in pagedGuides"
+          :key="guide.documentId || guide.id || guide.slug || guide.title"
+          :to="`/solution-guides/${guide.slug}`"
+          class="card border border-base-300 bg-base-100 transition hover:shadow-md"
+        >
           <div class="card-body">
-            <h3 class="card-title text-lg">{{ guide.title }}</h3>
-            <p class="text-sm text-base-content/80">{{ guide.summary || 'No summary available.' }}</p>
+            <h3 class="card-title line-clamp-2 text-lg">{{ guide.title }}</h3>
+            <p class="line-clamp-2 text-sm text-base-content/80">
+              {{ guide.summary || 'No summary available.' }}
+            </p>
           </div>
-        </article>
+        </NuxtLink>
       </div>
-      <div v-else class="alert border border-base-300 bg-base-100"><span>No solution guides linked to this vendor.</span></div>
+      <div v-else class="alert border border-base-300 bg-base-100">
+        <span>No solution guides linked to this vendor.</span>
+      </div>
+      <PagerControls
+        v-if="guides.length > guidesPageSize"
+        :page="guidesPage"
+        :page-size="guidesPageSize"
+        :total-pages="guidesTotalPages"
+        :show-page-size="false"
+        @update:page="guidesPage = $event"
+      />
     </section>
 
     <section class="space-y-3">
       <h2 class="text-2xl font-bold">KB Articles</h2>
-      <ul v-if="kbArticles.length" class="menu rounded-box border border-base-300 bg-base-100">
-        <li v-for="kb in kbArticles" :key="kb.documentId || kb.id || kb.slug || kb.title" class="border-b border-base-200 last:border-0">
-          <div class="flex items-center justify-between gap-3 py-2">
-            <span class="font-medium">{{ kb.title }}</span>
-            <span class="text-xs text-base-content/60">{{ kb.type || 'article' }}</span>
+      <div v-if="pagedKbArticles.length" class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <NuxtLink
+          v-for="kb in pagedKbArticles"
+          :key="kb.documentId || kb.id || kb.slug || kb.title"
+          :to="`/kb-articles/${kb.slug}`"
+          class="card border border-base-300 bg-base-100 transition hover:shadow-md"
+        >
+          <div class="card-body">
+            <h3 class="card-title line-clamp-2 text-lg">{{ kb.title }}</h3>
+            <p class="line-clamp-2 text-sm text-base-content/70">{{ kb.type || 'article' }}</p>
           </div>
-        </li>
-      </ul>
-      <div v-else class="alert border border-base-300 bg-base-100"><span>No KB articles linked to this vendor.</span></div>
+        </NuxtLink>
+      </div>
+      <div v-else class="alert border border-base-300 bg-base-100">
+        <span>No KB articles linked to this vendor.</span>
+      </div>
+      <PagerControls
+        v-if="kbArticles.length > kbPageSize"
+        :page="kbPage"
+        :page-size="kbPageSize"
+        :total-pages="kbTotalPages"
+        :show-page-size="false"
+        @update:page="kbPage = $event"
+      />
     </section>
   </section>
 
@@ -102,20 +202,93 @@
 </template>
 
 <script setup lang="ts">
-const route = useRoute();
-const slug = computed(() => String(route.params.slug || ''));
+  const route = useRoute();
+  const slug = computed(() => String(route.params.slug || ''));
 
-const { data, pending, error } = await useFetch(() => `/api/vendors/${slug.value}`);
+  const { data, pending, error } = await useFetch(() => `/api/vendors/${slug.value}`);
 
-const vendor = computed(() => data.value?.vendor || null);
-const briefs = computed(() => data.value?.briefs || []);
-const guides = computed(() => data.value?.guides || []);
-const kbArticles = computed(() => data.value?.kbArticles || []);
+  const vendor = computed(() => data.value?.vendor || null);
+  const solutions = computed(() => data.value?.vendor?.solutions || []);
+  const briefs = computed(() => data.value?.briefs || []);
+  const guides = computed(() => data.value?.guides || []);
+  const kbArticles = computed(() => data.value?.kbArticles || []);
 
-const joinedList = (values: string[]) => (Array.isArray(values) && values.length ? values.join(', ') : 'N/A');
+  const joinedList = (values: string[]) =>
+    Array.isArray(values) && values.length ? values.join(', ') : 'N/A';
 
-useServerSeoMeta({
-  title: () => (vendor.value?.name ? `${vendor.value.name} | VAN` : 'Vendor | VAN'),
-  description: () => vendor.value?.shortDescription || 'Vendor details in Vates Alliance Network.',
-});
+  const solutionsPage = ref(1);
+const solutionsPageSize = ref(6);
+const briefsPage = ref(1);
+const briefsPageSize = ref(6);
+const guidesPage = ref(1);
+const guidesPageSize = ref(6);
+const kbPage = ref(1);
+const kbPageSize = ref(6);
+
+  function pagedSlice<T>(items: T[], page: number, pageSize: number) {
+    const safeSize = Math.max(1, Number(pageSize || 10));
+    const safePage = Math.max(1, Number(page || 1));
+    const start = (safePage - 1) * safeSize;
+    return items.slice(start, start + safeSize);
+  }
+
+  function calcTotalPages(total: number, pageSize: number) {
+    return Math.max(1, Math.ceil(Number(total || 0) / Math.max(1, Number(pageSize || 10))));
+  }
+
+  const solutionsTotalPages = computed(() =>
+    calcTotalPages(solutions.value.length, solutionsPageSize.value)
+  );
+  const briefsTotalPages = computed(() =>
+    calcTotalPages(briefs.value.length, briefsPageSize.value)
+  );
+  const guidesTotalPages = computed(() =>
+    calcTotalPages(guides.value.length, guidesPageSize.value)
+  );
+  const kbTotalPages = computed(() => calcTotalPages(kbArticles.value.length, kbPageSize.value));
+
+  const pagedSolutions = computed(() =>
+    pagedSlice(solutions.value, solutionsPage.value, solutionsPageSize.value)
+  );
+  const pagedBriefs = computed(() =>
+    pagedSlice(briefs.value, briefsPage.value, briefsPageSize.value)
+  );
+  const pagedGuides = computed(() =>
+    pagedSlice(guides.value, guidesPage.value, guidesPageSize.value)
+  );
+  const pagedKbArticles = computed(() =>
+    pagedSlice(kbArticles.value, kbPage.value, kbPageSize.value)
+  );
+
+  watch(solutionsPageSize, () => {
+    solutionsPage.value = 1;
+  });
+  watch(briefsPageSize, () => {
+    briefsPage.value = 1;
+  });
+  watch(guidesPageSize, () => {
+    guidesPage.value = 1;
+  });
+  watch(kbPageSize, () => {
+    kbPage.value = 1;
+  });
+
+  watch(solutionsTotalPages, (next) => {
+    if (solutionsPage.value > next) solutionsPage.value = next;
+  });
+  watch(briefsTotalPages, (next) => {
+    if (briefsPage.value > next) briefsPage.value = next;
+  });
+  watch(guidesTotalPages, (next) => {
+    if (guidesPage.value > next) guidesPage.value = next;
+  });
+  watch(kbTotalPages, (next) => {
+    if (kbPage.value > next) kbPage.value = next;
+  });
+
+  useServerSeoMeta({
+    title: () => (vendor.value?.name ? `${vendor.value.name} | VAN` : 'Vendor | VAN'),
+    description: () =>
+      vendor.value?.shortDescription || 'Vendor details in Vates Alliance Network.',
+  });
 </script>

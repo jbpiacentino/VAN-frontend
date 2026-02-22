@@ -1,5 +1,5 @@
-import { c as cachedEventHandler, g as getRequestURL, a as getQuery } from '../../../nitro/nitro.mjs';
-import { a as strapiFetchAll, b as buildMembershipMap, m as mapVendor, c as markdownToPreviewText, r as relationFirst, d as relationItems, w as words, f as fuzzyIncludes, l as levenshtein } from '../../../_/strapi.mjs';
+import { f as cachedEventHandler, h as getRequestURL, a as getQuery } from '../../../nitro/nitro.mjs';
+import { s as strapiFetchAll, c as buildMembershipMap, m as mapVendor, d as markdownToPreviewText, b as relationFirst, r as relationItems, w as words, f as fuzzyIncludes, l as levenshtein } from '../../../_/strapi.mjs';
 import 'node:http';
 import 'node:https';
 import 'node:events';
@@ -103,6 +103,10 @@ const vendors_get = cachedEventHandler(
     const start = (page - 1) * pageSize;
     const items = filtered.slice(start, start + pageSize);
     const countsByVendor = Object.fromEntries(items.map((vendor) => [vendor.documentId, resourceCountInit(vendor)]));
+    const solutionsByVendor = Object.fromEntries(items.map((vendor) => [vendor.documentId, []]));
+    const memberVendorIds = new Set(
+      items.filter((vendor) => vendor.isVanMember).map((vendor) => String(vendor.documentId || ""))
+    );
     if (items.length > 0) {
       const vendorSlugSet = new Set(items.map((vendor) => String(vendor.slug || "")).filter(Boolean));
       const allSolutions = await strapiFetchAll("solutions", {
@@ -124,6 +128,14 @@ const vendors_get = cachedEventHandler(
         solutionOwner.set(sid, owner);
         solutionIds.push(sid);
         if (countsByVendor[owner]) countsByVendor[owner].solutions += 1;
+        if (solutionsByVendor[owner]) {
+          solutionsByVendor[owner].push({
+            id: solution.id,
+            documentId: solution.documentId,
+            slug: solution.slug,
+            name: solution.name || solution.title
+          });
+        }
       }
       if (solutionIds.length > 0) {
         const solutionIdSet = new Set(solutionIds);
@@ -154,6 +166,7 @@ const vendors_get = cachedEventHandler(
               if (owner) owners.add(owner);
             }
             owners.forEach((owner) => {
+              if ((field === "guides" || field === "briefs") && !memberVendorIds.has(owner)) return;
               if (countsByVendor[owner]) countsByVendor[owner][field] += 1;
             });
           }
@@ -169,7 +182,8 @@ const vendors_get = cachedEventHandler(
         descriptionPreview: markdownToPreviewText(
           vendor.shortDescription || vendor.description || vendor.summary || "No description available."
         ),
-        resources: countsByVendor[vendor.documentId] || resourceCountInit(vendor)
+        resources: countsByVendor[vendor.documentId] || resourceCountInit(vendor),
+        solutions: (solutionsByVendor[vendor.documentId] || []).filter((entry) => String(entry.slug || "").trim()).sort((a, b) => String(a.name || "").localeCompare(String(b.name || "")))
       })),
       meta: {
         total,

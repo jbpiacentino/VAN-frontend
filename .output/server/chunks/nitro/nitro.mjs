@@ -99,7 +99,7 @@ function encodeQueryKey(text) {
 function encodePath(text) {
   return encode(text).replace(HASH_RE, "%23").replace(IM_RE, "%3F").replace(ENC_ENC_SLASH_RE, "%2F").replace(AMPERSAND_RE, "%26").replace(PLUS_RE, "%2B");
 }
-function decode(text = "") {
+function decode$1(text = "") {
   try {
     return decodeURIComponent("" + text);
   } catch {
@@ -107,13 +107,13 @@ function decode(text = "") {
   }
 }
 function decodePath(text) {
-  return decode(text.replace(ENC_SLASH_RE, "%252F"));
+  return decode$1(text.replace(ENC_SLASH_RE, "%252F"));
 }
 function decodeQueryKey(text) {
-  return decode(text.replace(PLUS_RE, " "));
+  return decode$1(text.replace(PLUS_RE, " "));
 }
 function decodeQueryValue(text) {
-  return decode(text.replace(PLUS_RE, " "));
+  return decode$1(text.replace(PLUS_RE, " "));
 }
 
 function parseQuery(parametersString = "") {
@@ -379,6 +379,211 @@ function stringifyParsedURL(parsed) {
   const host = parsed.host || "";
   const proto = parsed.protocol || parsed[protocolRelative] ? (parsed.protocol || "") + "//" : "";
   return proto + auth + host + pathname + search + hash;
+}
+
+function parse(str, options) {
+  if (typeof str !== "string") {
+    throw new TypeError("argument str must be a string");
+  }
+  const obj = {};
+  const opt = {};
+  const dec = opt.decode || decode;
+  let index = 0;
+  while (index < str.length) {
+    const eqIdx = str.indexOf("=", index);
+    if (eqIdx === -1) {
+      break;
+    }
+    let endIdx = str.indexOf(";", index);
+    if (endIdx === -1) {
+      endIdx = str.length;
+    } else if (endIdx < eqIdx) {
+      index = str.lastIndexOf(";", eqIdx - 1) + 1;
+      continue;
+    }
+    const key = str.slice(index, eqIdx).trim();
+    if (opt?.filter && !opt?.filter(key)) {
+      index = endIdx + 1;
+      continue;
+    }
+    if (void 0 === obj[key]) {
+      let val = str.slice(eqIdx + 1, endIdx).trim();
+      if (val.codePointAt(0) === 34) {
+        val = val.slice(1, -1);
+      }
+      obj[key] = tryDecode(val, dec);
+    }
+    index = endIdx + 1;
+  }
+  return obj;
+}
+function decode(str) {
+  return str.includes("%") ? decodeURIComponent(str) : str;
+}
+function tryDecode(str, decode2) {
+  try {
+    return decode2(str);
+  } catch {
+    return str;
+  }
+}
+
+const fieldContentRegExp = /^[\u0009\u0020-\u007E\u0080-\u00FF]+$/;
+function serialize$2(name, value, options) {
+  const opt = options || {};
+  const enc = opt.encode || encodeURIComponent;
+  if (typeof enc !== "function") {
+    throw new TypeError("option encode is invalid");
+  }
+  if (!fieldContentRegExp.test(name)) {
+    throw new TypeError("argument name is invalid");
+  }
+  const encodedValue = enc(value);
+  if (encodedValue && !fieldContentRegExp.test(encodedValue)) {
+    throw new TypeError("argument val is invalid");
+  }
+  let str = name + "=" + encodedValue;
+  if (void 0 !== opt.maxAge && opt.maxAge !== null) {
+    const maxAge = opt.maxAge - 0;
+    if (Number.isNaN(maxAge) || !Number.isFinite(maxAge)) {
+      throw new TypeError("option maxAge is invalid");
+    }
+    str += "; Max-Age=" + Math.floor(maxAge);
+  }
+  if (opt.domain) {
+    if (!fieldContentRegExp.test(opt.domain)) {
+      throw new TypeError("option domain is invalid");
+    }
+    str += "; Domain=" + opt.domain;
+  }
+  if (opt.path) {
+    if (!fieldContentRegExp.test(opt.path)) {
+      throw new TypeError("option path is invalid");
+    }
+    str += "; Path=" + opt.path;
+  }
+  if (opt.expires) {
+    if (!isDate(opt.expires) || Number.isNaN(opt.expires.valueOf())) {
+      throw new TypeError("option expires is invalid");
+    }
+    str += "; Expires=" + opt.expires.toUTCString();
+  }
+  if (opt.httpOnly) {
+    str += "; HttpOnly";
+  }
+  if (opt.secure) {
+    str += "; Secure";
+  }
+  if (opt.priority) {
+    const priority = typeof opt.priority === "string" ? opt.priority.toLowerCase() : opt.priority;
+    switch (priority) {
+      case "low": {
+        str += "; Priority=Low";
+        break;
+      }
+      case "medium": {
+        str += "; Priority=Medium";
+        break;
+      }
+      case "high": {
+        str += "; Priority=High";
+        break;
+      }
+      default: {
+        throw new TypeError("option priority is invalid");
+      }
+    }
+  }
+  if (opt.sameSite) {
+    const sameSite = typeof opt.sameSite === "string" ? opt.sameSite.toLowerCase() : opt.sameSite;
+    switch (sameSite) {
+      case true: {
+        str += "; SameSite=Strict";
+        break;
+      }
+      case "lax": {
+        str += "; SameSite=Lax";
+        break;
+      }
+      case "strict": {
+        str += "; SameSite=Strict";
+        break;
+      }
+      case "none": {
+        str += "; SameSite=None";
+        break;
+      }
+      default: {
+        throw new TypeError("option sameSite is invalid");
+      }
+    }
+  }
+  if (opt.partitioned) {
+    str += "; Partitioned";
+  }
+  return str;
+}
+function isDate(val) {
+  return Object.prototype.toString.call(val) === "[object Date]" || val instanceof Date;
+}
+
+function parseSetCookie(setCookieValue, options) {
+  const parts = (setCookieValue || "").split(";").filter((str) => typeof str === "string" && !!str.trim());
+  const nameValuePairStr = parts.shift() || "";
+  const parsed = _parseNameValuePair(nameValuePairStr);
+  const name = parsed.name;
+  let value = parsed.value;
+  try {
+    value = options?.decode === false ? value : (options?.decode || decodeURIComponent)(value);
+  } catch {
+  }
+  const cookie = {
+    name,
+    value
+  };
+  for (const part of parts) {
+    const sides = part.split("=");
+    const partKey = (sides.shift() || "").trimStart().toLowerCase();
+    const partValue = sides.join("=");
+    switch (partKey) {
+      case "expires": {
+        cookie.expires = new Date(partValue);
+        break;
+      }
+      case "max-age": {
+        cookie.maxAge = Number.parseInt(partValue, 10);
+        break;
+      }
+      case "secure": {
+        cookie.secure = true;
+        break;
+      }
+      case "httponly": {
+        cookie.httpOnly = true;
+        break;
+      }
+      case "samesite": {
+        cookie.sameSite = partValue;
+        break;
+      }
+      default: {
+        cookie[partKey] = partValue;
+      }
+    }
+  }
+  return cookie;
+}
+function _parseNameValuePair(nameValuePairStr) {
+  let name = "";
+  let value = "";
+  const nameValueArr = nameValuePairStr.split("=");
+  if (nameValueArr.length > 1) {
+    name = nameValueArr.shift();
+    value = nameValueArr.join("=");
+  } else {
+    value = nameValuePairStr;
+  }
+  return { name, value };
 }
 
 const NODE_TYPES = {
@@ -798,7 +1003,7 @@ function getRouterParams(event, opts = {}) {
   if (opts.decode) {
     params = { ...params };
     for (const key in params) {
-      params[key] = decode(params[key]);
+      params[key] = decode$1(params[key]);
     }
   }
   return params;
@@ -865,6 +1070,7 @@ function getRequestURL(event, opts = {}) {
 }
 
 const RawBodySymbol = Symbol.for("h3RawBody");
+const ParsedBodySymbol = Symbol.for("h3ParsedBody");
 const PayloadMethods$1 = ["PATCH", "POST", "PUT", "DELETE"];
 function readRawBody(event, encoding = "utf8") {
   assertMethod(event, PayloadMethods$1);
@@ -934,6 +1140,26 @@ function readRawBody(event, encoding = "utf8") {
   const result = encoding ? promise.then((buff) => buff.toString(encoding)) : promise;
   return result;
 }
+async function readBody(event, options = {}) {
+  const request = event.node.req;
+  if (hasProp(request, ParsedBodySymbol)) {
+    return request[ParsedBodySymbol];
+  }
+  const contentType = request.headers["content-type"] || "";
+  const body = await readRawBody(event);
+  let parsed;
+  if (contentType === "application/json") {
+    parsed = _parseJSON(body, options.strict ?? true);
+  } else if (contentType.startsWith("application/x-www-form-urlencoded")) {
+    parsed = _parseURLEncodedBody(body);
+  } else if (contentType.startsWith("text/")) {
+    parsed = body;
+  } else {
+    parsed = _parseJSON(body, options.strict ?? false);
+  }
+  request[ParsedBodySymbol] = parsed;
+  return parsed;
+}
 function getRequestWebStream(event) {
   if (!PayloadMethods$1.includes(event.method)) {
     return;
@@ -967,6 +1193,35 @@ function getRequestWebStream(event) {
       });
     }
   });
+}
+function _parseJSON(body = "", strict) {
+  if (!body) {
+    return void 0;
+  }
+  try {
+    return destr(body, { strict });
+  } catch {
+    throw createError$1({
+      statusCode: 400,
+      statusMessage: "Bad Request",
+      message: "Invalid JSON body"
+    });
+  }
+}
+function _parseURLEncodedBody(body) {
+  const form = new URLSearchParams(body);
+  const parsedForm = /* @__PURE__ */ Object.create(null);
+  for (const [key, value] of form.entries()) {
+    if (hasProp(parsedForm, key)) {
+      if (!Array.isArray(parsedForm[key])) {
+        parsedForm[key] = [parsedForm[key]];
+      }
+      parsedForm[key].push(value);
+    } else {
+      parsedForm[key] = value;
+    }
+  }
+  return parsedForm;
 }
 
 function handleCacheHeaders(event, opts) {
@@ -1021,6 +1276,41 @@ function sanitizeStatusCode(statusCode, defaultStatusCode = 200) {
     return defaultStatusCode;
   }
   return statusCode;
+}
+
+function getDistinctCookieKey(name, opts) {
+  return [name, opts.domain || "", opts.path || "/"].join(";");
+}
+
+function parseCookies(event) {
+  return parse(event.node.req.headers.cookie || "");
+}
+function getCookie(event, name) {
+  return parseCookies(event)[name];
+}
+function setCookie(event, name, value, serializeOptions = {}) {
+  if (!serializeOptions.path) {
+    serializeOptions = { path: "/", ...serializeOptions };
+  }
+  const newCookie = serialize$2(name, value, serializeOptions);
+  const currentCookies = splitCookiesString(
+    event.node.res.getHeader("set-cookie")
+  );
+  if (currentCookies.length === 0) {
+    event.node.res.setHeader("set-cookie", newCookie);
+    return;
+  }
+  const newCookieKey = getDistinctCookieKey(name, serializeOptions);
+  event.node.res.removeHeader("set-cookie");
+  for (const cookie of currentCookies) {
+    const parsed = parseSetCookie(cookie);
+    const key = getDistinctCookieKey(parsed.name, parsed);
+    if (key === newCookieKey) {
+      continue;
+    }
+    event.node.res.appendHeader("set-cookie", cookie);
+  }
+  event.node.res.appendHeader("set-cookie", newCookie);
 }
 function splitCookiesString(cookiesString) {
   if (Array.isArray(cookiesString)) {
@@ -4041,7 +4331,7 @@ function _expandFromEnv(value) {
 const _inlineRuntimeConfig = {
   "app": {
     "baseURL": "/",
-    "buildId": "3c6d8bb9-9ece-4ec2-b754-5777e62841d5",
+    "buildId": "b51c3c9d-bc7e-44ea-9211-4b4134afb71a",
     "buildAssetsDir": "/_nuxt/",
     "cdnURL": ""
   },
@@ -4050,37 +4340,6 @@ const _inlineRuntimeConfig = {
     "routeRules": {
       "/__nuxt_error": {
         "cache": false
-      },
-      "/": {
-        "swr": 300,
-        "cache": {
-          "swr": true,
-          "maxAge": 300
-        }
-      },
-      "/program": {
-        "prerender": true
-      },
-      "/solutions": {
-        "swr": 600,
-        "cache": {
-          "swr": true,
-          "maxAge": 600
-        }
-      },
-      "/van-finder": {
-        "swr": 120,
-        "cache": {
-          "swr": true,
-          "maxAge": 120
-        }
-      },
-      "/vendors/**": {
-        "swr": 300,
-        "cache": {
-          "swr": true,
-          "maxAge": 300
-        }
       },
       "/_nuxt/builds/meta/**": {
         "headers": {
@@ -4096,30 +4355,14 @@ const _inlineRuntimeConfig = {
         "headers": {
           "cache-control": "public, max-age=31536000, immutable"
         }
-      },
-      "//_payload.json": {
-        "cache": {
-          "swr": true,
-          "maxAge": 300
-        }
-      },
-      "/solutions/_payload.json": {
-        "cache": {
-          "swr": true,
-          "maxAge": 600
-        }
-      },
-      "/van-finder/_payload.json": {
-        "cache": {
-          "swr": true,
-          "maxAge": 120
-        }
       }
     }
   },
   "public": {
     "strapiBaseUrl": "http://10.1.5.125:8080"
   },
+  "protectedAccess": "true",
+  "protectedAccessPwd": "ridethevan",
   "strapiToken": "5c778e37320d71add404affe13c6344480413384e90724babe2fe8af162ef0936e0d030f8fad0944078aa3beffd0ce61c655fa5020a3aba592c5fa9bbd14ad7467af006b63bccb31c965470061f3b2c840dd904d28ce20d4d44227876733c38f3697a3ad3284894698ebc6c8918b04ea18a5f3e80dfc6b2a96e34e17f931705c",
   "strapiApiPrefix": "/api",
   "landingSingleType": "landing-page"
@@ -4554,138 +4797,180 @@ const plugins = [
 ];
 
 const assets = {
-  "/program/_payload.json": {
-    "type": "application/json;charset=utf-8",
-    "etag": "\"45-QrAeo7aRz5YdQnDHdm6+S7m4x/s\"",
-    "mtime": "2026-02-21T16:07:54.361Z",
-    "size": 69,
-    "path": "../public/program/_payload.json"
-  },
-  "/program/index.html": {
-    "type": "text/html;charset=utf-8",
-    "etag": "\"1187-c227GKu2fbwRJCvmIIVSBtcQiZw\"",
-    "mtime": "2026-02-21T16:07:54.358Z",
-    "size": 4487,
-    "path": "../public/program/index.html"
-  },
-  "/_nuxt/B0WlIhl8.js": {
+  "/_nuxt/-F-rEqwQ.js": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"1547-O0cQUBJtM5h8r5Es1Gvma/rCpr0\"",
-    "mtime": "2026-02-21T16:07:54.376Z",
-    "size": 5447,
-    "path": "../public/_nuxt/B0WlIhl8.js"
+    "etag": "\"de8-vh0sG3sysc62aSY3rWPnL48en08\"",
+    "mtime": "2026-02-22T15:17:03.468Z",
+    "size": 3560,
+    "path": "../public/_nuxt/-F-rEqwQ.js"
   },
-  "/_nuxt/CftUlXNA.js": {
+  "/_nuxt/98INGShW.js": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"131-kYZWxiBN93MwxrxnBB0Fw1/fvN0\"",
-    "mtime": "2026-02-21T16:07:54.376Z",
-    "size": 305,
-    "path": "../public/_nuxt/CftUlXNA.js"
+    "etag": "\"3cc-af35WL9eKkP0Wo9VdiEIccGFRy0\"",
+    "mtime": "2026-02-22T15:17:03.468Z",
+    "size": 972,
+    "path": "../public/_nuxt/98INGShW.js"
   },
-  "/_nuxt/C6tkjcSg.js": {
+  "/_nuxt/B0-K95Kr.js": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"1c9-ITk7h96Tdw3hTnXHiSz+hbkUpwU\"",
-    "mtime": "2026-02-21T16:07:54.376Z",
-    "size": 457,
-    "path": "../public/_nuxt/C6tkjcSg.js"
+    "etag": "\"155c-LfUnkDhXJa0yeVV7Dhlhoh9WmEU\"",
+    "mtime": "2026-02-22T15:17:03.468Z",
+    "size": 5468,
+    "path": "../public/_nuxt/B0-K95Kr.js"
   },
-  "/_nuxt/CxPW2HfI.js": {
+  "/_nuxt/B0UXY0h2.js": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"3b6-ic4WSmSbUvXUBNOvvxhUt5RNWSc\"",
-    "mtime": "2026-02-21T16:07:54.376Z",
-    "size": 950,
-    "path": "../public/_nuxt/CxPW2HfI.js"
+    "etag": "\"2cc47-5s33jqS8OUn6gFHO1U/unZsmQPg\"",
+    "mtime": "2026-02-22T15:17:03.468Z",
+    "size": 183367,
+    "path": "../public/_nuxt/B0UXY0h2.js"
   },
-  "/_nuxt/DcKB9Txp.js": {
+  "/_nuxt/BgkzffYW.js": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"d96-g6QyeT64zBQgvpXPJm+o5dcQx6Y\"",
-    "mtime": "2026-02-21T16:07:54.376Z",
-    "size": 3478,
-    "path": "../public/_nuxt/DcKB9Txp.js"
+    "etag": "\"ed4-QA9AoskgzPaT18//HnQNB6/WVZc\"",
+    "mtime": "2026-02-22T15:17:03.468Z",
+    "size": 3796,
+    "path": "../public/_nuxt/BgkzffYW.js"
   },
-  "/_nuxt/DjFP2-yP.js": {
+  "/_nuxt/Bk-V4sT7.js": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"3d2-3JCbVI3HHhcWoCz0t4vNEBZodOE\"",
-    "mtime": "2026-02-21T16:07:54.376Z",
-    "size": 978,
-    "path": "../public/_nuxt/DjFP2-yP.js"
+    "etag": "\"db1-7rWUl7nd2K8lzPFg0pkXM8MddZc\"",
+    "mtime": "2026-02-22T15:17:03.468Z",
+    "size": 3505,
+    "path": "../public/_nuxt/Bk-V4sT7.js"
   },
-  "/_nuxt/CH5TTGXL.js": {
+  "/_nuxt/C9F-p9Hp.js": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"3a28-5PILgQdFHHXbpp4JtrEF1FTLw6g\"",
-    "mtime": "2026-02-21T16:07:54.376Z",
-    "size": 14888,
-    "path": "../public/_nuxt/CH5TTGXL.js"
+    "etag": "\"24d-jh3JyT3/bCsLhfOsfWL26ndyVUo\"",
+    "mtime": "2026-02-22T15:17:03.468Z",
+    "size": 589,
+    "path": "../public/_nuxt/C9F-p9Hp.js"
   },
-  "/_nuxt/DA0MKmI1.js": {
+  "/_nuxt/CE4iZIF3.js": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"2c767-8XQtL2jpW3ETpRYo1XTUBfxZpgE\"",
-    "mtime": "2026-02-21T16:07:54.376Z",
-    "size": 182119,
-    "path": "../public/_nuxt/DA0MKmI1.js"
+    "etag": "\"5c4-xxfdBVjJ5bLKaz8CNK6PjD/N9CA\"",
+    "mtime": "2026-02-22T15:17:03.468Z",
+    "size": 1476,
+    "path": "../public/_nuxt/CE4iZIF3.js"
   },
-  "/_nuxt/DoHRqVOh.js": {
+  "/_nuxt/ByrZy1lV.js": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"eb9-xP3o+zsTQwlUPTh9xiWKg2YNnTQ\"",
-    "mtime": "2026-02-21T16:07:54.376Z",
-    "size": 3769,
-    "path": "../public/_nuxt/DoHRqVOh.js"
+    "etag": "\"c6c-ivISj1PYYavx8ASLWaNqnCDQy3g\"",
+    "mtime": "2026-02-22T15:17:03.468Z",
+    "size": 3180,
+    "path": "../public/_nuxt/ByrZy1lV.js"
   },
-  "/_nuxt/DnV19Y7t.js": {
+  "/_nuxt/CjPtpQEB.js": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"194a5-v4U9tg2fK206q5yNknVsVJD6DBg\"",
-    "mtime": "2026-02-21T16:07:54.377Z",
-    "size": 103589,
-    "path": "../public/_nuxt/DnV19Y7t.js"
+    "etag": "\"5d0-rnspcrH4my/EamYQJxZdGuWnGAk\"",
+    "mtime": "2026-02-22T15:17:03.468Z",
+    "size": 1488,
+    "path": "../public/_nuxt/CjPtpQEB.js"
   },
-  "/_nuxt/G1oS8va8.js": {
+  "/_nuxt/D-Pi3-81.js": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"553-b5+7+5EJgwwi4xfMqc4Vm0C7uEY\"",
-    "mtime": "2026-02-21T16:07:54.377Z",
-    "size": 1363,
-    "path": "../public/_nuxt/G1oS8va8.js"
+    "etag": "\"3a14-Lv1nH41A5+rytp8ZCi3JIRhUrlk\"",
+    "mtime": "2026-02-22T15:17:03.468Z",
+    "size": 14868,
+    "path": "../public/_nuxt/D-Pi3-81.js"
   },
-  "/_nuxt/error-404._yXoGkXB.css": {
-    "type": "text/css; charset=utf-8",
-    "etag": "\"97e-UvhxUpGzrIO+HDYB4qU9Txgu35A\"",
-    "mtime": "2026-02-21T16:07:54.377Z",
-    "size": 2430,
-    "path": "../public/_nuxt/error-404._yXoGkXB.css"
+  "/_nuxt/D4ImPwe_.js": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"3ef-UMbCKF1whHG8uNB0mjr07bD3M94\"",
+    "mtime": "2026-02-22T15:17:03.468Z",
+    "size": 1007,
+    "path": "../public/_nuxt/D4ImPwe_.js"
+  },
+  "/_nuxt/DYPyyUKs.js": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"2050-mLThL/4SsmZ/X3l3niyh3uRMC3M\"",
+    "mtime": "2026-02-22T15:17:03.468Z",
+    "size": 8272,
+    "path": "../public/_nuxt/DYPyyUKs.js"
+  },
+  "/_nuxt/DOOf-7Ht.js": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"17d-wrFenyTM0S5LmVAuyw0ZjACbFug\"",
+    "mtime": "2026-02-22T15:17:03.468Z",
+    "size": 381,
+    "path": "../public/_nuxt/DOOf-7Ht.js"
+  },
+  "/_nuxt/DJ0WTHTB.js": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"b9f-Jvfl8cz70PEyPKgwGxMOt7LgF6c\"",
+    "mtime": "2026-02-22T15:17:03.468Z",
+    "size": 2975,
+    "path": "../public/_nuxt/DJ0WTHTB.js"
+  },
+  "/_nuxt/Dh9mjHx9.js": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"5fb-rXh7m0IGf/69ndORiuRyuR1jSuE\"",
+    "mtime": "2026-02-22T15:17:03.468Z",
+    "size": 1531,
+    "path": "../public/_nuxt/Dh9mjHx9.js"
+  },
+  "/_nuxt/DlAUqK2U.js": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"5b-eFCz/UrraTh721pgAl0VxBNR1es\"",
+    "mtime": "2026-02-22T15:17:03.468Z",
+    "size": 91,
+    "path": "../public/_nuxt/DlAUqK2U.js"
+  },
+  "/_nuxt/appPpgwg.js": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"2d50-84b2GTzuLAcwqBw0AtnLdD+Zgkc\"",
+    "mtime": "2026-02-22T15:17:03.468Z",
+    "size": 11600,
+    "path": "../public/_nuxt/appPpgwg.js"
+  },
+  "/_nuxt/ZJRWiRhR.js": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"194c7-v/JdR4aOSUHSA2xa/ZJjYZM8zIA\"",
+    "mtime": "2026-02-22T15:17:03.468Z",
+    "size": 103623,
+    "path": "../public/_nuxt/ZJRWiRhR.js"
   },
   "/_nuxt/error-500.BENb_mjk.css": {
     "type": "text/css; charset=utf-8",
     "etag": "\"773-BFLUend+w1t3SP3QDB+Z0A0V5pI\"",
-    "mtime": "2026-02-21T16:07:54.377Z",
+    "mtime": "2026-02-22T15:17:03.468Z",
     "size": 1907,
     "path": "../public/_nuxt/error-500.BENb_mjk.css"
   },
-  "/_nuxt/entry.BEYzsVmd.css": {
+  "/_nuxt/entry.diT_5E6U.css": {
     "type": "text/css; charset=utf-8",
-    "etag": "\"17a9f-gKfqsDOImCzRAqj7nA9EsVOgoSQ\"",
-    "mtime": "2026-02-21T16:07:54.377Z",
-    "size": 96927,
-    "path": "../public/_nuxt/entry.BEYzsVmd.css"
+    "etag": "\"1a144-CwMJ34XF5GRObBZHs3UdzGZQy30\"",
+    "mtime": "2026-02-22T15:17:03.468Z",
+    "size": 106820,
+    "path": "../public/_nuxt/entry.diT_5E6U.css"
   },
-  "/_nuxt/ri02swXO.js": {
+  "/_nuxt/error-404._yXoGkXB.css": {
+    "type": "text/css; charset=utf-8",
+    "etag": "\"97e-UvhxUpGzrIO+HDYB4qU9Txgu35A\"",
+    "mtime": "2026-02-22T15:17:03.468Z",
+    "size": 2430,
+    "path": "../public/_nuxt/error-404._yXoGkXB.css"
+  },
+  "/_nuxt/hKvdbc_h.js": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"26c8-4ZC0dsbfAOs+ihzDFcdnetYzkyw\"",
-    "mtime": "2026-02-21T16:07:54.377Z",
-    "size": 9928,
-    "path": "../public/_nuxt/ri02swXO.js"
+    "etag": "\"131-xkSR3/WM5BB++0ZJ97VJ3aLLAdQ\"",
+    "mtime": "2026-02-22T15:17:03.468Z",
+    "size": 305,
+    "path": "../public/_nuxt/hKvdbc_h.js"
+  },
+  "/_nuxt/builds/meta/b51c3c9d-bc7e-44ea-9211-4b4134afb71a.json": {
+    "type": "application/json",
+    "etag": "\"58-6f2XcbZIyeEVzdJtzp8GcTiwa3A\"",
+    "mtime": "2026-02-22T15:17:03.461Z",
+    "size": 88,
+    "path": "../public/_nuxt/builds/meta/b51c3c9d-bc7e-44ea-9211-4b4134afb71a.json"
   },
   "/_nuxt/builds/latest.json": {
     "type": "application/json",
-    "etag": "\"47-d1yRpLh8eX5ZGETQLZjG3oELr8A\"",
-    "mtime": "2026-02-21T16:07:54.372Z",
+    "etag": "\"47-8XxQZ/v2qB179ZO3ZlOzyMqjwo8\"",
+    "mtime": "2026-02-22T15:17:03.464Z",
     "size": 71,
     "path": "../public/_nuxt/builds/latest.json"
-  },
-  "/_nuxt/builds/meta/3c6d8bb9-9ece-4ec2-b754-5777e62841d5.json": {
-    "type": "application/json",
-    "etag": "\"62-ae0vGih4yWkqeB4YEP0fJoSUKGM\"",
-    "mtime": "2026-02-21T16:07:54.370Z",
-    "size": 98,
-    "path": "../public/_nuxt/builds/meta/3c6d8bb9-9ece-4ec2-b754-5777e62841d5.json"
   }
 };
 
@@ -4879,29 +5164,82 @@ const _mhWRXP = eventHandler((event) => {
   return readAsset(id);
 });
 
+function isPublicPath(pathname) {
+  if (pathname === "/access") return true;
+  if (pathname.startsWith("/api/access")) return true;
+  if (pathname.startsWith("/_nuxt")) return true;
+  if (pathname.startsWith("/__nuxt")) return true;
+  if (pathname.startsWith("/@vite")) return true;
+  if (pathname.startsWith("/@id")) return true;
+  if (pathname === "/__vite_ping") return true;
+  if (pathname === "/favicon.ico") return true;
+  if (pathname === "/robots.txt") return true;
+  if (pathname === "/site.webmanifest") return true;
+  if (pathname === "/manifest.webmanifest") return true;
+  if (pathname.startsWith("/assets/")) return true;
+  return false;
+}
+function isEnabled(value) {
+  const raw = String(value || "").trim().toLowerCase();
+  return raw === "1" || raw === "true" || raw === "yes" || raw === "on";
+}
+const _b83Lag = defineEventHandler((event) => {
+  const config = useRuntimeConfig(event);
+  const protectionEnabled = isEnabled(config.protectedAccess);
+  const url = getRequestURL(event);
+  const path = url.pathname;
+  const accessGranted = getCookie(event, "van_access") === "1";
+  if (!protectionEnabled) {
+    if (path === "/access") {
+      return sendRedirect(event, "/", 302);
+    }
+    return;
+  }
+  if (isPublicPath(path)) {
+    if (path === "/access" && accessGranted) {
+      const redirect = String(url.searchParams.get("redirect") || "/");
+      const target = redirect.startsWith("/") && !redirect.startsWith("/access") ? redirect : "/";
+      return sendRedirect(event, target, 302);
+    }
+    return;
+  }
+  if (accessGranted) return;
+  if (path.startsWith("/api/")) {
+    throw createError$1({ statusCode: 401, statusMessage: "Access denied" });
+  }
+  const requested = `${url.pathname}${url.search || ""}`;
+  return sendRedirect(event, `/access?redirect=${encodeURIComponent(requested)}`, 302);
+});
+
 const _SxA8c9 = defineEventHandler(() => {});
 
+const _lazy_vxLBOH = () => import('../routes/api/access/login.post.mjs');
+const _lazy_hOwsJU = () => import('../routes/api/kb-articles/_slug_.get.mjs');
 const _lazy_HlyFAM = () => import('../routes/api/landing.get.mjs');
+const _lazy_9MOt71 = () => import('../routes/api/media.get.mjs');
+const _lazy_t6UOVe = () => import('../routes/api/solution-briefs/_slug_.get.mjs');
+const _lazy_fX5Rt0 = () => import('../routes/api/solution-guides/_slug_.get.mjs');
 const _lazy_Prfbdt = () => import('../routes/api/solutions.get.mjs');
+const _lazy_J9r0Co = () => import('../routes/api/solutions/_slug_.get.mjs');
 const _lazy_QmYC87 = () => import('../routes/api/van-finder/vendors.get.mjs');
 const _lazy_dqTxFW = () => import('../routes/api/vendors/_slug_.get.mjs');
 const _lazy_0EeiPC = () => import('../routes/renderer.mjs').then(function (n) { return n.r; });
 
 const handlers = [
   { route: '', handler: _mhWRXP, lazy: false, middleware: true, method: undefined },
+  { route: '', handler: _b83Lag, lazy: false, middleware: true, method: undefined },
+  { route: '/api/access/login', handler: _lazy_vxLBOH, lazy: true, middleware: false, method: "post" },
+  { route: '/api/kb-articles/:slug', handler: _lazy_hOwsJU, lazy: true, middleware: false, method: "get" },
   { route: '/api/landing', handler: _lazy_HlyFAM, lazy: true, middleware: false, method: "get" },
+  { route: '/api/media', handler: _lazy_9MOt71, lazy: true, middleware: false, method: "get" },
+  { route: '/api/solution-briefs/:slug', handler: _lazy_t6UOVe, lazy: true, middleware: false, method: "get" },
+  { route: '/api/solution-guides/:slug', handler: _lazy_fX5Rt0, lazy: true, middleware: false, method: "get" },
   { route: '/api/solutions', handler: _lazy_Prfbdt, lazy: true, middleware: false, method: "get" },
+  { route: '/api/solutions/:slug', handler: _lazy_J9r0Co, lazy: true, middleware: false, method: "get" },
   { route: '/api/van-finder/vendors', handler: _lazy_QmYC87, lazy: true, middleware: false, method: "get" },
   { route: '/api/vendors/:slug', handler: _lazy_dqTxFW, lazy: true, middleware: false, method: "get" },
   { route: '/__nuxt_error', handler: _lazy_0EeiPC, lazy: true, middleware: false, method: undefined },
   { route: '/__nuxt_island/**', handler: _SxA8c9, lazy: false, middleware: false, method: undefined },
-  { route: '/', handler: _lazy_0EeiPC, lazy: true, middleware: false, method: undefined },
-  { route: '/solutions', handler: _lazy_0EeiPC, lazy: true, middleware: false, method: undefined },
-  { route: '/van-finder', handler: _lazy_0EeiPC, lazy: true, middleware: false, method: undefined },
-  { route: '/vendors/**', handler: _lazy_0EeiPC, lazy: true, middleware: false, method: undefined },
-  { route: '//_payload.json', handler: _lazy_0EeiPC, lazy: true, middleware: false, method: undefined },
-  { route: '/solutions/_payload.json', handler: _lazy_0EeiPC, lazy: true, middleware: false, method: undefined },
-  { route: '/van-finder/_payload.json', handler: _lazy_0EeiPC, lazy: true, middleware: false, method: undefined },
   { route: '/**', handler: _lazy_0EeiPC, lazy: true, middleware: false, method: undefined }
 ];
 
@@ -5357,5 +5695,5 @@ trapUnhandledNodeErrors();
 setupGracefulShutdown(listener, nitroApp);
 const nodeServer = {};
 
-export { $fetch as $, createHooks as A, executeAsync as B, defu as C, hash$1 as D, nodeServer as E, getQuery as a, getRouterParam as b, cachedEventHandler as c, defineEventHandler as d, createError$1 as e, getResponseStatusText as f, getRequestURL as g, getResponseStatus as h, defineRenderHandler as i, joinRelativeURL as j, destr as k, getRouteRules as l, joinURL as m, useNitroApp as n, hasProtocol as o, parseQuery as p, parseURL as q, encodePath as r, decodePath as s, getContext as t, useRuntimeConfig as u, isScriptProtocol as v, withQuery as w, withTrailingSlash as x, withoutTrailingSlash as y, sanitizeStatusCode as z };
+export { $fetch as $, isScriptProtocol as A, withTrailingSlash as B, withoutTrailingSlash as C, sanitizeStatusCode as D, createHooks as E, executeAsync as F, defu as G, hash$1 as H, nodeServer as I, getQuery as a, setResponseHeader as b, createError$1 as c, defineEventHandler as d, send as e, cachedEventHandler as f, getRouterParam as g, getRequestURL as h, getResponseStatusText as i, joinRelativeURL as j, getResponseStatus as k, defineRenderHandler as l, destr as m, getRouteRules as n, joinURL as o, useNitroApp as p, parseQuery as q, readBody as r, setCookie as s, hasProtocol as t, useRuntimeConfig as u, parseURL as v, encodePath as w, decodePath as x, getContext as y, withQuery as z };
 //# sourceMappingURL=nitro.mjs.map

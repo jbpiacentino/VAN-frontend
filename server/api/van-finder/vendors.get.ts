@@ -129,6 +129,10 @@ export default cachedEventHandler(
     const items = filtered.slice(start, start + pageSize);
 
     const countsByVendor = Object.fromEntries(items.map((vendor) => [vendor.documentId, resourceCountInit(vendor)]));
+    const solutionsByVendor = Object.fromEntries(items.map((vendor) => [vendor.documentId, []]));
+    const memberVendorIds = new Set(
+      items.filter((vendor) => vendor.isVanMember).map((vendor) => String(vendor.documentId || ''))
+    );
 
     if (items.length > 0) {
       const vendorSlugSet = new Set(items.map((vendor) => String(vendor.slug || '')).filter(Boolean));
@@ -149,6 +153,14 @@ export default cachedEventHandler(
         solutionOwner.set(sid, owner);
         solutionIds.push(sid);
         if (countsByVendor[owner]) countsByVendor[owner].solutions += 1;
+        if (solutionsByVendor[owner]) {
+          solutionsByVendor[owner].push({
+            id: solution.id,
+            documentId: solution.documentId,
+            slug: solution.slug,
+            name: solution.name || solution.title,
+          });
+        }
       }
 
       if (solutionIds.length > 0) {
@@ -184,6 +196,7 @@ export default cachedEventHandler(
               if (owner) owners.add(owner);
             }
             owners.forEach((owner) => {
+              if ((field === 'guides' || field === 'briefs') && !memberVendorIds.has(owner)) return;
               if (countsByVendor[owner]) countsByVendor[owner][field] += 1;
             });
           }
@@ -202,6 +215,9 @@ export default cachedEventHandler(
           vendor.shortDescription || vendor.description || vendor.summary || 'No description available.'
         ),
         resources: countsByVendor[vendor.documentId] || resourceCountInit(vendor),
+        solutions: (solutionsByVendor[vendor.documentId] || [])
+          .filter((entry) => String(entry.slug || '').trim())
+          .sort((a, b) => String(a.name || '').localeCompare(String(b.name || ''))),
       })),
       meta: {
         total,

@@ -48,6 +48,33 @@ See `.env.example`:
 - `VITE_STRAPI_FULL_ACCESS_TOKEN` (write token for seed script)
 - `VITE_STRAPI_API_PREFIX` (`/api` default)
 - `VITE_STRAPI_LANDING_SINGLE_TYPE` (`landing-page` default)
+- `PROTECTED_ACCESS` (`true|false`, missing/false disables access protection)
+- `PROTECTED_ACCESS_PWD` (password used only when `PROTECTED_ACCESS=true`)
+
+## Protected Access Gate
+
+The app supports a global password gate via server middleware.
+
+- When `PROTECTED_ACCESS=true`:
+  - all website routes are protected
+  - users are redirected to `/access` until authenticated
+  - access is granted by posting password to `POST /api/access/login`
+- When `PROTECTED_ACCESS=false` (or missing):
+  - protection is disabled
+  - `/access` redirects to `/`
+
+Example (enabled):
+
+```env
+PROTECTED_ACCESS=true
+PROTECTED_ACCESS_PWD=ridethevan
+```
+
+Example (disabled):
+
+```env
+PROTECTED_ACCESS=false
+```
 
 ## Finder API
 
