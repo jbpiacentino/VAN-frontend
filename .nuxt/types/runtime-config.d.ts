@@ -20,6 +20,14 @@ import { RuntimeConfig as UserRuntimeConfig, PublicRuntimeConfig as UserPublicRu
 
    landingSingleType: string,
 
+   gristBaseUrl: string,
+
+   gristApiKey: string,
+
+   gristDocId: string,
+
+   gristTableId: string,
+
    nitro: {
       envPrefix: string,
    },

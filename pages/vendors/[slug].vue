@@ -208,7 +208,11 @@
   const { data, pending, error } = await useFetch(() => `/api/vendors/${slug.value}`);
 
   const vendor = computed(() => data.value?.vendor || null);
-  const solutions = computed(() => data.value?.vendor?.solutions || []);
+const solutions = computed(() =>
+  (data.value?.vendor?.solutions || []).filter((solution: any) =>
+    String(solution?.slug || '').trim()
+  )
+);
   const briefs = computed(() => data.value?.briefs || []);
   const guides = computed(() => data.value?.guides || []);
   const kbArticles = computed(() => data.value?.kbArticles || []);

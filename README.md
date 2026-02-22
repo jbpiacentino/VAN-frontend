@@ -50,6 +50,10 @@ See `.env.example`:
 - `VITE_STRAPI_LANDING_SINGLE_TYPE` (`landing-page` default)
 - `PROTECTED_ACCESS` (`true|false`, missing/false disables access protection)
 - `PROTECTED_ACCESS_PWD` (password used only when `PROTECTED_ACCESS=true`)
+- `GRIST_BASE_URL` (Grist host, default `https://docs.getgrist.com`)
+- `GRIST_API_KEY` (Grist API key used for lead capture write)
+- `GRIST_DOC_ID` (target Grist document ID)
+- `GRIST_TABLE_ID` (target table ID/name, e.g. `SolutionGuideLeads`)
 
 ## Protected Access Gate
 
@@ -93,6 +97,65 @@ Response includes:
 - per-vendor resource counts (`solutions`, `briefs`, `guides`, `kb`)
 - `focusOptions`
 - pagination metadata
+
+## Solution Guide Lead Capture
+
+Solution Guide detail pages (`/solution-guides/:slug`) are gated:
+
+- Guide title/summary and related resources are visible.
+- Full guide body is shown only after submitting the lead form.
+- Required fields:
+  - `fullName`
+  - `email`
+  - `company`
+  - `jobTitle`
+- Optional fields:
+  - `country`
+  - `optIn`
+
+Implementation:
+
+- Frontend form and unlock logic: `pages/solution-guides/[slug].vue`
+- Capture endpoint: `POST /api/access/solution-guide-contact`
+  - file: `server/api/access/solution-guide-contact.post.ts`
+
+Storage behavior:
+
+- When Grist is configured (`GRIST_BASE_URL`, `GRIST_API_KEY`, `GRIST_DOC_ID`, `GRIST_TABLE_ID`), contact details are written to the configured Grist table.
+- On first write per app process, the backend attempts to ensure required Grist columns exist and creates missing ones automatically.
+- If Grist is missing or unreachable, payload is logged to Nuxt server stdout as fallback.
+- Guide unlock state is stored in client cookies:
+  - `sg_access`: comma-separated list of authorized solution-guide slugs
+  - `sg_lead_profile`: saved lead profile reused to unlock additional guides without re-entering details
+
+Captured payload fields (Grist row / fallback log):
+
+- `guideSlug`, `guideTitle`
+- `fullName`, `email`, `company`, `jobTitle`, `country`, `optIn`
+- request metadata: `ip`, `userAgent`
+
+Expected Grist columns:
+
+- `timestamp`
+- `document_type`
+- `guide_slug`
+- `guide_title`
+- `event_type`
+- `access_granted`
+- `access_method`
+- `full_name`
+- `email`
+- `company`
+- `job_title`
+- `country`
+- `opt_in`
+- `page_url`
+- `referrer`
+- `utm_source`
+- `utm_medium`
+- `utm_campaign`
+- `ip`
+- `user_agent`
 
 ## Seeding
 

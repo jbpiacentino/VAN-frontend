@@ -17,6 +17,10 @@ export default defineNuxtConfig({
       '',
     strapiApiPrefix: process.env.VITE_STRAPI_API_PREFIX || '/api',
     landingSingleType: process.env.VITE_STRAPI_LANDING_SINGLE_TYPE || 'landing-page',
+    gristBaseUrl: process.env.GRIST_BASE_URL || 'https://docs.getgrist.com',
+    gristApiKey: process.env.GRIST_API_KEY || '',
+    gristDocId: process.env.GRIST_DOC_ID || '',
+    gristTableId: process.env.GRIST_TABLE_ID || '',
     public: {
       strapiBaseUrl:
         process.env.NUXT_PUBLIC_STRAPI_BASE_URL || process.env.VITE_STRAPI_BASE_URL || '',

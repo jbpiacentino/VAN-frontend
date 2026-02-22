@@ -6,6 +6,9 @@ declare module "nitropack/types" {
     '/api/access/login': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/access/login.post').default>>>>
     }
+    '/api/access/solution-guide-contact': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/access/solution-guide-contact.post').default>>>>
+    }
     '/api/kb-articles/:slug': {
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/kb-articles/[slug].get').default>>>>
     }

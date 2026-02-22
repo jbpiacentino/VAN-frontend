@@ -72,7 +72,11 @@
 
   const router = useRouter();
   const previewSolutions = computed(() =>
-    Array.isArray(props.vendor?.solutions) ? props.vendor.solutions.slice(0, 3) : []
+    Array.isArray(props.vendor?.solutions)
+      ? props.vendor.solutions
+          .filter((solution) => String(solution?.slug || '').trim())
+          .slice(0, 3)
+      : []
   );
   const remainingSolutions = computed(() =>
     Math.max(0, Number(props.vendor?.solutions?.length || 0) - previewSolutions.value.length)

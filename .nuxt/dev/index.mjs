@@ -1,5 +1,5 @@
 import process from 'node:process';globalThis._importMeta_={url:import.meta.url,env:process.env};import { tmpdir } from 'node:os';
-import { defineEventHandler, handleCacheHeaders, splitCookiesString, createEvent, fetchWithEvent, isEvent, eventHandler, setHeaders, sendRedirect, proxyRequest, getRequestHeader, setResponseHeaders, setResponseStatus, send, getRequestHeaders, setResponseHeader, appendResponseHeader, getRequestURL, getResponseHeader, removeResponseHeader, createError, getCookie, getQuery as getQuery$1, readBody, createApp, createRouter as createRouter$1, toNodeListener, lazyEventHandler, getResponseStatus, getRouterParam, setCookie, getResponseStatusText } from 'file:///Users/jb/code/VAN-frontend/node_modules/h3/dist/index.mjs';
+import { defineEventHandler, handleCacheHeaders, splitCookiesString, createEvent, fetchWithEvent, isEvent, eventHandler, setHeaders, sendRedirect, proxyRequest, getRequestHeader, setResponseHeaders, setResponseStatus, send, getRequestHeaders, setResponseHeader, appendResponseHeader, getRequestURL, getResponseHeader, removeResponseHeader, createError, getCookie, getQuery as getQuery$1, readBody, createApp, createRouter as createRouter$1, toNodeListener, lazyEventHandler, getResponseStatus, getRouterParam, setCookie, getRequestIP, getResponseStatusText } from 'file:///Users/jb/code/VAN-frontend/node_modules/h3/dist/index.mjs';
 import { Server } from 'node:http';
 import { resolve, dirname, join } from 'node:path';
 import nodeCrypto from 'node:crypto';
@@ -14,10 +14,8 @@ import { fetchNodeRequestHandler, callNodeRequestHandler } from 'file:///Users/j
 import { createStorage, prefixStorage } from 'file:///Users/jb/code/VAN-frontend/node_modules/unstorage/dist/index.mjs';
 import unstorage_47drivers_47fs from 'file:///Users/jb/code/VAN-frontend/node_modules/unstorage/drivers/fs.mjs';
 import { digest } from 'file:///Users/jb/code/VAN-frontend/node_modules/ohash/dist/index.mjs';
-import { klona } from 'file:///Users/jb/code/VAN-frontend/node_modules/klona/dist/index.mjs';
-import defu, { defuFn } from 'file:///Users/jb/code/VAN-frontend/node_modules/defu/dist/defu.mjs';
-import { snakeCase } from 'file:///Users/jb/code/VAN-frontend/node_modules/scule/dist/index.mjs';
 import { getContext } from 'file:///Users/jb/code/VAN-frontend/node_modules/unctx/dist/index.mjs';
+import defu, { defuFn } from 'file:///Users/jb/code/VAN-frontend/node_modules/defu/dist/defu.mjs';
 import { toRouteMatcher, createRouter } from 'file:///Users/jb/code/VAN-frontend/node_modules/radix3/dist/index.mjs';
 import { readFile } from 'node:fs/promises';
 import consola, { consola as consola$1 } from 'file:///Users/jb/code/VAN-frontend/node_modules/consola/dist/index.mjs';
@@ -34,6 +32,8 @@ import { dirname as dirname$1, resolve as resolve$1 } from 'file:///Users/jb/cod
 import { createHead as createHead$1, propsToString, renderSSRHead } from 'file:///Users/jb/code/VAN-frontend/node_modules/unhead/dist/server.mjs';
 import { renderToString } from 'file:///Users/jb/code/VAN-frontend/node_modules/vue/server-renderer/index.mjs';
 import { walkResolver } from 'file:///Users/jb/code/VAN-frontend/node_modules/unhead/dist/utils.mjs';
+import { klona } from 'file:///Users/jb/code/VAN-frontend/node_modules/klona/dist/index.mjs';
+import { snakeCase } from 'file:///Users/jb/code/VAN-frontend/node_modules/scule/dist/index.mjs';
 
 const serverAssets = [{"baseName":"server","dir":"/Users/jb/code/VAN-frontend/server/assets"}];
 
@@ -653,7 +653,11 @@ const _inlineRuntimeConfig = {
   "protectedAccessPwd": "ridethevan",
   "strapiToken": "5c778e37320d71add404affe13c6344480413384e90724babe2fe8af162ef0936e0d030f8fad0944078aa3beffd0ce61c655fa5020a3aba592c5fa9bbd14ad7467af006b63bccb31c965470061f3b2c840dd904d28ce20d4d44227876733c38f3697a3ad3284894698ebc6c8918b04ea18a5f3e80dfc6b2a96e34e17f931705c",
   "strapiApiPrefix": "/api",
-  "landingSingleType": "landing-page"
+  "landingSingleType": "landing-page",
+  "gristBaseUrl": "https://grist.vates.tech/o/van",
+  "gristApiKey": "7bb7cbed4903ea8916cf892557a8379b60226676",
+  "gristDocId": "fohzxEGqXa6aZnXYkmhfNR",
+  "gristTableId": "ResourcesLeads"
 };
 const envOptions = {
   prefix: "NITRO_",
@@ -2147,16 +2151,16 @@ _UXxgNMdnWc4VrIlQzbgM08kn4DKwnfw2fUy8nUxZRU
 const assets = {
   "/index.mjs": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"246c4-oG8wGC8S8e6VCoaXo7DNulUQ4MY\"",
-    "mtime": "2026-02-22T09:18:14.042Z",
-    "size": 149188,
+    "etag": "\"26c74-htkzX8aPRb0dBOmDC+kA7cEz8e4\"",
+    "mtime": "2026-02-22T21:44:48.274Z",
+    "size": 158836,
     "path": "index.mjs"
   },
   "/index.mjs.map": {
     "type": "application/json",
-    "etag": "\"91ca1-GYrRHAZVaIVL50IIKYy8r1p9kWs\"",
-    "mtime": "2026-02-22T09:18:14.042Z",
-    "size": 597153,
+    "etag": "\"9aa6a-S049fTciEnrxZDTOSipg/uN7oVI\"",
+    "mtime": "2026-02-22T21:44:48.274Z",
+    "size": 633450,
     "path": "index.mjs.map"
   }
 };
@@ -2655,6 +2659,7 @@ async function getIslandContext(event) {
 }
 
 const _lazy_vxLBOH = () => Promise.resolve().then(function () { return login_post$1; });
+const _lazy_B202K0 = () => Promise.resolve().then(function () { return solutionGuideContact_post$1; });
 const _lazy_hOwsJU = () => Promise.resolve().then(function () { return _slug__get$9; });
 const _lazy_HlyFAM = () => Promise.resolve().then(function () { return landing_get$1; });
 const _lazy_9MOt71 = () => Promise.resolve().then(function () { return media_get$1; });
@@ -2670,6 +2675,7 @@ const handlers = [
   { route: '', handler: _mhWRXP, lazy: false, middleware: true, method: undefined },
   { route: '', handler: _b83Lag, lazy: false, middleware: true, method: undefined },
   { route: '/api/access/login', handler: _lazy_vxLBOH, lazy: true, middleware: false, method: "post" },
+  { route: '/api/access/solution-guide-contact', handler: _lazy_B202K0, lazy: true, middleware: false, method: "post" },
   { route: '/api/kb-articles/:slug', handler: _lazy_hOwsJU, lazy: true, middleware: false, method: "get" },
   { route: '/api/landing', handler: _lazy_HlyFAM, lazy: true, middleware: false, method: "get" },
   { route: '/api/media', handler: _lazy_9MOt71, lazy: true, middleware: false, method: "get" },
@@ -3053,6 +3059,69 @@ const login_post = defineEventHandler(async (event) => {
 const login_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
   default: login_post
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const solutionGuideContact_post = defineEventHandler(async (event) => {
+  const { writeSolutionGuideLeadToGrist } = await Promise.resolve().then(function () { return grist; });
+  const body = await readBody(event);
+  const fullName = String((body == null ? void 0 : body.fullName) || "").trim();
+  const email = String((body == null ? void 0 : body.email) || "").trim().toLowerCase();
+  const company = String((body == null ? void 0 : body.company) || "").trim();
+  const jobTitle = String((body == null ? void 0 : body.jobTitle) || "").trim();
+  const country = String((body == null ? void 0 : body.country) || "").trim();
+  const guideSlug = String((body == null ? void 0 : body.guideSlug) || "").trim();
+  const guideTitle = String((body == null ? void 0 : body.guideTitle) || "").trim();
+  const documentType = String((body == null ? void 0 : body.documentType) || "SG").trim() || "SG";
+  const eventType = String((body == null ? void 0 : body.eventType) || "unlock").trim() || "unlock";
+  const accessMethod = String((body == null ? void 0 : body.accessMethod) || "form_submit").trim() || "form_submit";
+  const optIn = Boolean(body == null ? void 0 : body.optIn);
+  const pageUrl = String((body == null ? void 0 : body.pageUrl) || "").trim();
+  const referrer = String((body == null ? void 0 : body.referrer) || "").trim();
+  const utmSource = String((body == null ? void 0 : body.utmSource) || "").trim();
+  const utmMedium = String((body == null ? void 0 : body.utmMedium) || "").trim();
+  const utmCampaign = String((body == null ? void 0 : body.utmCampaign) || "").trim();
+  if (!guideSlug || !fullName || !email || !company || !jobTitle) {
+    throw createError({ statusCode: 400, statusMessage: "Missing required contact fields." });
+  }
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailPattern.test(email)) {
+    throw createError({ statusCode: 400, statusMessage: "Invalid email format." });
+  }
+  const leadRecord = {
+    at: (/* @__PURE__ */ new Date()).toISOString(),
+    documentType,
+    guideSlug,
+    guideTitle,
+    eventType,
+    accessGranted: true,
+    accessMethod,
+    fullName,
+    email,
+    company,
+    jobTitle,
+    country,
+    optIn,
+    pageUrl,
+    referrer,
+    utmSource,
+    utmMedium,
+    utmCampaign,
+    ip: getRequestHeader(event, "x-forwarded-for") || getRequestIP(event, { xForwardedFor: true }) || "",
+    userAgent: getRequestHeader(event, "user-agent") || ""
+  };
+  const gristResult = await writeSolutionGuideLeadToGrist(leadRecord);
+  if (!gristResult.written) {
+    console.log("[solution-guide-contact]", JSON.stringify(leadRecord));
+    if (gristResult.reason === "request_failed") {
+      console.error("[solution-guide-contact][grist_error]", gristResult.error);
+    }
+  }
+  return { ok: true };
+});
+
+const solutionGuideContact_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: solutionGuideContact_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
 function toArray(value) {
@@ -4346,5 +4415,217 @@ function renderHTMLDocument(html) {
 const renderer$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
   default: renderer
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const ensuredTables = /* @__PURE__ */ new Set();
+const REQUIRED_COLUMNS = [
+  { id: "timestamp", type: "DateTime" },
+  { id: "document_type", type: "Text" },
+  { id: "guide_slug", type: "Text" },
+  { id: "guide_title", type: "Text" },
+  { id: "event_type", type: "Text" },
+  { id: "access_granted", type: "Bool" },
+  { id: "access_method", type: "Text" },
+  { id: "full_name", type: "Text" },
+  { id: "email", type: "Text" },
+  { id: "company", type: "Text" },
+  { id: "job_title", type: "Text" },
+  { id: "country", type: "Text" },
+  { id: "opt_in", type: "Bool" },
+  { id: "page_url", type: "Text" },
+  { id: "referrer", type: "Text" },
+  { id: "utm_source", type: "Text" },
+  { id: "utm_medium", type: "Text" },
+  { id: "utm_campaign", type: "Text" },
+  { id: "ip", type: "Text" },
+  { id: "user_agent", type: "Text" }
+];
+function normalizeBaseUrl(value) {
+  return value.replace(/\/+$/, "");
+}
+function buildApiBase(baseUrl, docId, tableId) {
+  return `${normalizeBaseUrl(baseUrl)}/api/docs/${encodeURIComponent(docId)}/tables/${encodeURIComponent(
+    tableId
+  )}`;
+}
+function buildDocApiBase(baseUrl, docId) {
+  return `${normalizeBaseUrl(baseUrl)}/api/docs/${encodeURIComponent(docId)}`;
+}
+function collectColumnIds(payload) {
+  var _a, _b, _c;
+  const ids = /* @__PURE__ */ new Set();
+  const columns = Array.isArray(payload == null ? void 0 : payload.columns) ? payload.columns : [];
+  for (const col of columns) {
+    const candidateIds = [
+      col == null ? void 0 : col.id,
+      col == null ? void 0 : col.colId,
+      (_a = col == null ? void 0 : col.fields) == null ? void 0 : _a.id,
+      (_b = col == null ? void 0 : col.fields) == null ? void 0 : _b.colId,
+      (_c = col == null ? void 0 : col.fields) == null ? void 0 : _c.label,
+      col == null ? void 0 : col.label
+    ];
+    for (const value of candidateIds) {
+      if (typeof value === "string" && value.trim()) ids.add(value.trim());
+    }
+  }
+  return ids;
+}
+async function ensureSchema(baseUrl, apiKey, docId, tableId) {
+  var _a, _b, _c;
+  const tableKey = `${docId}::${tableId}`;
+  if (ensuredTables.has(tableKey)) return { ok: true };
+  const apiBase = buildApiBase(baseUrl, docId, tableId);
+  const docApiBase = buildDocApiBase(baseUrl, docId);
+  const headers = { Authorization: `Bearer ${apiKey}` };
+  let existing = /* @__PURE__ */ new Set();
+  try {
+    const payload = await $fetch(`${apiBase}/columns`, { headers });
+    existing = collectColumnIds(payload);
+  } catch (error) {
+    const message = String(((_a = error == null ? void 0 : error.data) == null ? void 0 : _a.error) || (error == null ? void 0 : error.message) || "");
+    if (!/table not found/i.test(message)) {
+      return {
+        ok: false,
+        error: message || "Unable to fetch existing Grist columns"
+      };
+    }
+    const tablePayloadVariants = [
+      {
+        tables: [
+          {
+            id: tableId,
+            columns: REQUIRED_COLUMNS.map((col) => ({ id: col.id, type: col.type }))
+          }
+        ]
+      },
+      {
+        tables: [
+          {
+            id: tableId,
+            columns: REQUIRED_COLUMNS.map((col) => ({ id: col.id, fields: { type: col.type } }))
+          }
+        ]
+      },
+      {
+        tables: [
+          {
+            id: tableId,
+            columns: REQUIRED_COLUMNS.map((col) => ({
+              fields: { colId: col.id, type: col.type }
+            }))
+          }
+        ]
+      }
+    ];
+    let created = false;
+    let createError = "Unknown Grist table creation error";
+    for (const body of tablePayloadVariants) {
+      try {
+        await $fetch(`${docApiBase}/tables`, {
+          method: "POST",
+          headers,
+          body
+        });
+        created = true;
+        break;
+      } catch (createErr) {
+        createError = ((_b = createErr == null ? void 0 : createErr.data) == null ? void 0 : _b.error) || (createErr == null ? void 0 : createErr.message) || createError;
+      }
+    }
+    if (!created) {
+      return { ok: false, error: createError };
+    }
+    ensuredTables.add(tableKey);
+    return { ok: true };
+  }
+  const missing = REQUIRED_COLUMNS.filter((col) => !existing.has(col.id));
+  if (!missing.length) {
+    ensuredTables.add(tableKey);
+    return { ok: true };
+  }
+  const payloadVariants = [
+    { columns: missing.map((col) => ({ id: col.id, type: col.type })) },
+    { columns: missing.map((col) => ({ id: col.id, fields: { type: col.type } })) },
+    { columns: missing.map((col) => ({ fields: { colId: col.id, type: col.type } })) }
+  ];
+  let lastError = "Unknown Grist column creation error";
+  for (const body of payloadVariants) {
+    try {
+      await $fetch(`${apiBase}/columns`, {
+        method: "POST",
+        headers,
+        body
+      });
+      ensuredTables.add(tableKey);
+      return { ok: true };
+    } catch (error) {
+      lastError = ((_c = error == null ? void 0 : error.data) == null ? void 0 : _c.error) || (error == null ? void 0 : error.message) || lastError;
+    }
+  }
+  return { ok: false, error: lastError };
+}
+async function writeSolutionGuideLeadToGrist(lead) {
+  var _a;
+  const config = useRuntimeConfig();
+  const baseUrl = String(config.gristBaseUrl || "").trim();
+  const apiKey = String(config.gristApiKey || "").trim();
+  const docId = String(config.gristDocId || "").trim();
+  const tableId = String(config.gristTableId || "").trim();
+  if (!baseUrl || !apiKey || !docId || !tableId) {
+    return { written: false, reason: "not_configured" };
+  }
+  const schemaResult = await ensureSchema(baseUrl, apiKey, docId, tableId);
+  if (!schemaResult.ok) {
+    return { written: false, reason: "request_failed", error: schemaResult.error };
+  }
+  const url = `${buildApiBase(baseUrl, docId, tableId)}/records`;
+  try {
+    await $fetch(url, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`
+      },
+      body: {
+        records: [
+          {
+            fields: {
+              timestamp: lead.at,
+              document_type: lead.documentType,
+              guide_slug: lead.guideSlug,
+              guide_title: lead.guideTitle,
+              event_type: lead.eventType,
+              access_granted: lead.accessGranted,
+              access_method: lead.accessMethod,
+              full_name: lead.fullName,
+              email: lead.email,
+              company: lead.company,
+              job_title: lead.jobTitle,
+              country: lead.country,
+              opt_in: lead.optIn,
+              page_url: lead.pageUrl,
+              referrer: lead.referrer,
+              utm_source: lead.utmSource,
+              utm_medium: lead.utmMedium,
+              utm_campaign: lead.utmCampaign,
+              ip: lead.ip,
+              user_agent: lead.userAgent
+            }
+          }
+        ]
+      }
+    });
+    return { written: true };
+  } catch (error) {
+    return {
+      written: false,
+      reason: "request_failed",
+      error: ((_a = error == null ? void 0 : error.data) == null ? void 0 : _a.error) || (error == null ? void 0 : error.message) || "Unknown Grist write error"
+    };
+  }
+}
+
+const grist = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  writeSolutionGuideLeadToGrist: writeSolutionGuideLeadToGrist
 }, Symbol.toStringTag, { value: 'Module' }));
 //# sourceMappingURL=index.mjs.map

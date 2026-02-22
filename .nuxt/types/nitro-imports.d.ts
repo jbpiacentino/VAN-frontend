@@ -141,6 +141,7 @@ declare global {
   const useStorage: typeof import('../../node_modules/nitropack/dist/runtime/internal/storage').useStorage
   const words: typeof import('../../server/utils/strapi').words
   const writeEarlyHints: typeof import('../../node_modules/h3').writeEarlyHints
+  const writeSolutionGuideLeadToGrist: typeof import('../../server/utils/grist').writeSolutionGuideLeadToGrist
 }
 // for type re-export
 declare global {
@@ -162,4 +163,5 @@ export { defineTask, runTask } from 'nitropack/runtime/internal/task';
 export { defineNitroErrorHandler } from 'nitropack/runtime/internal/error/utils';
 export { buildAssetsURL as __buildAssetsURL, publicAssetsURL as __publicAssetsURL } from '/Users/jb/code/VAN-frontend/node_modules/@nuxt/nitro-server/dist/runtime/utils/paths';
 export { defineAppConfig } from '/Users/jb/code/VAN-frontend/node_modules/@nuxt/nitro-server/dist/runtime/utils/config';
+export { writeSolutionGuideLeadToGrist } from '/Users/jb/code/VAN-frontend/server/utils/grist';
 export { getStrapiConfig, strapiFetch, strapiFetchAll, mediaUrl, pickComponentValue, normalizeComponentStringList, normalizeVendorLinks, relationItems, relationFirst, mapVendor, buildMembershipMap, markdownToPreviewText, fuzzyIncludes, words, levenshtein } from '/Users/jb/code/VAN-frontend/server/utils/strapi';
