@@ -2148,7 +2148,22 @@ const plugins = [
 _UXxgNMdnWc4VrIlQzbgM08kn4DKwnfw2fUy8nUxZRU
 ];
 
-const assets = {};
+const assets = {
+  "/index.mjs": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"27804-9Z2h3aiCm/Mc2W9OFc05COXJ4dQ\"",
+    "mtime": "2026-02-23T10:03:33.207Z",
+    "size": 161796,
+    "path": "index.mjs"
+  },
+  "/index.mjs.map": {
+    "type": "application/json",
+    "etag": "\"9d30b-fe1KTyHAMjvzynwH2CVNNiQ0IGQ\"",
+    "mtime": "2026-02-23T10:03:33.207Z",
+    "size": 643851,
+    "path": "index.mjs.map"
+  }
+};
 
 function readAsset (id) {
   const serverDir = dirname$1(fileURLToPath(globalThis._importMeta_.url));
@@ -3720,6 +3735,27 @@ const _slug__get$4 = defineEventHandler(async (event) => {
     slug: item.slug || "",
     name: item.name || item.title || ""
   }));
+  const relatedGuides = relationItems(solution == null ? void 0 : solution.solution_guides).map((item) => ({
+    id: item.id,
+    documentId: item.documentId,
+    slug: item.slug || "",
+    title: item.title || item.name || "",
+    href: item.slug ? `/solution-guides/${item.slug}` : ""
+  })).filter((item) => item.slug && item.title);
+  const relatedBriefs = relationItems(solution == null ? void 0 : solution.solution_briefs).map((item) => ({
+    id: item.id,
+    documentId: item.documentId,
+    slug: item.slug || "",
+    title: item.title || item.name || "",
+    href: item.slug ? `/solution-briefs/${item.slug}` : ""
+  })).filter((item) => item.slug && item.title);
+  const relatedKbArticles = relationItems(solution == null ? void 0 : solution.kb_articles).map((item) => ({
+    id: item.id,
+    documentId: item.documentId,
+    slug: item.slug || "",
+    title: item.title || item.name || "",
+    href: item.slug ? `/kb-articles/${item.slug}` : ""
+  })).filter((item) => item.slug && item.title);
   return {
     id: solution.id,
     documentId: solution.documentId,
@@ -3744,9 +3780,9 @@ const _slug__get$4 = defineEventHandler(async (event) => {
     updatedAt: solution.updatedAt || null,
     publishedAt: solution.publishedAt || null,
     relatedResources: {
-      guides: relationItems(solution == null ? void 0 : solution.solution_guides).length,
-      briefs: relationItems(solution == null ? void 0 : solution.solution_briefs).length,
-      kbArticles: relationItems(solution == null ? void 0 : solution.kb_articles).length
+      guides: relatedGuides,
+      briefs: relatedBriefs,
+      kbArticles: relatedKbArticles
     }
   };
 });

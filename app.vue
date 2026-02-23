@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen flex flex-col bg-base-100 text-base-content">
+  <div class="min-h-screen flex flex-col bg-base-100 text-base-content" :data-theme="themeModel">
     <header
       v-if="!isAccessPage"
       class="navbar sticky top-0 z-40 border-b border-base-300 bg-base-100/90 px-0 backdrop-blur-md"
@@ -82,36 +82,40 @@
 
   const themeModel = useState('theme', () => 'light');
 
+  useHead(() => ({
+    htmlAttrs: {
+      'data-theme': themeModel.value,
+      lang: localeModel.value,
+    },
+  }));
+
   onMounted(() => {
     const saved = localStorage.getItem('van-theme');
     if (saved && themes.includes(saved)) {
       themeModel.value = saved;
-    } else {
-      const current = document.documentElement.getAttribute('data-theme');
-      if (current && themes.includes(current)) themeModel.value = current;
     }
-    applyTheme(themeModel.value);
 
     const savedLocale = localStorage.getItem('van-locale');
     if (savedLocale === 'fr' || savedLocale === 'en') {
       localeModel.value = savedLocale;
     }
-    applyLocale(localeModel.value);
   });
 
-  watch(themeModel, (next) => applyTheme(next));
-  watch(localeModel, (next) => applyLocale(next));
-
-  function applyTheme(next: string) {
+  watch(themeModel, (next) => {
     const theme = themes.includes(next) ? next : 'light';
-    document.documentElement.setAttribute('data-theme', theme);
-    document.body?.setAttribute('data-theme', theme);
+    if (theme !== next) {
+      themeModel.value = theme;
+      return;
+    }
     localStorage.setItem('van-theme', theme);
-  }
+  });
 
-  function applyLocale(next: 'en' | 'fr') {
+  watch(localeModel, (next) => {
     const locale = next === 'fr' ? 'fr' : 'en';
-    document.documentElement.setAttribute('lang', locale);
+    if (locale !== next) {
+      localeModel.value = locale;
+      return;
+    }
     localStorage.setItem('van-locale', locale);
-  }
+  });
 </script>

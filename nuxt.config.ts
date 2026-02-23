@@ -28,12 +28,14 @@ export default defineNuxtConfig({
   },
   routeRules: {},
   app: {
+    baseURL: process.env.NUXT_APP_BASE_URL || '/',
     head: {
       title: 'Vates Alliance Network',
       meta: [
         {
           name: 'description',
-          content: 'Vates Alliance Network: members, solutions, guides, briefs, and knowledge resources.',
+          content:
+            'Vates Alliance Network: members, solutions, guides, briefs, and knowledge resources.',
         },
       ],
     },

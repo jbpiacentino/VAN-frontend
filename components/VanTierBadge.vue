@@ -23,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-  import vanBadgeLogo from '~/assets/logo-van-badge-256x256.png';
+  import vanBadgeLogo from '~/assets/van-shuttle-256x256.png';
 
   const { t } = useL10n();
 

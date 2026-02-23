@@ -25,6 +25,33 @@ export default defineEventHandler(async (event) => {
     slug: item.slug || '',
     name: item.name || item.title || '',
   }));
+  const relatedGuides = relationItems(solution?.solution_guides)
+    .map((item) => ({
+      id: item.id,
+      documentId: item.documentId,
+      slug: item.slug || '',
+      title: item.title || item.name || '',
+      href: item.slug ? `/solution-guides/${item.slug}` : '',
+    }))
+    .filter((item) => item.slug && item.title);
+  const relatedBriefs = relationItems(solution?.solution_briefs)
+    .map((item) => ({
+      id: item.id,
+      documentId: item.documentId,
+      slug: item.slug || '',
+      title: item.title || item.name || '',
+      href: item.slug ? `/solution-briefs/${item.slug}` : '',
+    }))
+    .filter((item) => item.slug && item.title);
+  const relatedKbArticles = relationItems(solution?.kb_articles)
+    .map((item) => ({
+      id: item.id,
+      documentId: item.documentId,
+      slug: item.slug || '',
+      title: item.title || item.name || '',
+      href: item.slug ? `/kb-articles/${item.slug}` : '',
+    }))
+    .filter((item) => item.slug && item.title);
 
   return {
     id: solution.id,
@@ -52,9 +79,9 @@ export default defineEventHandler(async (event) => {
     updatedAt: solution.updatedAt || null,
     publishedAt: solution.publishedAt || null,
     relatedResources: {
-      guides: relationItems(solution?.solution_guides).length,
-      briefs: relationItems(solution?.solution_briefs).length,
-      kbArticles: relationItems(solution?.kb_articles).length,
+      guides: relatedGuides,
+      briefs: relatedBriefs,
+      kbArticles: relatedKbArticles,
     },
   };
 });

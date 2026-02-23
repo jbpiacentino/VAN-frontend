@@ -57,6 +57,7 @@ const messages: MessageDict = {
     'solution.licensingModel': 'Licensing model',
     'solution.visibility': 'Visibility',
     'solution.relatedResources': 'Related resources',
+    'solution.noRelatedResources': 'No related resources.',
     'solution.guidesShort': 'SG',
     'solution.briefsShort': 'SB',
     'solution.kbShort': 'KB',

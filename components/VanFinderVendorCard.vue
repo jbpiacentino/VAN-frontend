@@ -9,7 +9,7 @@
   >
     <div class="card-body relative p-5">
       <VanTierBadge :tier="vanTier" />
-      <div class="flex h-24 items-center justify-center">
+      <div class="flex h-20 items-center justify-center pt-6">
         <img
           v-if="vendor.logoUrl"
           :src="vendor.logoUrl"
