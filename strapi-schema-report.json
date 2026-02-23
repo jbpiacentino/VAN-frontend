@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-02-23T08:24:58.338Z",
+  "generatedAt": "2026-02-23T15:25:39.675Z",
   "baseUrl": "http://10.1.5.125:8080",
   "apiPrefix": "/api",
   "collections": {
@@ -22,10 +22,6 @@
           "nullable": false
         },
         "slug": {
-          "type": "string",
-          "nullable": false
-        },
-        "visibility_policy": {
           "type": "string",
           "nullable": false
         },
@@ -71,6 +67,11 @@
           "items": "relation-one",
           "nullable": false
         },
+        "links": {
+          "type": "relation-many",
+          "items": "relation-one",
+          "nullable": false
+        },
         "regions": {
           "type": "relation-many",
           "items": "relation-one",
@@ -79,11 +80,6 @@
         "seo": {
           "type": "array",
           "items": "unknown",
-          "nullable": false
-        },
-        "links": {
-          "type": "relation-many",
-          "items": "relation-one",
           "nullable": false
         },
         "localizations": {
@@ -116,10 +112,6 @@
           "type": "string",
           "nullable": false
         },
-        "solution_type": {
-          "type": "string",
-          "nullable": false
-        },
         "integration_patterns": {
           "type": "string",
           "nullable": false
@@ -129,14 +121,6 @@
           "nullable": false
         },
         "description": {
-          "type": "string",
-          "nullable": false
-        },
-        "visibility_level": {
-          "type": "string",
-          "nullable": false
-        },
-        "workflow": {
           "type": "string",
           "nullable": false
         },
@@ -171,8 +155,8 @@
           "nullable": false
         },
         "solution_guides": {
-          "type": "relation-many",
-          "items": "relation-one",
+          "type": "array",
+          "items": "unknown",
           "nullable": false
         },
         "vendor": {
@@ -185,8 +169,8 @@
           "nullable": false
         },
         "kb_articles": {
-          "type": "array",
-          "items": "unknown",
+          "type": "relation-many",
+          "items": "relation-one",
           "nullable": false
         },
         "compatibility_records": {
@@ -221,10 +205,6 @@
           "nullable": false
         },
         "slug": {
-          "type": "string",
-          "nullable": false
-        },
-        "workflow": {
           "type": "string",
           "nullable": false
         },
@@ -306,10 +286,6 @@
           "type": "string",
           "nullable": false
         },
-        "workflow": {
-          "type": "string",
-          "nullable": false
-        },
         "short_description": {
           "type": "string",
           "nullable": false
@@ -360,10 +336,6 @@
           "items": "unknown",
           "nullable": false
         },
-        "seo": {
-          "type": "null",
-          "nullable": true
-        },
         "product": {
           "type": "relation-one",
           "nullable": false
@@ -382,6 +354,10 @@
           "nullable": false
         },
         "compatibility_record": {
+          "type": "null",
+          "nullable": true
+        },
+        "seo": {
           "type": "null",
           "nullable": true
         },
@@ -657,27 +633,36 @@
           "type": "string",
           "nullable": false
         },
+        "description": {
+          "type": "null",
+          "nullable": true
+        },
         "seo": {
+          "type": "array",
+          "items": "unknown",
+          "nullable": false
+        },
+        "solution_guides": {
           "type": "relation-many",
           "items": "relation-one",
           "nullable": false
         },
-        "solution_guides": {
-          "type": "array",
-          "items": "unknown",
-          "nullable": false
-        },
         "solution_briefs": {
-          "type": "array",
-          "items": "unknown",
+          "type": "relation-many",
+          "items": "relation-one",
           "nullable": false
         },
         "kb_articles": {
+          "type": "relation-many",
+          "items": "relation-one",
+          "nullable": false
+        },
+        "compatibility_records": {
           "type": "array",
           "items": "unknown",
           "nullable": false
         },
-        "compatibility_records": {
+        "links": {
           "type": "array",
           "items": "unknown",
           "nullable": false

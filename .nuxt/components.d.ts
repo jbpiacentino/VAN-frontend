@@ -22,6 +22,7 @@ export const SurfacePanel: typeof import("../components/SurfacePanel.vue")['defa
 export const VanFinderControls: typeof import("../components/VanFinderControls.vue")['default']
 export const VanFinderVendorCard: typeof import("../components/VanFinderVendorCard.vue")['default']
 export const VanTierBadge: typeof import("../components/VanTierBadge.vue")['default']
+export const VendorDetailsAside: typeof import("../components/VendorDetailsAside.vue")['default']
 export const NuxtWelcome: typeof import("../node_modules/nuxt/dist/app/components/welcome.vue")['default']
 export const NuxtLayout: typeof import("../node_modules/nuxt/dist/app/components/nuxt-layout")['default']
 export const NuxtErrorBoundary: typeof import("../node_modules/nuxt/dist/app/components/nuxt-error-boundary.vue")['default']
@@ -53,6 +54,7 @@ export const LazySurfacePanel: LazyComponent<typeof import("../components/Surfac
 export const LazyVanFinderControls: LazyComponent<typeof import("../components/VanFinderControls.vue")['default']>
 export const LazyVanFinderVendorCard: LazyComponent<typeof import("../components/VanFinderVendorCard.vue")['default']>
 export const LazyVanTierBadge: LazyComponent<typeof import("../components/VanTierBadge.vue")['default']>
+export const LazyVendorDetailsAside: LazyComponent<typeof import("../components/VendorDetailsAside.vue")['default']>
 export const LazyNuxtWelcome: LazyComponent<typeof import("../node_modules/nuxt/dist/app/components/welcome.vue")['default']>
 export const LazyNuxtLayout: LazyComponent<typeof import("../node_modules/nuxt/dist/app/components/nuxt-layout")['default']>
 export const LazyNuxtErrorBoundary: LazyComponent<typeof import("../node_modules/nuxt/dist/app/components/nuxt-error-boundary.vue")['default']>

@@ -2151,16 +2151,16 @@ _UXxgNMdnWc4VrIlQzbgM08kn4DKwnfw2fUy8nUxZRU
 const assets = {
   "/index.mjs": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"27804-9Z2h3aiCm/Mc2W9OFc05COXJ4dQ\"",
-    "mtime": "2026-02-23T10:03:33.207Z",
-    "size": 161796,
+    "etag": "\"2843b-DYSc/iGIPfMzpgQd2oPvu/w5cDk\"",
+    "mtime": "2026-02-23T15:30:09.930Z",
+    "size": 164923,
     "path": "index.mjs"
   },
   "/index.mjs.map": {
     "type": "application/json",
-    "etag": "\"9d30b-fe1KTyHAMjvzynwH2CVNNiQ0IGQ\"",
-    "mtime": "2026-02-23T10:03:33.207Z",
-    "size": 643851,
+    "etag": "\"9f7b6-ye6JtpYUDVLaS0Kk4/5tsw+M+eQ\"",
+    "mtime": "2026-02-23T15:30:09.930Z",
+    "size": 653238,
     "path": "index.mjs.map"
   }
 };
@@ -2660,9 +2660,11 @@ async function getIslandContext(event) {
 
 const _lazy_vxLBOH = () => Promise.resolve().then(function () { return login_post$1; });
 const _lazy_B202K0 = () => Promise.resolve().then(function () { return solutionGuideContact_post$1; });
-const _lazy_hOwsJU = () => Promise.resolve().then(function () { return _slug__get$b; });
+const _lazy_hOwsJU = () => Promise.resolve().then(function () { return _slug__get$d; });
 const _lazy_HlyFAM = () => Promise.resolve().then(function () { return landing_get$1; });
 const _lazy_9MOt71 = () => Promise.resolve().then(function () { return media_get$1; });
+const _lazy_KNE2vb = () => Promise.resolve().then(function () { return products_get$1; });
+const _lazy_tV845N = () => Promise.resolve().then(function () { return _slug__get$b; });
 const _lazy_t6UOVe = () => Promise.resolve().then(function () { return _slug__get$9; });
 const _lazy_fX5Rt0 = () => Promise.resolve().then(function () { return _slug__get$7; });
 const _lazy_Prfbdt = () => Promise.resolve().then(function () { return solutions_get$1; });
@@ -2680,6 +2682,8 @@ const handlers = [
   { route: '/api/kb-articles/:slug', handler: _lazy_hOwsJU, lazy: true, middleware: false, method: "get" },
   { route: '/api/landing', handler: _lazy_HlyFAM, lazy: true, middleware: false, method: "get" },
   { route: '/api/media', handler: _lazy_9MOt71, lazy: true, middleware: false, method: "get" },
+  { route: '/api/products', handler: _lazy_KNE2vb, lazy: true, middleware: false, method: "get" },
+  { route: '/api/products/:slug', handler: _lazy_tV845N, lazy: true, middleware: false, method: "get" },
   { route: '/api/solution-briefs/:slug', handler: _lazy_t6UOVe, lazy: true, middleware: false, method: "get" },
   { route: '/api/solution-guides/:slug', handler: _lazy_fX5Rt0, lazy: true, middleware: false, method: "get" },
   { route: '/api/solutions', handler: _lazy_Prfbdt, lazy: true, middleware: false, method: "get" },
@@ -3298,7 +3302,7 @@ function levenshtein(a, b) {
   return dp[rows - 1][cols - 1];
 }
 
-const _slug__get$a = defineEventHandler(async (event) => {
+const _slug__get$c = defineEventHandler(async (event) => {
   const slug = String(getRouterParam(event, "slug") || "").trim();
   if (!slug) {
     throw createError({ statusCode: 400, statusMessage: "Missing KB article slug" });
@@ -3356,9 +3360,9 @@ const _slug__get$a = defineEventHandler(async (event) => {
   };
 });
 
-const _slug__get$b = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const _slug__get$d = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: _slug__get$a
+  default: _slug__get$c
 }, Symbol.toStringTag, { value: 'Module' }));
 
 function asRecord(value) {
@@ -3555,6 +3559,132 @@ const media_get = defineEventHandler(async (event) => {
 const media_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
   default: media_get
+}, Symbol.toStringTag, { value: 'Module' }));
+
+function parsePositiveInt$1(value, fallback) {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) && parsed > 0 ? Math.floor(parsed) : fallback;
+}
+const products_get = defineEventHandler(async (event) => {
+  var _a;
+  const query = getQuery$1(event);
+  const page = parsePositiveInt$1(query.page, 1);
+  const pageSize = Math.min(parsePositiveInt$1(query.pageSize, 10), 100);
+  const response = await strapiFetch("/products", {
+    populate: "*",
+    "sort[0]": "name:asc",
+    "pagination[page]": page,
+    "pagination[pageSize]": pageSize
+  });
+  const rows = Array.isArray(response == null ? void 0 : response.data) ? response.data : [];
+  const pagination = ((_a = response == null ? void 0 : response.meta) == null ? void 0 : _a.pagination) || {};
+  return {
+    items: rows.map((product) => ({
+      id: product.id,
+      documentId: product.documentId,
+      slug: product.slug || "",
+      name: product.name || product.title || "",
+      description: product.description || "",
+      counts: {
+        guides: relationItems(product.solution_guides).length,
+        briefs: relationItems(product.solution_briefs).length,
+        kbArticles: relationItems(product.kb_articles).length
+      }
+    })),
+    pagination: {
+      page: Number(pagination.page || page),
+      pageSize: Number(pagination.pageSize || pageSize),
+      pageCount: Number(pagination.pageCount || 1),
+      total: Number(pagination.total || rows.length)
+    }
+  };
+});
+
+const products_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: products_get
+}, Symbol.toStringTag, { value: 'Module' }));
+
+function dedupeByDocumentId(items) {
+  return items.filter(
+    (item, index, arr) => arr.findIndex((other) => String((other == null ? void 0 : other.documentId) || (other == null ? void 0 : other.id) || "") === String((item == null ? void 0 : item.documentId) || (item == null ? void 0 : item.id) || "")) === index
+  );
+}
+function normalizeLinks(value) {
+  if (!Array.isArray(value)) return [];
+  return value.map((item) => {
+    if (typeof item === "string" && item.trim()) {
+      return { label: item.trim(), url: item.trim() };
+    }
+    if (!item || typeof item !== "object" || Array.isArray(item)) return null;
+    const url = String(item.url || item.href || item.link || "").trim();
+    const label = String(item.label || item.title || item.name || url).trim();
+    if (!url) return null;
+    return { label: label || url, url };
+  }).filter(Boolean);
+}
+const _slug__get$a = defineEventHandler(async (event) => {
+  const slug = String(getRouterParam(event, "slug") || "").trim();
+  if (!slug) {
+    throw createError({ statusCode: 400, statusMessage: "Missing product slug" });
+  }
+  const response = await strapiFetch("/products", {
+    populate: "*",
+    "filters[slug][$eq]": slug,
+    "pagination[pageSize]": 1
+  });
+  const rows = Array.isArray(response == null ? void 0 : response.data) ? response.data : [];
+  const product = rows[0];
+  if (!product) {
+    throw createError({ statusCode: 404, statusMessage: "Product not found" });
+  }
+  const guides = dedupeByDocumentId(relationItems(product.solution_guides)).map((item) => ({
+    id: item.id,
+    documentId: item.documentId,
+    slug: item.slug || "",
+    title: item.title || item.name || "",
+    summary: item.summary || "",
+    href: item.slug ? `/solution-guides/${item.slug}` : ""
+  }));
+  const briefs = dedupeByDocumentId(relationItems(product.solution_briefs)).map((item) => ({
+    id: item.id,
+    documentId: item.documentId,
+    slug: item.slug || "",
+    title: item.title || item.name || "",
+    shortDescription: item.short_description || "",
+    href: item.slug ? `/solution-briefs/${item.slug}` : ""
+  }));
+  const kbArticles = dedupeByDocumentId(relationItems(product.kb_articles)).map((item) => ({
+    id: item.id,
+    documentId: item.documentId,
+    slug: item.slug || "",
+    title: item.title || item.name || "",
+    type: item.type || "",
+    href: item.slug ? `/kb-articles/${item.slug}` : ""
+  }));
+  return {
+    product: {
+      id: product.id,
+      documentId: product.documentId,
+      slug: product.slug || "",
+      name: product.name || product.title || "",
+      description: product.description || "",
+      createdAt: product.createdAt || null,
+      updatedAt: product.updatedAt || null,
+      publishedAt: product.publishedAt || null,
+      links: normalizeLinks(product.links)
+    },
+    relatedResources: {
+      guides: guides.filter((item) => item.slug && item.title),
+      briefs: briefs.filter((item) => item.slug && item.title),
+      kbArticles: kbArticles.filter((item) => item.slug && item.title)
+    }
+  };
+});
+
+const _slug__get$b = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: _slug__get$a
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const _slug__get$8 = defineEventHandler(async (event) => {
@@ -3835,8 +3965,9 @@ function fuzzyNameMatch(text, query) {
 function membershipPriority(vendor) {
   const tier = String(vendor.vanTier || "").trim().toLowerCase();
   if (tier === "strategic" || tier === "startegic") return 0;
-  if (tier === "regular") return 1;
-  return 2;
+  if (tier === "alliance" || tier === "regular") return 1;
+  if (tier === "associate") return 2;
+  return 3;
 }
 function resourceCountInit(vendor) {
   return {

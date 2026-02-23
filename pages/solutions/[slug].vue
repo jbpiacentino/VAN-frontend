@@ -42,10 +42,6 @@
             </NuxtLink>
             <p v-else class="text-base-content/70">{{ t('common.na') }}</p>
           </div>
-          <!-- <div>
-            <p class="text-sm font-semibold">{{ t('solution.type') }}</p>
-            <p class="text-base-content/80">{{ solution.solutionType || t('common.na') }}</p>
-          </div> -->
           <div>
             <p class="text-sm font-semibold">{{ t('solution.integrationPattern') }}</p>
             <p class="text-base-content/80">{{ solution.integrationPattern || t('common.na') }}</p>
@@ -54,10 +50,6 @@
             <p class="text-sm font-semibold">{{ t('solution.licensingModel') }}</p>
             <p class="text-base-content/80">{{ solution.licensingModel || t('common.na') }}</p>
           </div>
-          <!-- <div>
-            <p class="text-sm font-semibold">{{ t('solution.visibility') }}</p>
-            <p class="text-base-content/80">{{ solution.visibilityLevel || t('common.na') }}</p>
-          </div> -->
 
           <div>
             <!-- <p class="text-sm font-semibold">{{ t('solution.relatedResources') }}</p> -->
@@ -125,13 +117,15 @@
           <div v-if="solution.products?.length">
             <p class="text-sm font-semibold">{{ t('solution.products') }}</p>
             <div class="mt-2 flex flex-wrap gap-2">
-              <span
+              <NuxtLink
                 v-for="product in solution.products"
                 :key="product.documentId || product.id"
-                class="badge badge-outline"
+                :to="product.slug ? `/products/${product.slug}` : '#'"
+                :class="product.slug ? 'badge badge-outline hover:badge-primary' : 'badge badge-outline'"
+                :aria-disabled="!product.slug"
               >
                 {{ product.name }}
-              </span>
+              </NuxtLink>
             </div>
           </div>
 

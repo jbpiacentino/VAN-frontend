@@ -58,7 +58,14 @@
           </div>
           <div>
             <p class="text-sm font-semibold">{{ t('brief.product') }}</p>
-            <p class="text-base-content/80">{{ brief.product?.name || t('common.na') }}</p>
+            <NuxtLink
+              v-if="brief.product?.slug"
+              :to="`/products/${brief.product.slug}`"
+              class="link link-primary"
+            >
+              {{ brief.product.name }}
+            </NuxtLink>
+            <p v-else class="text-base-content/80">{{ brief.product?.name || t('common.na') }}</p>
           </div>
         </div>
       </aside>

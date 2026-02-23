@@ -30,8 +30,9 @@ function fuzzyNameMatch(text: string, query: string) {
 function membershipPriority(vendor: any) {
   const tier = String(vendor.vanTier || '').trim().toLowerCase();
   if (tier === 'strategic' || tier === 'startegic') return 0;
-  if (tier === 'regular') return 1;
-  return 2;
+  if (tier === 'alliance' || tier === 'regular') return 1;
+  if (tier === 'associate') return 2;
+  return 3;
 }
 
 function resourceCountInit(vendor: any) {

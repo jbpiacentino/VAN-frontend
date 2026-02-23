@@ -16,6 +16,7 @@
             t('nav.vanFinder')
           }}</NuxtLink>
           <NuxtLink to="/solutions" class="btn btn-ghost btn-sm">{{ t('nav.solutions') }}</NuxtLink>
+          <NuxtLink to="/products" class="btn btn-ghost btn-sm">{{ t('nav.products') }}</NuxtLink>
         </nav>
         <div class="inline-flex items-center gap-3 text-sm text-base-content/70">
           <label for="theme-select" class="font-medium">{{ t('common.theme') }}</label>

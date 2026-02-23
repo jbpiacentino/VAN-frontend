@@ -424,12 +424,22 @@ const _routes = [
   {
     name: "van-finder",
     path: "/van-finder",
-    component: () => import('./van-finder-BWY6xAx3.mjs')
+    component: () => import('./van-finder-DXSwpCiG.mjs')
+  },
+  {
+    name: "products",
+    path: "/products",
+    component: () => import('./index-CwakfgVu.mjs')
   },
   {
     name: "vendors-slug",
     path: "/vendors/:slug()",
-    component: () => import('./_slug_-BHiUdSAO.mjs')
+    component: () => import('./_slug_-WfnY6xIW.mjs')
+  },
+  {
+    name: "products-slug",
+    path: "/products/:slug()",
+    component: () => import('./_slug_-BgMBBmM-.mjs')
   },
   {
     name: "solutions",
@@ -439,22 +449,22 @@ const _routes = [
   {
     name: "solutions-slug",
     path: "/solutions/:slug()",
-    component: () => import('./_slug_-D8u-tDCR.mjs')
+    component: () => import('./_slug_-B6KtMd2p.mjs')
   },
   {
     name: "kb-articles-slug",
     path: "/kb-articles/:slug()",
-    component: () => import('./_slug_-cpVP-ecj.mjs')
+    component: () => import('./_slug_-BmfGPDZ_.mjs')
   },
   {
     name: "solution-briefs-slug",
     path: "/solution-briefs/:slug()",
-    component: () => import('./_slug_-vvb4fC9t.mjs')
+    component: () => import('./_slug_-DTyUpXGc.mjs')
   },
   {
     name: "solution-guides-slug",
     path: "/solution-guides/:slug()",
-    component: () => import('./_slug_-DLTASKcf.mjs')
+    component: () => import('./_slug_-zY8ZE8vQ.mjs')
   }
 ];
 const ROUTE_KEY_PARENTHESES_RE = /(:\w+)\([^)]+\)/g;
@@ -1195,6 +1205,7 @@ const messages$2 = {
   "nav.program": "Program",
   "nav.vanFinder": "VAN Finder",
   "nav.solutions": "Solutions",
+  "nav.products": "Products",
   "common.theme": "Theme",
   "common.locale": "Language",
   "common.by": "by",
@@ -1235,6 +1246,24 @@ const messages$2 = {
   "solutions.vendor": "Vendor",
   "solutions.seoTitle": "VAN Solutions",
   "solutions.seoDescription": "Browse VAN partner solutions.",
+  "products.label": "Products",
+  "products.title": "Products Catalog",
+  "products.subtitle": "Browse platform products linked to VAN resources.",
+  "products.none": "No products available.",
+  "products.noDescription": "No product description available.",
+  "products.guidesCount": "{count} guides",
+  "products.briefsCount": "{count} briefs",
+  "products.kbCount": "{count} KB articles",
+  "products.seoTitle": "VAN Products",
+  "products.seoDescription": "Browse products linked to VAN solution resources.",
+  "product.label": "Product",
+  "product.links": "Links",
+  "product.noGuides": "No solution guides linked to this product.",
+  "product.noBriefs": "No solution briefs linked to this product.",
+  "product.noKb": "No KB articles linked to this product.",
+  "product.notFound": "Product not found.",
+  "product.seoFallbackTitle": "Product",
+  "product.seoDescription": "Product details and linked VAN resources.",
   "solution.label": "Solution",
   "solution.overview": "Overview",
   "solution.details": "Details",
@@ -1347,6 +1376,8 @@ const messages$2 = {
   "pager.resourceBriefs": "solution briefs",
   "pager.resourceKbArticles": "knowledge base articles",
   "finder.tierRegular": "VAN member",
+  "finder.tierAlliance": "Alliance",
+  "finder.tierAssociate": "Associate",
   "finder.tierStrategic": "Strategic",
   "finder.tierNonMember": "Not a VAN member"
 };
@@ -1356,6 +1387,7 @@ const messages$1 = {
   "nav.program": "Programme",
   "nav.vanFinder": "Recherche VAN",
   "nav.solutions": "Solutions",
+  "nav.products": "Produits",
   "common.theme": "Theme",
   "common.locale": "Langue",
   "common.by": "par",
@@ -1396,6 +1428,24 @@ const messages$1 = {
   "solutions.vendor": "Fournisseur",
   "solutions.seoTitle": "Solutions VAN",
   "solutions.seoDescription": "Parcourez les solutions partenaires VAN.",
+  "products.label": "Produits",
+  "products.title": "Catalogue des produits",
+  "products.subtitle": "Parcourez les produits plateforme lies aux ressources VAN.",
+  "products.none": "Aucun produit disponible.",
+  "products.noDescription": "Aucune description de produit disponible.",
+  "products.guidesCount": "{count} guides",
+  "products.briefsCount": "{count} briefs",
+  "products.kbCount": "{count} articles KB",
+  "products.seoTitle": "Produits VAN",
+  "products.seoDescription": "Parcourez les produits lies aux ressources de solution VAN.",
+  "product.label": "Produit",
+  "product.links": "Liens",
+  "product.noGuides": "Aucun guide de solution lie a ce produit.",
+  "product.noBriefs": "Aucun brief de solution lie a ce produit.",
+  "product.noKb": "Aucun article KB lie a ce produit.",
+  "product.notFound": "Produit introuvable.",
+  "product.seoFallbackTitle": "Produit",
+  "product.seoDescription": "Details produit et ressources VAN liees.",
   "solution.label": "Solution",
   "solution.overview": "Vue d'ensemble",
   "solution.details": "Details",
@@ -1508,6 +1558,8 @@ const messages$1 = {
   "pager.resourceBriefs": "briefs de solution",
   "pager.resourceKbArticles": "articles base de connaissances",
   "finder.tierRegular": "Membre VAN",
+  "finder.tierAlliance": "Alliance",
+  "finder.tierAssociate": "Associe",
   "finder.tierStrategic": "Strategique",
   "finder.tierNonMember": "Non membre VAN"
 };
@@ -1671,6 +1723,21 @@ const _sfc_main$2 = /* @__PURE__ */ defineComponent({
             } else {
               return [
                 createTextVNode(toDisplayString(unref(t)("nav.solutions")), 1)
+              ];
+            }
+          }),
+          _: 1
+        }, _parent));
+        _push(ssrRenderComponent(_component_NuxtLink, {
+          to: "/products",
+          class: "btn btn-ghost btn-sm"
+        }, {
+          default: withCtx((_, _push2, _parent2, _scopeId) => {
+            if (_push2) {
+              _push2(`${ssrInterpolate(unref(t)("nav.products"))}`);
+            } else {
+              return [
+                createTextVNode(toDisplayString(unref(t)("nav.products")), 1)
               ];
             }
           }),

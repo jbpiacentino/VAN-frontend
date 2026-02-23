@@ -8,7 +8,9 @@
         class="hero-content w-full flex-col items-start gap-6 px-6 py-8 md:flex-row md:items-center md:justify-between"
       >
         <div class="space-y-2">
-          <p class="text-xs uppercase tracking-wide text-primary">{{ t('vendor.profile') }}</p>
+          <p class="text-xs uppercase tracking-wide text-primary">
+            {{ t('vendor.profile') }}
+          </p>
           <h1 class="text-4xl font-bold">{{ vendor.name }}</h1>
           <p class="text-base-content/70">
             {{ vendor.shortDescription || t('vendor.shortDescriptionFallback') }}
@@ -27,60 +29,17 @@
     <div class="grid gap-6 lg:grid-cols-[2fr_1fr]">
       <article class="card">
         <div class="card-body">
-          <h2 class="card-title">{{ t('vendor.about', { name: vendor.name }) }}</h2>
+          <!-- <h2 class="card-title text-primary">{{ t('vendor.about', { name: vendor.name }) }}</h2> -->
           <MarkdownContent v-if="vendor.description" :source="vendor.description" />
           <p v-else>{{ vendor.summary || t('vendor.noDescription') }}</p>
         </div>
       </article>
 
-      <aside class="card bg-base-200">
-        <div class="card-body space-y-3">
-          <h2 class="card-title">{{ t('vendor.partnerDetails') }}</h2>
-          <div>
-            <p class="text-sm font-semibold">{{ t('vendor.vanTier') }}</p>
-            <p class="text-base-content/80">{{ vendor.vanTier || t('vendor.notMember') }}</p>
-          </div>
-          <div>
-            <p class="text-sm font-semibold">{{ t('vendor.areasOfFocus') }}</p>
-            <p class="text-base-content/80">{{ joinedList(vendor.areaOfFocus) }}</p>
-          </div>
-          <div>
-            <p class="text-sm font-semibold">{{ t('vendor.regions') }}</p>
-            <p class="text-base-content/80">{{ joinedList(vendor.regions) }}</p>
-          </div>
-          <div>
-            <p class="text-sm font-semibold">{{ t('vendor.website') }}</p>
-            <a
-              v-if="vendor.website"
-              :href="vendor.website"
-              target="_blank"
-              rel="noreferrer"
-              class="link link-primary break-all"
-              >{{ vendor.website }}</a
-            >
-            <p v-else class="text-base-content/60">{{ t('common.na') }}</p>
-          </div>
-          <div>
-            <p class="text-sm font-semibold">{{ t('vendor.links') }}</p>
-            <ul v-if="vendor.links?.length" class="space-y-1">
-              <li v-for="link in vendor.links" :key="link.url">
-                <a
-                  :href="link.url"
-                  target="_blank"
-                  rel="noreferrer"
-                  class="link link-primary break-all"
-                  >{{ link.label }}</a
-                >
-              </li>
-            </ul>
-            <p v-else class="text-base-content/60">{{ t('common.na') }}</p>
-          </div>
-        </div>
-      </aside>
+      <VendorDetailsAside :vendor="vendor" />
     </div>
 
     <section class="space-y-3">
-      <h2 class="text-2xl font-bold">{{ t('vendor.solutions') }}</h2>
+      <h2 class="text-2xl font-bold text-primary">{{ t('vendor.solutions') }}</h2>
       <div v-if="pagedSolutions.length" class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         <NuxtLink
           v-for="solution in pagedSolutions"
@@ -109,13 +68,19 @@
         @update:page="solutionsPage = $event"
       >
         <template #status="{ page, pageSize, totalItems }">
-          {{ t('pager.itemsStatus', { shown: Math.min(page * pageSize, totalItems), total: totalItems, resource: t('pager.resourceSolutions') }) }}
+          {{
+            t('pager.itemsStatus', {
+              shown: Math.min(page * pageSize, totalItems),
+              total: totalItems,
+              resource: t('pager.resourceSolutions'),
+            })
+          }}
         </template>
       </PagerControls>
     </section>
 
     <section class="space-y-3">
-      <h2 class="text-2xl font-bold">{{ t('vendor.solutionGuides') }}</h2>
+      <h2 class="text-2xl font-bold text-primary">{{ t('vendor.solutionGuides') }}</h2>
       <div v-if="pagedGuides.length" class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         <NuxtLink
           v-for="guide in pagedGuides"
@@ -144,13 +109,19 @@
         @update:page="guidesPage = $event"
       >
         <template #status="{ page, pageSize, totalItems }">
-          {{ t('pager.itemsStatus', { shown: Math.min(page * pageSize, totalItems), total: totalItems, resource: t('pager.resourceGuides') }) }}
+          {{
+            t('pager.itemsStatus', {
+              shown: Math.min(page * pageSize, totalItems),
+              total: totalItems,
+              resource: t('pager.resourceGuides'),
+            })
+          }}
         </template>
       </PagerControls>
     </section>
 
     <section class="space-y-3">
-      <h2 class="text-2xl font-bold">{{ t('vendor.solutionBriefs') }}</h2>
+      <h2 class="text-2xl font-bold text-primary">{{ t('vendor.solutionBriefs') }}</h2>
       <div v-if="pagedBriefs.length" class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         <NuxtLink
           v-for="brief in pagedBriefs"
@@ -179,13 +150,19 @@
         @update:page="briefsPage = $event"
       >
         <template #status="{ page, pageSize, totalItems }">
-          {{ t('pager.itemsStatus', { shown: Math.min(page * pageSize, totalItems), total: totalItems, resource: t('pager.resourceBriefs') }) }}
+          {{
+            t('pager.itemsStatus', {
+              shown: Math.min(page * pageSize, totalItems),
+              total: totalItems,
+              resource: t('pager.resourceBriefs'),
+            })
+          }}
         </template>
       </PagerControls>
     </section>
 
     <section class="space-y-3">
-      <h2 class="text-2xl font-bold">{{ t('vendor.kbArticles') }}</h2>
+      <h2 class="text-2xl font-bold text-primary">{{ t('vendor.kbArticles') }}</h2>
       <div v-if="pagedKbArticles.length" class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         <NuxtLink
           v-for="kb in pagedKbArticles"
@@ -195,7 +172,9 @@
         >
           <div class="card-body">
             <h3 class="card-title line-clamp-2 text-lg">{{ kb.title }}</h3>
-            <p class="line-clamp-2 text-sm text-base-content/70">{{ kb.type || t('kb.article') }}</p>
+            <p class="line-clamp-2 text-sm text-base-content/70">
+              {{ kb.type || t('kb.article') }}
+            </p>
           </div>
         </NuxtLink>
       </div>
@@ -212,13 +191,21 @@
         @update:page="kbPage = $event"
       >
         <template #status="{ page, pageSize, totalItems }">
-          {{ t('pager.itemsStatus', { shown: Math.min(page * pageSize, totalItems), total: totalItems, resource: t('pager.resourceKbArticles') }) }}
+          {{
+            t('pager.itemsStatus', {
+              shown: Math.min(page * pageSize, totalItems),
+              total: totalItems,
+              resource: t('pager.resourceKbArticles'),
+            })
+          }}
         </template>
       </PagerControls>
     </section>
   </section>
 
-  <div v-else class="alert border border-base-300 bg-base-100"><span>{{ t('vendor.notFound') }}</span></div>
+  <div v-else class="alert border border-base-300 bg-base-100">
+    <span>{{ t('vendor.notFound') }}</span>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -237,9 +224,6 @@
   const briefs = computed(() => data.value?.briefs || []);
   const guides = computed(() => data.value?.guides || []);
   const kbArticles = computed(() => data.value?.kbArticles || []);
-
-  const joinedList = (values: string[]) =>
-    Array.isArray(values) && values.length ? values.join(', ') : t('common.na');
 
   const solutionsPage = ref(1);
   const solutionsPageSize = ref(6);
@@ -312,9 +296,7 @@
   });
 
   useServerSeoMeta({
-    title: () =>
-      vendor.value?.name ? `${vendor.value.name} | VAN` : t('vendor.seoFallbackTitle'),
-    description: () =>
-      vendor.value?.shortDescription || t('vendor.seoDescription'),
+    title: () => (vendor.value?.name ? `${vendor.value.name} | VAN` : t('vendor.seoFallbackTitle')),
+    description: () => vendor.value?.shortDescription || t('vendor.seoDescription'),
   });
 </script>

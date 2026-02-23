@@ -18,6 +18,12 @@ declare module "nitropack/types" {
     '/api/media': {
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/media.get').default>>>>
     }
+    '/api/products': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/products.get').default>>>>
+    }
+    '/api/products/:slug': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/products/[slug].get').default>>>>
+    }
     '/api/solution-briefs/:slug': {
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/solution-briefs/[slug].get').default>>>>
     }

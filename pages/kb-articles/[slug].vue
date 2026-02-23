@@ -62,13 +62,15 @@
           <div>
             <p class="text-sm font-semibold">{{ t('kb.products') }}</p>
             <div v-if="products.length" class="flex flex-wrap gap-2">
-              <span
+              <NuxtLink
                 v-for="product in products"
                 :key="product.documentId || product.id || product.slug"
-                class="badge badge-outline"
+                :to="product.slug ? `/products/${product.slug}` : '#'"
+                :class="product.slug ? 'badge badge-outline hover:badge-primary' : 'badge badge-outline'"
+                :aria-disabled="!product.slug"
               >
                 {{ product.name }}
-              </span>
+              </NuxtLink>
             </div>
             <p v-else class="text-base-content/70">{{ t('common.na') }}</p>
           </div>

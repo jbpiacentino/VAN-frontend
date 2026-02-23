@@ -883,7 +883,7 @@ export const seedData = {
     },
     {
       data: {
-        tier: 'regular',
+        tier: 'associate',
         registered_at: '2026-01-08T00:00:00.000Z',
         expires_at: '2027-01-08T00:00:00.000Z'
       },
@@ -893,7 +893,7 @@ export const seedData = {
     },
     {
       data: {
-        tier: 'regular',
+        tier: 'alliance',
         registered_at: '2026-01-12T00:00:00.000Z',
         expires_at: '2027-01-12T00:00:00.000Z'
       },
@@ -903,7 +903,7 @@ export const seedData = {
     },
     {
       data: {
-        tier: 'regular',
+        tier: 'associate',
         registered_at: '2026-01-15T00:00:00.000Z',
         expires_at: '2027-01-15T00:00:00.000Z'
       },
@@ -923,7 +923,7 @@ export const seedData = {
     },
     {
       data: {
-        tier: 'regular',
+        tier: 'alliance',
         registered_at: '2026-01-25T00:00:00.000Z',
         expires_at: '2027-01-25T00:00:00.000Z'
       },
@@ -943,7 +943,7 @@ export const seedData = {
     },
     {
       data: {
-        tier: 'regular',
+        tier: 'associate',
         registered_at: '2026-01-30T00:00:00.000Z',
         expires_at: '2027-01-30T00:00:00.000Z'
       },
@@ -953,7 +953,7 @@ export const seedData = {
     },
     {
       data: {
-        tier: 'regular',
+        tier: 'alliance',
         registered_at: '2026-02-01T00:00:00.000Z',
         expires_at: '2027-02-01T00:00:00.000Z'
       },
@@ -973,7 +973,7 @@ export const seedData = {
     },
     {
       data: {
-        tier: 'regular',
+        tier: 'associate',
         registered_at: '2026-02-05T00:00:00.000Z',
         expires_at: '2027-02-05T00:00:00.000Z'
       },
@@ -983,7 +983,7 @@ export const seedData = {
     },
     {
       data: {
-        tier: 'regular',
+        tier: 'alliance',
         registered_at: '2026-02-07T00:00:00.000Z',
         expires_at: '2027-02-07T00:00:00.000Z'
       },
@@ -1003,7 +1003,7 @@ export const seedData = {
     },
     {
       data: {
-        tier: 'regular',
+        tier: 'associate',
         registered_at: '2026-02-11T00:00:00.000Z',
         expires_at: '2027-02-11T00:00:00.000Z'
       },
@@ -1023,7 +1023,7 @@ export const seedData = {
     },
     {
       data: {
-        tier: 'regular',
+        tier: 'alliance',
         registered_at: '2026-02-15T00:00:00.000Z',
         expires_at: '2027-02-15T00:00:00.000Z'
       },
@@ -1033,7 +1033,7 @@ export const seedData = {
     },
     {
       data: {
-        tier: 'regular',
+        tier: 'associate',
         registered_at: '2026-02-16T00:00:00.000Z',
         expires_at: '2027-02-16T00:00:00.000Z'
       },
@@ -1053,7 +1053,7 @@ export const seedData = {
     },
     {
       data: {
-        tier: 'regular',
+        tier: 'alliance',
         registered_at: '2026-02-18T00:00:00.000Z',
         expires_at: '2027-02-18T00:00:00.000Z'
       },

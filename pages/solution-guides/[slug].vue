@@ -120,13 +120,15 @@
     <section class="space-y-3">
       <h2 class="text-2xl font-bold">{{ t('guide.products') }}</h2>
       <div v-if="products.length" class="flex flex-wrap gap-2">
-        <span
+        <NuxtLink
           v-for="product in products"
           :key="product.documentId || product.id || product.slug"
-          class="badge badge-outline"
+          :to="product.slug ? `/products/${product.slug}` : '#'"
+          :class="product.slug ? 'badge badge-outline hover:badge-primary' : 'badge badge-outline'"
+          :aria-disabled="!product.slug"
         >
           {{ product.name }}
-        </span>
+        </NuxtLink>
       </div>
       <div v-else class="alert border border-base-300 bg-base-100">
         <span>{{ t('guide.noRelatedProducts') }}</span>
