@@ -26,7 +26,7 @@
           v-for="vendor in items"
           :key="vendor.documentId || vendor.id || vendor.slug"
           :vendor="vendor"
-          :tier-badge="tierBadge(vendor)"
+          :van-tier="vendor.vanTier"
           :description="vendor.descriptionPreview"
           :resources="visibleResources(vendor)"
         />
@@ -122,13 +122,6 @@
     selectedFocuses.value = [...selectedFocuses.value, focus];
   }
 
-  function tierBadge(vendor: any) {
-    const tier = String(vendor?.vanTier || '').toLowerCase();
-    if (tier === 'regular') return t('finder.tierRegular');
-    if (tier === 'strategic' || tier === 'startegic') return t('finder.tierStrategic');
-    return '';
-  }
-
   function visibleResources(vendor: any) {
     const counts = vendor?.resources || {};
     const values = [
@@ -161,7 +154,7 @@
   }
 
   useServerSeoMeta({
-    title: 'VAN Finder',
-    description: 'Find Vates Alliance Network members, areas of focus, and linked resources.',
+    title: t('finder.title'),
+    description: t('finder.seoDescription'),
   });
 </script>

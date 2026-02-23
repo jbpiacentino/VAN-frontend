@@ -93,6 +93,8 @@ declare global {
   const normalizeVendorLinks: typeof import('../../server/utils/strapi').normalizeVendorLinks
   const parseCookies: typeof import('../../node_modules/h3').parseCookies
   const pickComponentValue: typeof import('../../server/utils/strapi').pickComponentValue
+  const pickStaticPageContent: typeof import('../../server/utils/strapi-richtext').pickStaticPageContent
+  const pickStaticPageTitle: typeof import('../../server/utils/strapi-richtext').pickStaticPageTitle
   const promisifyNodeListener: typeof import('../../node_modules/h3').promisifyNodeListener
   const proxyRequest: typeof import('../../node_modules/h3').proxyRequest
   const readBody: typeof import('../../node_modules/h3').readBody
@@ -126,6 +128,7 @@ declare global {
   const strapiFetch: typeof import('../../server/utils/strapi').strapiFetch
   const strapiFetchAll: typeof import('../../server/utils/strapi').strapiFetchAll
   const toEventHandler: typeof import('../../node_modules/h3').toEventHandler
+  const toMarkdown: typeof import('../../server/utils/strapi-richtext').toMarkdown
   const toNodeListener: typeof import('../../node_modules/h3').toNodeListener
   const toPlainHandler: typeof import('../../node_modules/h3').toPlainHandler
   const toWebHandler: typeof import('../../node_modules/h3').toWebHandler
@@ -139,6 +142,7 @@ declare global {
   const useRuntimeConfig: typeof import('../../node_modules/nitropack/dist/runtime/internal/config').useRuntimeConfig
   const useSession: typeof import('../../node_modules/h3').useSession
   const useStorage: typeof import('../../node_modules/nitropack/dist/runtime/internal/storage').useStorage
+  const withAttributes: typeof import('../../server/utils/strapi-richtext').withAttributes
   const words: typeof import('../../server/utils/strapi').words
   const writeEarlyHints: typeof import('../../node_modules/h3').writeEarlyHints
   const writeSolutionGuideLeadToGrist: typeof import('../../server/utils/grist').writeSolutionGuideLeadToGrist
@@ -164,4 +168,5 @@ export { defineNitroErrorHandler } from 'nitropack/runtime/internal/error/utils'
 export { buildAssetsURL as __buildAssetsURL, publicAssetsURL as __publicAssetsURL } from '/Users/jb/code/VAN-frontend/node_modules/@nuxt/nitro-server/dist/runtime/utils/paths';
 export { defineAppConfig } from '/Users/jb/code/VAN-frontend/node_modules/@nuxt/nitro-server/dist/runtime/utils/config';
 export { writeSolutionGuideLeadToGrist } from '/Users/jb/code/VAN-frontend/server/utils/grist';
+export { withAttributes, toMarkdown, pickStaticPageTitle, pickStaticPageContent } from '/Users/jb/code/VAN-frontend/server/utils/strapi-richtext';
 export { getStrapiConfig, strapiFetch, strapiFetchAll, mediaUrl, pickComponentValue, normalizeComponentStringList, normalizeVendorLinks, relationItems, relationFirst, mapVendor, buildMembershipMap, markdownToPreviewText, fuzzyIncludes, words, levenshtein } from '/Users/jb/code/VAN-frontend/server/utils/strapi';

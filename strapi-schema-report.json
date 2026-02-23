@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-02-21T15:52:55.239Z",
+  "generatedAt": "2026-02-23T08:24:58.338Z",
   "baseUrl": "http://10.1.5.125:8080",
   "apiPrefix": "/api",
   "collections": {
@@ -7,7 +7,7 @@
       "ok": true,
       "endpoint": "http://10.1.5.125:8080/api/vendors?populate=*&pagination%5Bpage%5D=1&pagination%5BpageSize%5D=1",
       "sampleCount": 1,
-      "total": 9,
+      "total": 36,
       "fields": {
         "id": {
           "type": "number",
@@ -82,8 +82,8 @@
           "nullable": false
         },
         "links": {
-          "type": "array",
-          "items": "unknown",
+          "type": "relation-many",
+          "items": "relation-one",
           "nullable": false
         },
         "localizations": {
@@ -98,7 +98,7 @@
       "ok": true,
       "endpoint": "http://10.1.5.125:8080/api/solutions?populate=*&pagination%5Bpage%5D=1&pagination%5BpageSize%5D=1",
       "sampleCount": 1,
-      "total": 10,
+      "total": 55,
       "fields": {
         "id": {
           "type": "number",
@@ -206,7 +206,7 @@
       "ok": true,
       "endpoint": "http://10.1.5.125:8080/api/solution-guides?populate=*&pagination%5Bpage%5D=1&pagination%5BpageSize%5D=1",
       "sampleCount": 1,
-      "total": 4,
+      "total": 25,
       "fields": {
         "id": {
           "type": "number",
@@ -288,7 +288,7 @@
       "ok": true,
       "endpoint": "http://10.1.5.125:8080/api/solution-briefs?populate=*&pagination%5Bpage%5D=1&pagination%5BpageSize%5D=1",
       "sampleCount": 1,
-      "total": 5,
+      "total": 28,
       "fields": {
         "id": {
           "type": "number",
@@ -397,7 +397,7 @@
       "ok": true,
       "endpoint": "http://10.1.5.125:8080/api/kb-articles?populate=*&pagination%5Bpage%5D=1&pagination%5BpageSize%5D=1",
       "sampleCount": 1,
-      "total": 3,
+      "total": 35,
       "fields": {
         "id": {
           "type": "number",
@@ -658,28 +658,28 @@
           "nullable": false
         },
         "seo": {
+          "type": "relation-many",
+          "items": "relation-one",
+          "nullable": false
+        },
+        "solution_guides": {
           "type": "array",
           "items": "unknown",
           "nullable": false
         },
-        "solution_guides": {
-          "type": "relation-many",
-          "items": "relation-one",
-          "nullable": false
-        },
         "solution_briefs": {
-          "type": "relation-many",
-          "items": "relation-one",
+          "type": "array",
+          "items": "unknown",
           "nullable": false
         },
         "kb_articles": {
-          "type": "relation-many",
-          "items": "relation-one",
+          "type": "array",
+          "items": "unknown",
           "nullable": false
         },
         "compatibility_records": {
-          "type": "relation-many",
-          "items": "relation-one",
+          "type": "array",
+          "items": "unknown",
           "nullable": false
         },
         "localizations": {
@@ -694,7 +694,7 @@
       "ok": true,
       "endpoint": "http://10.1.5.125:8080/api/VAN-members?populate=*&pagination%5Bpage%5D=1&pagination%5BpageSize%5D=1",
       "sampleCount": 1,
-      "total": 7,
+      "total": 20,
       "fields": {
         "id": {
           "type": "number",
@@ -734,6 +734,61 @@
         },
         "vendor": {
           "type": "relation-one",
+          "nullable": false
+        },
+        "localizations": {
+          "type": "array",
+          "items": "unknown",
+          "nullable": false
+        }
+      },
+      "note": null
+    },
+    "static-pages": {
+      "ok": true,
+      "endpoint": "http://10.1.5.125:8080/api/static-pages?populate=*&pagination%5Bpage%5D=1&pagination%5BpageSize%5D=1",
+      "sampleCount": 1,
+      "total": 2,
+      "fields": {
+        "id": {
+          "type": "number",
+          "nullable": false
+        },
+        "documentId": {
+          "type": "string",
+          "nullable": false
+        },
+        "title": {
+          "type": "string",
+          "nullable": false
+        },
+        "slug": {
+          "type": "string",
+          "nullable": false
+        },
+        "body": {
+          "type": "string",
+          "nullable": false
+        },
+        "createdAt": {
+          "type": "string",
+          "nullable": false
+        },
+        "updatedAt": {
+          "type": "string",
+          "nullable": false
+        },
+        "publishedAt": {
+          "type": "string",
+          "nullable": false
+        },
+        "locale": {
+          "type": "string",
+          "nullable": false
+        },
+        "seo": {
+          "type": "array",
+          "items": "unknown",
           "nullable": false
         },
         "localizations": {

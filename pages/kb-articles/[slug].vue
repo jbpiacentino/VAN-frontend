@@ -8,11 +8,11 @@
         class="hero-content w-full flex-col items-start gap-3 px-6 py-8 md:flex-row md:items-center md:justify-between"
       >
         <div class="space-y-2">
-          <p class="text-xs uppercase tracking-wide text-primary">KB article</p>
+          <p class="text-xs uppercase tracking-wide text-primary">{{ t('kb.label') }}</p>
           <h1 class="text-4xl font-bold">{{ article.title }}</h1>
         </div>
         <div class="flex flex-wrap gap-2">
-          <span class="badge badge-outline">{{ article.type || 'article' }}</span>
+          <span class="badge badge-outline">{{ article.type || t('kb.article') }}</span>
           <span v-if="article.severity" class="badge badge-outline">{{ article.severity }}</span>
         </div>
       </div>
@@ -22,19 +22,19 @@
       <article class="card border border-base-300 bg-base-100">
         <div class="card-body space-y-4">
           <div>
-            <h2 class="card-title text-xl">Symptoms</h2>
-            <p>{{ article.symptoms || 'N/A' }}</p>
+            <h2 class="card-title text-xl">{{ t('kb.symptoms') }}</h2>
+            <p>{{ article.symptoms || t('common.na') }}</p>
           </div>
           <div>
-            <h2 class="card-title text-xl">Root cause</h2>
-            <p>{{ article.rootCause || 'N/A' }}</p>
+            <h2 class="card-title text-xl">{{ t('kb.rootCause') }}</h2>
+            <p>{{ article.rootCause || t('common.na') }}</p>
           </div>
           <div v-if="article.resolution">
-            <h2 class="card-title text-xl">Resolution</h2>
+            <h2 class="card-title text-xl">{{ t('kb.resolution') }}</h2>
             <p>{{ article.resolution }}</p>
           </div>
           <div v-if="article.body || article.summary">
-            <h2 class="card-title text-xl">Additional notes</h2>
+            <h2 class="card-title text-xl">{{ t('kb.additionalNotes') }}</h2>
             <MarkdownContent :source="article.body || article.summary" />
           </div>
         </div>
@@ -42,10 +42,10 @@
 
       <aside class="card bg-base-200">
         <div class="card-body space-y-3">
-          <h2 class="card-title">Related Resources</h2>
+          <h2 class="card-title">{{ t('kb.relatedResources') }}</h2>
 
           <div>
-            <p class="text-sm font-semibold">Solutions</p>
+            <p class="text-sm font-semibold">{{ t('kb.solutions') }}</p>
             <ul v-if="solutions.length" class="space-y-1">
               <li
                 v-for="solution in solutions"
@@ -56,11 +56,11 @@
                 </NuxtLink>
               </li>
             </ul>
-            <p v-else class="text-base-content/70">N/A</p>
+            <p v-else class="text-base-content/70">{{ t('common.na') }}</p>
           </div>
 
           <div>
-            <p class="text-sm font-semibold">Products</p>
+            <p class="text-sm font-semibold">{{ t('kb.products') }}</p>
             <div v-if="products.length" class="flex flex-wrap gap-2">
               <span
                 v-for="product in products"
@@ -70,7 +70,7 @@
                 {{ product.name }}
               </span>
             </div>
-            <p v-else class="text-base-content/70">N/A</p>
+            <p v-else class="text-base-content/70">{{ t('common.na') }}</p>
           </div>
         </div>
       </aside>
@@ -78,11 +78,12 @@
   </section>
 
   <div v-else class="alert border border-base-300 bg-base-100">
-    <span>KB article not found.</span>
+    <span>{{ t('kb.notFound') }}</span>
   </div>
 </template>
 
 <script setup lang="ts">
+  const { t } = useL10n();
   const route = useRoute();
   const slug = computed(() => String(route.params.slug || ''));
   const { data, pending, error } = await useFetch(() => `/api/kb-articles/${slug.value}`);
@@ -92,10 +93,10 @@
   const products = computed(() => data.value?.products || []);
 
   useServerSeoMeta({
-    title: () => (article.value?.title ? `${article.value.title} | KB Article` : 'KB Article'),
+    title: () => (article.value?.title ? `${article.value.title} | ${t('kb.label')}` : t('kb.seoFallbackTitle')),
     description: () =>
       article.value?.symptoms ||
       article.value?.summary ||
-      'Knowledge base article details and linked resources.',
+      t('kb.seoDescription'),
   });
 </script>

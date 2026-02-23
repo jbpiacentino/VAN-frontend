@@ -3,14 +3,14 @@
     <ClientOnly>
       <div class="card w-full border border-base-300 bg-base-100 shadow-sm">
         <div class="card-body">
-          <h1 class="card-title text-2xl">Protected Access</h1>
+          <h1 class="card-title text-2xl">{{ t('access.title') }}</h1>
 
           <label class="form-control mt-3 w-full">
             <input
               v-model="password"
               type="password"
               class="input input-bordered w-full"
-              placeholder="Password"
+              :placeholder="t('access.passwordPlaceholder')"
               @keydown.enter.prevent="submit"
             />
           </label>
@@ -19,7 +19,7 @@
 
           <div class="card-actions mt-2 justify-end">
             <button class="btn btn-primary" :disabled="pending || !password" @click="submit">
-              {{ pending ? 'Checking...' : 'Enter' }}
+              {{ pending ? t('access.checking') : t('access.enter') }}
             </button>
           </div>
         </div>
@@ -29,6 +29,7 @@
 </template>
 
 <script setup lang="ts">
+const { t } = useL10n();
 const route = useRoute();
 const password = ref('');
 const pending = ref(false);
@@ -52,14 +53,14 @@ const errorMessage = ref('');
     }
     await navigateTo(target);
   } catch {
-    errorMessage.value = 'Invalid password';
+    errorMessage.value = t('access.invalidPassword');
   } finally {
     pending.value = false;
   }
 }
 
   useServerSeoMeta({
-    title: 'Access',
-    description: 'Password-protected access page.',
+    title: t('access.seoTitle'),
+    description: t('access.seoDescription'),
   });
 </script>

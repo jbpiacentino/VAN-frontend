@@ -509,5 +509,5 @@ const renderer$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty
   default: renderer
 }, Symbol.toStringTag, { value: 'Module' }));
 
-export { useServerSeoMeta as a, baseURL as b, headSymbol as h, renderer$1 as r, useHead as u };
+export { useSeoMeta as a, baseURL as b, useServerSeoMeta as c, headSymbol as h, renderer$1 as r, useHead as u };
 //# sourceMappingURL=renderer.mjs.map

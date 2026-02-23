@@ -2148,22 +2148,7 @@ const plugins = [
 _UXxgNMdnWc4VrIlQzbgM08kn4DKwnfw2fUy8nUxZRU
 ];
 
-const assets = {
-  "/index.mjs": {
-    "type": "text/javascript; charset=utf-8",
-    "etag": "\"26c74-htkzX8aPRb0dBOmDC+kA7cEz8e4\"",
-    "mtime": "2026-02-22T21:44:48.274Z",
-    "size": 158836,
-    "path": "index.mjs"
-  },
-  "/index.mjs.map": {
-    "type": "application/json",
-    "etag": "\"9aa6a-S049fTciEnrxZDTOSipg/uN7oVI\"",
-    "mtime": "2026-02-22T21:44:48.274Z",
-    "size": 633450,
-    "path": "index.mjs.map"
-  }
-};
+const assets = {};
 
 function readAsset (id) {
   const serverDir = dirname$1(fileURLToPath(globalThis._importMeta_.url));
@@ -2660,13 +2645,14 @@ async function getIslandContext(event) {
 
 const _lazy_vxLBOH = () => Promise.resolve().then(function () { return login_post$1; });
 const _lazy_B202K0 = () => Promise.resolve().then(function () { return solutionGuideContact_post$1; });
-const _lazy_hOwsJU = () => Promise.resolve().then(function () { return _slug__get$9; });
+const _lazy_hOwsJU = () => Promise.resolve().then(function () { return _slug__get$b; });
 const _lazy_HlyFAM = () => Promise.resolve().then(function () { return landing_get$1; });
 const _lazy_9MOt71 = () => Promise.resolve().then(function () { return media_get$1; });
-const _lazy_t6UOVe = () => Promise.resolve().then(function () { return _slug__get$7; });
-const _lazy_fX5Rt0 = () => Promise.resolve().then(function () { return _slug__get$5; });
+const _lazy_t6UOVe = () => Promise.resolve().then(function () { return _slug__get$9; });
+const _lazy_fX5Rt0 = () => Promise.resolve().then(function () { return _slug__get$7; });
 const _lazy_Prfbdt = () => Promise.resolve().then(function () { return solutions_get$1; });
-const _lazy_J9r0Co = () => Promise.resolve().then(function () { return _slug__get$3; });
+const _lazy_J9r0Co = () => Promise.resolve().then(function () { return _slug__get$5; });
+const _lazy_tUvWCY = () => Promise.resolve().then(function () { return _slug__get$3; });
 const _lazy_QmYC87 = () => Promise.resolve().then(function () { return vendors_get$1; });
 const _lazy_dqTxFW = () => Promise.resolve().then(function () { return _slug__get$1; });
 const _lazy_0EeiPC = () => Promise.resolve().then(function () { return renderer$1; });
@@ -2683,6 +2669,7 @@ const handlers = [
   { route: '/api/solution-guides/:slug', handler: _lazy_fX5Rt0, lazy: true, middleware: false, method: "get" },
   { route: '/api/solutions', handler: _lazy_Prfbdt, lazy: true, middleware: false, method: "get" },
   { route: '/api/solutions/:slug', handler: _lazy_J9r0Co, lazy: true, middleware: false, method: "get" },
+  { route: '/api/static-pages/:slug', handler: _lazy_tUvWCY, lazy: true, middleware: false, method: "get" },
   { route: '/api/van-finder/vendors', handler: _lazy_QmYC87, lazy: true, middleware: false, method: "get" },
   { route: '/api/vendors/:slug', handler: _lazy_dqTxFW, lazy: true, middleware: false, method: "get" },
   { route: '/__nuxt_error', handler: _lazy_0EeiPC, lazy: true, middleware: false, method: undefined },
@@ -3296,7 +3283,7 @@ function levenshtein(a, b) {
   return dp[rows - 1][cols - 1];
 }
 
-const _slug__get$8 = defineEventHandler(async (event) => {
+const _slug__get$a = defineEventHandler(async (event) => {
   const slug = String(getRouterParam(event, "slug") || "").trim();
   if (!slug) {
     throw createError({ statusCode: 400, statusMessage: "Missing KB article slug" });
@@ -3354,9 +3341,9 @@ const _slug__get$8 = defineEventHandler(async (event) => {
   };
 });
 
-const _slug__get$9 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const _slug__get$b = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: _slug__get$8
+  default: _slug__get$a
 }, Symbol.toStringTag, { value: 'Module' }));
 
 function asRecord(value) {
@@ -3408,18 +3395,12 @@ function inlineNodeToMd(node) {
   if (typeof node === "string") return normalizeString(node, false);
   if (Array.isArray(node)) return node.map((item) => inlineNodeToMd(item)).join("");
   const type = normalizeString(node.type).toLowerCase();
-  if (type === "hardbreak" || type === "hard_break" || type === "br") {
-    return "\n";
-  }
-  if (typeof node.text === "string") {
-    return applyInlineMarks(normalizeString(node.text, false), node);
-  }
+  if (type === "hardbreak" || type === "hard_break" || type === "br") return "\n";
+  if (typeof node.text === "string") return applyInlineMarks(normalizeString(node.text, false), node);
   const children = childNodes(node);
   const child = children.map((item) => inlineNodeToMd(item)).join("");
   const href = normalizeString(node.url || node.href || ((_a = node == null ? void 0 : node.attrs) == null ? void 0 : _a.href));
-  if ((type === "link" || href) && child) {
-    return href ? `[${child}](${href})` : child;
-  }
+  if ((type === "link" || href) && child) return href ? `[${child}](${href})` : child;
   return child;
 }
 function blockListToMd(children, ordered) {
@@ -3438,9 +3419,7 @@ function blockNodeToMd(node) {
   const type = normalizeString(node.type).toLowerCase();
   const children = childNodes(node);
   const text = inlineNodeToMd(children.length ? children : node).trim();
-  if (type === "doc") {
-    return children.map((item) => blockNodeToMd(item)).filter(Boolean).join("\n\n");
-  }
+  if (type === "doc") return children.map((item) => blockNodeToMd(item)).filter(Boolean).join("\n\n");
   if (type === "heading") {
     const level = Number(node.level || ((_a = node == null ? void 0 : node.attrs) == null ? void 0 : _a.level) || 2);
     const safe = Number.isFinite(level) ? Math.min(6, Math.max(1, level)) : 2;
@@ -3464,9 +3443,7 @@ function blockNodeToMd(node) {
 ${text || inlineNodeToMd(children).trim()}
 \`\`\``;
   }
-  if (type === "horizontalrule" || type === "thematicbreak") {
-    return "---";
-  }
+  if (type === "horizontalrule" || type === "thematicbreak") return "---";
   if (text) return text;
   const blocks = asRecord(node).blocks;
   if (Array.isArray(blocks)) return blocks.map((item) => blockNodeToMd(item)).filter(Boolean).join("\n\n");
@@ -3475,9 +3452,7 @@ ${text || inlineNodeToMd(children).trim()}
 function toMarkdown(value) {
   const plain = normalizeString(value);
   if (plain) return plain;
-  if (Array.isArray(value)) {
-    return value.map((item) => blockNodeToMd(item)).filter(Boolean).join("\n\n").trim();
-  }
+  if (Array.isArray(value)) return value.map((item) => blockNodeToMd(item)).filter(Boolean).join("\n\n").trim();
   if (!value || typeof value !== "object") return "";
   const obj = asRecord(value);
   const isRichTextNode = typeof obj.type === "string" || Array.isArray(obj.content) || Array.isArray(obj.children);
@@ -3485,41 +3460,37 @@ function toMarkdown(value) {
     const md = blockNodeToMd(obj).trim();
     if (md) return md;
   }
-  const directKeys = [
-    "content",
-    "blocks",
-    "children",
-    "body",
-    "markdown",
-    "text"
-  ];
-  for (const key of directKeys) {
+  for (const key of ["content", "blocks", "children", "body", "markdown", "text"]) {
     const md = toMarkdown(obj[key]);
     if (md) return md;
   }
   return blockNodeToMd(obj).trim();
 }
-function pickTitle(entry) {
-  const titleKeys = ["title", "name", "heading", "Heading", "label"];
-  for (const key of titleKeys) {
+function pickStaticPageTitle(entry, fallback = "Alliance Network") {
+  for (const key of ["title", "name", "heading", "Heading", "label"]) {
     const value = normalizeString(entry[key]);
     if (value) return value;
   }
-  return "Alliance Network";
+  return fallback;
 }
-function pickContent(entry) {
-  return toMarkdown(entry.content);
+function pickStaticPageContent(entry) {
+  return toMarkdown(entry.content || entry.body || entry.markdown || entry.text || "");
 }
+
 const landing_get = defineEventHandler(async () => {
   const config = useRuntimeConfig();
-  const singleType = String(config.landingSingleType || "landing-page");
-  const response = await strapiFetch(`/${singleType}`, { populate: "*" });
-  const raw = withAttributes((response == null ? void 0 : response.data) || null);
+  const slug = String(config.landingSingleType || "landing-page").trim();
+  const response = await strapiFetch("/static-pages", {
+    populate: "*",
+    "filters[slug][$eq]": slug,
+    "pagination[pageSize]": 1
+  });
+  const raw = withAttributes(Array.isArray(response == null ? void 0 : response.data) ? response.data[0] : null);
   if (!raw || Object.keys(raw).length === 0) return null;
   return {
     ...raw,
-    title: pickTitle(raw),
-    content: pickContent(raw)
+    title: pickStaticPageTitle(raw),
+    content: pickStaticPageContent(raw)
   };
 });
 
@@ -3571,7 +3542,7 @@ const media_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
   default: media_get
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const _slug__get$6 = defineEventHandler(async (event) => {
+const _slug__get$8 = defineEventHandler(async (event) => {
   const slug = String(getRouterParam(event, "slug") || "").trim();
   if (!slug) {
     throw createError({ statusCode: 400, statusMessage: "Missing brief slug" });
@@ -3619,12 +3590,12 @@ const _slug__get$6 = defineEventHandler(async (event) => {
   };
 });
 
-const _slug__get$7 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const _slug__get$9 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: _slug__get$6
+  default: _slug__get$8
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const _slug__get$4 = defineEventHandler(async (event) => {
+const _slug__get$6 = defineEventHandler(async (event) => {
   const slug = String(getRouterParam(event, "slug") || "").trim();
   if (!slug) {
     throw createError({ statusCode: 400, statusMessage: "Missing guide slug" });
@@ -3673,26 +3644,53 @@ const _slug__get$4 = defineEventHandler(async (event) => {
   };
 });
 
-const _slug__get$5 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const _slug__get$7 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: _slug__get$4
+  default: _slug__get$6
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const solutions_get = defineEventHandler(async () => {
-  const rows = await strapiFetchAll("solutions", {
+function parsePositiveInt(value, fallback) {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) && parsed > 0 ? Math.floor(parsed) : fallback;
+}
+const solutions_get = defineEventHandler(async (event) => {
+  var _a;
+  const query = getQuery$1(event);
+  const page = parsePositiveInt(query.page, 1);
+  const pageSize = Math.min(parsePositiveInt(query.pageSize, 10), 100);
+  const response = await strapiFetch("/solutions", {
     populate: "*",
-    "sort[0]": "name:asc"
+    "sort[0]": "name:asc",
+    "pagination[page]": page,
+    "pagination[pageSize]": pageSize
   });
-  return rows.map((solution) => ({
-    id: solution.id,
-    documentId: solution.documentId,
-    slug: solution.slug,
-    name: solution.name,
-    title: solution.title,
-    summary: solution.summary,
-    shortDescription: solution.short_description,
-    description: solution.description
-  }));
+  const rows = Array.isArray(response == null ? void 0 : response.data) ? response.data : [];
+  const pagination = ((_a = response == null ? void 0 : response.meta) == null ? void 0 : _a.pagination) || {};
+  return {
+    items: rows.map((solution) => {
+      const vendor = relationFirst(solution == null ? void 0 : solution.vendor);
+      return {
+        id: solution.id,
+        documentId: solution.documentId,
+        slug: solution.slug,
+        name: solution.name || solution.title || "",
+        shortDescription: solution.short_description || "",
+        summary: solution.summary || "",
+        solutionType: solution.solution_type || "",
+        workflow: solution.workflow || "",
+        vendor: vendor ? {
+          slug: vendor.slug || "",
+          name: vendor.name || ""
+        } : null
+      };
+    }),
+    pagination: {
+      page: Number(pagination.page || page),
+      pageSize: Number(pagination.pageSize || pageSize),
+      pageCount: Number(pagination.pageCount || 1),
+      total: Number(pagination.total || rows.length)
+    }
+  };
 });
 
 const solutions_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
@@ -3700,79 +3698,82 @@ const solutions_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePro
   default: solutions_get
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const _slug__get$2 = defineEventHandler(async (event) => {
+const _slug__get$4 = defineEventHandler(async (event) => {
   const slug = String(getRouterParam(event, "slug") || "").trim();
   if (!slug) {
     throw createError({ statusCode: 400, statusMessage: "Missing solution slug" });
   }
-  const rows = await strapiFetchAll("solutions", {
+  const response = await strapiFetch("/solutions", {
     populate: "*",
     "filters[slug][$eq]": slug,
     "pagination[pageSize]": 1
   });
+  const rows = Array.isArray(response == null ? void 0 : response.data) ? response.data : [];
   const solution = rows[0];
   if (!solution) {
     throw createError({ statusCode: 404, statusMessage: "Solution not found" });
   }
-  const solutionId = String(solution.documentId || "");
   const vendor = relationFirst(solution == null ? void 0 : solution.vendor);
-  const [allGuides, allBriefs, allKb] = await Promise.all([
-    strapiFetchAll("solution-guides", { populate: "*", "sort[0]": "title:asc", "pagination[pageSize]": 300 }),
-    strapiFetchAll("solution-briefs", { populate: "*", "sort[0]": "title:asc", "pagination[pageSize]": 300 }),
-    strapiFetchAll("kb-articles", { populate: "*", "sort[0]": "title:asc", "pagination[pageSize]": 300 })
-  ]);
-  const guides = allGuides.filter((row) => relationItems(row == null ? void 0 : row.solutions).some((rel) => String((rel == null ? void 0 : rel.documentId) || "") === solutionId)).map((row) => ({
-    id: row.id,
-    documentId: row.documentId,
-    slug: row.slug,
-    title: row.title,
-    summary: row.summary
-  }));
-  const briefs = allBriefs.filter((row) => relationItems(row == null ? void 0 : row.solution).some((rel) => String((rel == null ? void 0 : rel.documentId) || "") === solutionId)).map((row) => ({
-    id: row.id,
-    documentId: row.documentId,
-    slug: row.slug,
-    title: row.title,
-    shortDescription: row.short_description,
-    description: row.description,
-    integrationType: row.integration_type,
-    supportedCapabilities: row.supported_capabilities
-  }));
-  const kbArticles = allKb.filter((row) => {
-    const one = relationItems(row == null ? void 0 : row.solution);
-    const many = relationItems(row == null ? void 0 : row.solutions);
-    return [...one, ...many].some((rel) => String((rel == null ? void 0 : rel.documentId) || "") === solutionId);
-  }).map((row) => ({
-    id: row.id,
-    documentId: row.documentId,
-    slug: row.slug,
-    title: row.title,
-    type: row.type,
-    severity: row.severity
+  const products = relationItems(solution == null ? void 0 : solution.products).map((item) => ({
+    id: item.id,
+    documentId: item.documentId,
+    slug: item.slug || "",
+    name: item.name || item.title || ""
   }));
   return {
-    solution: {
-      id: solution.id,
-      documentId: solution.documentId,
-      slug: solution.slug,
-      name: solution.name || solution.title,
-      shortDescription: solution.short_description,
-      description: solution.description,
-      workflow: solution.workflow,
-      solutionType: solution.solution_type,
-      integrationPattern: solution.integration_patterns,
-      licensingModel: solution.licensing_model,
-      visibilityLevel: solution.visibility_level,
-      vendor: vendor ? {
-        id: vendor.id,
-        documentId: vendor.documentId,
-        slug: vendor.slug,
-        name: vendor.name
-      } : null
-    },
-    guides,
-    briefs,
-    kbArticles
+    id: solution.id,
+    documentId: solution.documentId,
+    slug: solution.slug,
+    name: solution.name || solution.title || "",
+    shortDescription: solution.short_description || "",
+    summary: solution.summary || "",
+    description: solution.description || "",
+    workflow: solution.workflow || "",
+    solutionType: solution.solution_type || "",
+    integrationPattern: solution.integration_patterns || "",
+    licensingModel: solution.licensing_model || "",
+    visibilityLevel: solution.visibility_level || "",
+    vendor: vendor ? {
+      id: vendor.id,
+      documentId: vendor.documentId,
+      slug: vendor.slug || "",
+      name: vendor.name || ""
+    } : null,
+    products,
+    createdAt: solution.createdAt || null,
+    updatedAt: solution.updatedAt || null,
+    publishedAt: solution.publishedAt || null,
+    relatedResources: {
+      guides: relationItems(solution == null ? void 0 : solution.solution_guides).length,
+      briefs: relationItems(solution == null ? void 0 : solution.solution_briefs).length,
+      kbArticles: relationItems(solution == null ? void 0 : solution.kb_articles).length
+    }
+  };
+});
+
+const _slug__get$5 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: _slug__get$4
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const _slug__get$2 = defineEventHandler(async (event) => {
+  const slug = String(getRouterParam(event, "slug") || "").trim();
+  if (!slug) {
+    throw createError({ statusCode: 400, statusMessage: "Missing static page slug" });
+  }
+  const response = await strapiFetch("/static-pages", {
+    populate: "*",
+    "filters[slug][$eq]": slug,
+    "pagination[pageSize]": 1
+  });
+  const raw = withAttributes(Array.isArray(response == null ? void 0 : response.data) ? response.data[0] : null);
+  if (!raw || Object.keys(raw).length === 0) {
+    throw createError({ statusCode: 404, statusMessage: "Static page not found" });
+  }
+  return {
+    ...raw,
+    title: pickStaticPageTitle(raw),
+    content: pickStaticPageContent(raw)
   };
 });
 

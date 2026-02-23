@@ -8,9 +8,7 @@
     @keydown.space.prevent="openVendor"
   >
     <div class="card-body relative p-5">
-      <span v-if="tierBadge" class="badge badge-neutral absolute top-3 right-3">{{
-        tierBadge
-      }}</span>
+      <VanTierBadge :tier="vanTier" />
       <div class="flex h-24 items-center justify-center">
         <img
           v-if="vendor.logoUrl"
@@ -25,13 +23,15 @@
       </p>
       <p class="line-clamp-6 text-base-content">{{ description }}</p>
       <div v-if="vendor.solutions?.length" class="space-y-1 pt-1">
-        <p class="text-xs font-semibold uppercase tracking-wide text-base-content/60">Solutions</p>
+        <p class="text-xs font-semibold uppercase tracking-wide text-base-content/60">
+          {{ t('finder.resourceSolutions') }}
+        </p>
         <div class="flex flex-wrap gap-1.5">
           <NuxtLink
             v-for="solution in previewSolutions"
             :key="solution.documentId || solution.id || solution.slug"
             :to="`/solutions/${solution.slug}`"
-            class="badge badge-outline badge-sm"
+            class="badge badge-soft badge-info badge-xs"
             @click.stop
           >
             {{ solution.name }}
@@ -63,9 +63,10 @@
 </template>
 
 <script setup lang="ts">
+  const { t } = useL10n();
   const props = defineProps<{
     vendor: Record<string, any>;
-    tierBadge?: string;
+    vanTier?: string | null;
     description?: string;
     resources?: Array<{ key: string; count: number; label: string; icon: any }>;
   }>();
@@ -73,9 +74,7 @@
   const router = useRouter();
   const previewSolutions = computed(() =>
     Array.isArray(props.vendor?.solutions)
-      ? props.vendor.solutions
-          .filter((solution) => String(solution?.slug || '').trim())
-          .slice(0, 3)
+      ? props.vendor.solutions.filter((solution) => String(solution?.slug || '').trim()).slice(0, 3)
       : []
   );
   const remainingSolutions = computed(() =>

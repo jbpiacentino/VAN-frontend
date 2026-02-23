@@ -1,4 +1,4 @@
-import process from 'node:process';globalThis._importMeta_=globalThis._importMeta_||{url:"file:///_entry.js",env:process.env};import { hasInjectionContext, inject, defineComponent, shallowRef, h, resolveComponent, toRef, isRef, getCurrentInstance, computed, ref, Suspense, Fragment, useSSRContext, createApp, provide, shallowReactive, watch, mergeProps, unref, withCtx, createTextVNode, toDisplayString, onErrorCaptured, onServerPrefetch, createVNode, resolveDynamicComponent, reactive, effectScope, defineAsyncComponent, getCurrentScope, isReadonly, isShallow, isReactive, toRaw } from 'vue';
+import process from 'node:process';globalThis._importMeta_=globalThis._importMeta_||{url:"file:///_entry.js",env:process.env};import { hasInjectionContext, inject, defineComponent, shallowRef, h, resolveComponent, getCurrentInstance, toRef, isRef, computed, ref, Suspense, Fragment, useSSRContext, createApp, provide, shallowReactive, watch, mergeProps, unref, withCtx, createTextVNode, toDisplayString, onErrorCaptured, onServerPrefetch, createVNode, resolveDynamicComponent, reactive, effectScope, defineAsyncComponent, getCurrentScope, isReadonly, isShallow, isReactive, toRaw } from 'vue';
 import { c as createError$1, v as parseQuery, w as hasProtocol, q as joinURL, x as parseURL, y as encodePath, z as decodePath, A as getContext, B as withQuery, C as isScriptProtocol, D as withTrailingSlash, E as withoutTrailingSlash, F as sanitizeStatusCode, $ as $fetch, G as createHooks, H as executeAsync, I as defu } from '../nitro/nitro.mjs';
 import { b as baseURL } from '../routes/renderer.mjs';
 import { RouterView, createMemoryHistory, createRouter, START_LOCATION } from 'vue-router';
@@ -409,54 +409,52 @@ const _routes = [
   {
     name: "index",
     path: "/",
-    component: () => import('./index-BVt8nWlj.mjs')
+    component: () => import('./index-CDRY0ow1.mjs')
   },
   {
     name: "access",
     path: "/access",
-    component: () => import('./access-Bf8ImAUv.mjs')
+    component: () => import('./access-By4epHN4.mjs')
   },
   {
     name: "program",
     path: "/program",
-    component: () => import('./program-DPdLWLRw.mjs')
-  },
-  {
-    name: "solutions",
-    path: "/solutions",
-    component: () => import('./solutions-DI6GGTQY.mjs'),
-    children: [
-      {
-        name: "solutions-slug",
-        path: ":slug()",
-        component: () => import('./_slug_-jmcKC5Da.mjs')
-      }
-    ]
+    component: () => import('./program-DqcGESDS.mjs')
   },
   {
     name: "van-finder",
     path: "/van-finder",
-    component: () => import('./van-finder-8bfUTWi_.mjs')
+    component: () => import('./van-finder-CJInBa-L.mjs')
   },
   {
     name: "vendors-slug",
     path: "/vendors/:slug()",
-    component: () => import('./_slug_-BFXfhRk3.mjs')
+    component: () => import('./_slug_-BLXmBDBw.mjs')
+  },
+  {
+    name: "solutions",
+    path: "/solutions",
+    component: () => import('./index-BbSD0RWa.mjs')
+  },
+  {
+    name: "solutions-slug",
+    path: "/solutions/:slug()",
+    component: () => import('./_slug_-CHCSHoyf.mjs')
   },
   {
     name: "kb-articles-slug",
     path: "/kb-articles/:slug()",
-    component: () => import('./_slug_-hMwSPc7-.mjs')
+    component: () => import('./_slug_-In2hFzvH.mjs')
   },
   {
     name: "solution-briefs-slug",
     path: "/solution-briefs/:slug()",
-    component: () => import('./_slug_-DPg6YRs6.mjs')
+    component: () => import('./_slug_-UbV2D27N.mjs')
   },
   {
     name: "solution-guides-slug",
     path: "/solution-guides/:slug()",
-    component: () => import('./_slug_-CKBCpdP2.mjs')
+    component: () => import('./_slug_-CttGdh-k.mjs')
   }
 ];
 const ROUTE_KEY_PARENTHESES_RE = /(:\w+)\([^)]+\)/g;
@@ -1167,6 +1165,326 @@ function normalizeSlot(slot, data) {
   const slotContent = slot(data);
   return slotContent.length === 1 ? h(slotContent[0]) : h(Fragment, void 0, slotContent);
 }
+const messages$2 = {
+  "layout.brand": "Vates VAN",
+  "layout.footer": "Vates Alliance Network (VAN)",
+  "nav.program": "Program",
+  "nav.vanFinder": "VAN Finder",
+  "nav.solutions": "Solutions",
+  "common.theme": "Theme",
+  "common.locale": "Language",
+  "common.by": "by",
+  "common.all": "All",
+  "common.search": "Search",
+  "common.clear": "Clear",
+  "common.loading": "Loading",
+  "common.na": "N/A",
+  "common.updated": "Updated",
+  "common.noSummary": "No summary available.",
+  "error.unexpected": "An unexpected error occurred.",
+  "access.title": "Protected Access",
+  "access.passwordPlaceholder": "Password",
+  "access.invalidPassword": "Invalid password",
+  "access.checking": "Checking...",
+  "access.enter": "Enter",
+  "access.seoTitle": "Access",
+  "access.seoDescription": "Password-protected access page.",
+  "landing.label": "Landing",
+  "landing.defaultTitle": "Alliance Network",
+  "landing.noContent": "No landing page content found.",
+  "landing.seoTitle": "Vates Alliance Network",
+  "landing.seoDescription": "Official VAN landing page with alliance overview and resources.",
+  "program.label": "Program",
+  "program.title": "About the VAN Program",
+  "program.intro": "This static page is the foundation for VAN messaging before full CMS integration into the main Vates website.",
+  "program.deliversTitle": "What VAN delivers",
+  "program.deliver1": "Alliance-based collaboration between Vates and vendor organizations",
+  "program.deliver2": "Curated solutions to customer challenges",
+  "program.deliver3": "Reusable knowledge assets for implementation and adoption",
+  "program.seoTitle": "VAN Program",
+  "program.seoDescription": "About the Vates Alliance Network program and value proposition.",
+  "program.noContent": "No program page content found.",
+  "solutions.label": "Solutions",
+  "solutions.title": "Solutions Catalog",
+  "solutions.subtitle": "Browse available solutions.",
+  "solutions.none": "No solutions available.",
+  "solutions.vendor": "Vendor",
+  "solutions.seoTitle": "VAN Solutions",
+  "solutions.seoDescription": "Browse VAN partner solutions.",
+  "solution.label": "Solution",
+  "solution.overview": "Overview",
+  "solution.details": "Details",
+  "solution.vendor": "Vendor",
+  "solution.type": "Type",
+  "solution.integrationPattern": "Integration pattern",
+  "solution.licensingModel": "Licensing model",
+  "solution.visibility": "Visibility",
+  "solution.relatedResources": "Related resources",
+  "solution.guidesShort": "SG",
+  "solution.briefsShort": "SB",
+  "solution.kbShort": "KB",
+  "solution.products": "Products",
+  "solution.notFound": "Solution not found.",
+  "solution.noDescription": "No description available.",
+  "solution.seoFallbackTitle": "Solution",
+  "solution.seoDescriptionFallback": "Solution details and linked resources.",
+  "vendor.profile": "Vendor profile",
+  "vendor.shortDescriptionFallback": "Alliance partner profile and solution highlights.",
+  "vendor.about": "About {name}",
+  "vendor.noDescription": "No description available yet.",
+  "vendor.partnerDetails": "Partner Details",
+  "vendor.vanTier": "VAN tier",
+  "vendor.notMember": "Not a VAN member",
+  "vendor.areasOfFocus": "Areas of focus",
+  "vendor.regions": "Regions",
+  "vendor.website": "Website",
+  "vendor.links": "Links",
+  "vendor.solutions": "Solutions",
+  "vendor.solutionGuides": "Solution Guides",
+  "vendor.solutionBriefs": "Solution Briefs",
+  "vendor.kbArticles": "KB Articles",
+  "vendor.noSolutions": "No solutions linked to this vendor.",
+  "vendor.noGuides": "No solution guides linked to this vendor.",
+  "vendor.noBriefs": "No solution briefs linked to this vendor.",
+  "vendor.noKb": "No KB articles linked to this vendor.",
+  "vendor.notFound": "Vendor not found.",
+  "vendor.seoFallbackTitle": "Vendor | VAN",
+  "vendor.seoDescription": "Vendor details in Vates Alliance Network.",
+  "brief.label": "Solution brief",
+  "brief.content": "Brief content",
+  "brief.noDescription": "No brief description available.",
+  "brief.details": "Details",
+  "brief.workflow": "Workflow",
+  "brief.integrationType": "Integration type",
+  "brief.supportedCapabilities": "Supported capabilities",
+  "brief.solution": "Solution",
+  "brief.vendor": "Vendor",
+  "brief.product": "Product",
+  "brief.requirements": "Requirements",
+  "brief.requirementsNone": "No requirements specified.",
+  "brief.limitations": "Limitations",
+  "brief.limitationsNone": "No limitations specified.",
+  "brief.notFound": "Solution brief not found.",
+  "brief.seoFallbackTitle": "Solution Brief",
+  "brief.seoDescription": "Solution brief details and references.",
+  "guide.label": "Solution guide",
+  "guide.content": "Guide content",
+  "guide.noBody": "No guide body available.",
+  "guide.accessTitle": "Access this solution guide",
+  "guide.accessIntro": "Please share your contact details to unlock the full guide content.",
+  "guide.fullName": "Full name",
+  "guide.businessEmail": "Business email",
+  "guide.company": "Company",
+  "guide.jobTitle": "Job title",
+  "guide.countryOptional": "Country (optional)",
+  "guide.optIn": "I agree to be contacted about this solution guide.",
+  "guide.submitting": "Submitting...",
+  "guide.unlock": "Unlock guide content",
+  "guide.relatedSolutions": "Related Solutions",
+  "guide.noRelatedSolutions": "No related solutions.",
+  "guide.products": "Products",
+  "guide.noRelatedProducts": "No related products.",
+  "guide.notFound": "Solution guide not found.",
+  "guide.seoFallbackTitle": "Solution Guide",
+  "guide.seoDescription": "Solution guide details and related resources.",
+  "guide.formRequired": "Please fill all required fields.",
+  "guide.formInvalidEmail": "Please provide a valid email address.",
+  "guide.formSubmitError": "Unable to submit your request.",
+  "kb.label": "KB article",
+  "kb.article": "article",
+  "kb.symptoms": "Symptoms",
+  "kb.rootCause": "Root cause",
+  "kb.resolution": "Resolution",
+  "kb.additionalNotes": "Additional notes",
+  "kb.relatedResources": "Related Resources",
+  "kb.solutions": "Solutions",
+  "kb.products": "Products",
+  "kb.notFound": "KB article not found.",
+  "kb.seoFallbackTitle": "KB Article",
+  "kb.seoDescription": "Knowledge base article details and linked resources.",
+  "finder.title": "VAN Finder",
+  "finder.includeNonMembers": "Include non VAN members",
+  "finder.searchPlaceholder": "Type a member or solution name",
+  "finder.seoDescription": "Find Vates Alliance Network members, areas of focus, and linked resources.",
+  "finder.resultsCount": "{count} match your search",
+  "finder.perPage": "Per page",
+  "finder.pageStatus": "Page {page} of {totalPages}",
+  "finder.previous": "Previous",
+  "finder.next": "Next",
+  "finder.noResults": "No matching vendor or solution found.",
+  "finder.resourceSolutions": "Solutions",
+  "finder.resourceBriefs": "Solution briefs",
+  "finder.resourceGuides": "Solution guides",
+  "finder.resourceKb": "Knowledge base articles",
+  "pager.itemsStatus": "{shown} / {total} {resource}",
+  "pager.resourceSolutions": "solutions",
+  "pager.resourceGuides": "solution guides",
+  "pager.resourceBriefs": "solution briefs",
+  "pager.resourceKbArticles": "knowledge base articles",
+  "finder.tierRegular": "VAN member",
+  "finder.tierStrategic": "Strategic",
+  "finder.tierNonMember": "Not a VAN member"
+};
+const messages$1 = {
+  "layout.brand": "Vates VAN",
+  "layout.footer": "Vates Alliance Network (VAN)",
+  "nav.program": "Programme",
+  "nav.vanFinder": "Recherche VAN",
+  "nav.solutions": "Solutions",
+  "common.theme": "Theme",
+  "common.locale": "Langue",
+  "common.by": "par",
+  "common.all": "Tous",
+  "common.search": "Rechercher",
+  "common.clear": "Effacer",
+  "common.loading": "Chargement",
+  "common.na": "N/A",
+  "common.updated": "Mis a jour",
+  "common.noSummary": "Aucun resume disponible.",
+  "error.unexpected": "Une erreur inattendue est survenue.",
+  "access.title": "Acces protege",
+  "access.passwordPlaceholder": "Mot de passe",
+  "access.invalidPassword": "Mot de passe invalide",
+  "access.checking": "Verification...",
+  "access.enter": "Entrer",
+  "access.seoTitle": "Acces",
+  "access.seoDescription": "Page d'acces protegee par mot de passe.",
+  "landing.label": "Accueil",
+  "landing.defaultTitle": "Alliance Network",
+  "landing.noContent": "Aucun contenu d'accueil trouve.",
+  "landing.seoTitle": "Vates Alliance Network",
+  "landing.seoDescription": "Page d'accueil officielle VAN avec presentation de l'alliance et des ressources.",
+  "program.label": "Programme",
+  "program.title": "A propos du programme VAN",
+  "program.intro": "Cette page statique sert de base au message VAN avant l'integration CMS complete dans le site principal de Vates.",
+  "program.deliversTitle": "Ce que VAN apporte",
+  "program.deliver1": "Collaboration d'alliance entre Vates et les organisations partenaires",
+  "program.deliver2": "Solutions ciblees pour les enjeux clients",
+  "program.deliver3": "Ressources de connaissance reutilisables pour l'implementation et l'adoption",
+  "program.seoTitle": "Programme VAN",
+  "program.seoDescription": "A propos du programme Vates Alliance Network et de sa proposition de valeur.",
+  "program.noContent": "Aucun contenu de page programme trouve.",
+  "solutions.label": "Solutions",
+  "solutions.title": "Catalogue des solutions",
+  "solutions.subtitle": "Parcourez les solutions disponibles.",
+  "solutions.none": "Aucune solution disponible.",
+  "solutions.vendor": "Fournisseur",
+  "solutions.seoTitle": "Solutions VAN",
+  "solutions.seoDescription": "Parcourez les solutions partenaires VAN.",
+  "solution.label": "Solution",
+  "solution.overview": "Vue d'ensemble",
+  "solution.details": "Details",
+  "solution.vendor": "Fournisseur",
+  "solution.type": "Type",
+  "solution.integrationPattern": "Mode d'integration",
+  "solution.licensingModel": "Mode de licence",
+  "solution.visibility": "Visibilite",
+  "solution.relatedResources": "Ressources liees",
+  "solution.guidesShort": "SG",
+  "solution.briefsShort": "SB",
+  "solution.kbShort": "KB",
+  "solution.products": "Produits",
+  "solution.notFound": "Solution introuvable.",
+  "solution.noDescription": "Aucune description disponible.",
+  "solution.seoFallbackTitle": "Solution",
+  "solution.seoDescriptionFallback": "Details de solution et ressources liees.",
+  "vendor.profile": "Profil fournisseur",
+  "vendor.shortDescriptionFallback": "Profil partenaire et points forts des solutions.",
+  "vendor.about": "A propos de {name}",
+  "vendor.noDescription": "Aucune description disponible pour le moment.",
+  "vendor.partnerDetails": "Details partenaire",
+  "vendor.vanTier": "Niveau VAN",
+  "vendor.notMember": "Non membre VAN",
+  "vendor.areasOfFocus": "Domaines d'expertise",
+  "vendor.regions": "Regions",
+  "vendor.website": "Site web",
+  "vendor.links": "Liens",
+  "vendor.solutions": "Solutions",
+  "vendor.solutionGuides": "Guides de solution",
+  "vendor.solutionBriefs": "Briefs de solution",
+  "vendor.kbArticles": "Articles KB",
+  "vendor.noSolutions": "Aucune solution liee a ce fournisseur.",
+  "vendor.noGuides": "Aucun guide de solution lie a ce fournisseur.",
+  "vendor.noBriefs": "Aucun brief de solution lie a ce fournisseur.",
+  "vendor.noKb": "Aucun article KB lie a ce fournisseur.",
+  "vendor.notFound": "Fournisseur introuvable.",
+  "vendor.seoFallbackTitle": "Fournisseur | VAN",
+  "vendor.seoDescription": "Details fournisseur dans Vates Alliance Network.",
+  "brief.label": "Brief de solution",
+  "brief.content": "Contenu du brief",
+  "brief.noDescription": "Aucune description de brief disponible.",
+  "brief.details": "Details",
+  "brief.workflow": "Workflow",
+  "brief.integrationType": "Type d'integration",
+  "brief.supportedCapabilities": "Capacites supportees",
+  "brief.solution": "Solution",
+  "brief.vendor": "Fournisseur",
+  "brief.product": "Produit",
+  "brief.requirements": "Exigences",
+  "brief.requirementsNone": "Aucune exigence specifiee.",
+  "brief.limitations": "Limitations",
+  "brief.limitationsNone": "Aucune limitation specifiee.",
+  "brief.notFound": "Brief de solution introuvable.",
+  "brief.seoFallbackTitle": "Brief de solution",
+  "brief.seoDescription": "Details de brief de solution et references.",
+  "guide.label": "Guide de solution",
+  "guide.content": "Contenu du guide",
+  "guide.noBody": "Aucun contenu de guide disponible.",
+  "guide.accessTitle": "Acceder a ce guide de solution",
+  "guide.accessIntro": "Merci de partager vos coordonnees pour debloquer le contenu complet du guide.",
+  "guide.fullName": "Nom complet",
+  "guide.businessEmail": "Email professionnel",
+  "guide.company": "Entreprise",
+  "guide.jobTitle": "Poste",
+  "guide.countryOptional": "Pays (optionnel)",
+  "guide.optIn": "J accepte d etre contacte a propos de ce guide de solution.",
+  "guide.submitting": "Envoi...",
+  "guide.unlock": "Debloquer le contenu du guide",
+  "guide.relatedSolutions": "Solutions liees",
+  "guide.noRelatedSolutions": "Aucune solution liee.",
+  "guide.products": "Produits",
+  "guide.noRelatedProducts": "Aucun produit lie.",
+  "guide.notFound": "Guide de solution introuvable.",
+  "guide.seoFallbackTitle": "Guide de solution",
+  "guide.seoDescription": "Details du guide de solution et ressources liees.",
+  "guide.formRequired": "Merci de remplir tous les champs obligatoires.",
+  "guide.formInvalidEmail": "Merci de fournir une adresse email valide.",
+  "guide.formSubmitError": "Impossible d'envoyer votre demande.",
+  "kb.label": "Article KB",
+  "kb.article": "article",
+  "kb.symptoms": "Symptomes",
+  "kb.rootCause": "Cause racine",
+  "kb.resolution": "Resolution",
+  "kb.additionalNotes": "Notes complementaires",
+  "kb.relatedResources": "Ressources liees",
+  "kb.solutions": "Solutions",
+  "kb.products": "Produits",
+  "kb.notFound": "Article KB introuvable.",
+  "kb.seoFallbackTitle": "Article KB",
+  "kb.seoDescription": "Details article base de connaissance et ressources liees.",
+  "finder.title": "Recherche VAN",
+  "finder.includeNonMembers": "Inclure les non-membres VAN",
+  "finder.searchPlaceholder": "Saisissez un nom de membre ou de solution",
+  "finder.seoDescription": "Trouvez les membres Vates Alliance Network, leurs domaines d expertise et les ressources liees.",
+  "finder.resultsCount": "{count} resultat(s)",
+  "finder.perPage": "Par page",
+  "finder.pageStatus": "Page {page} sur {totalPages}",
+  "finder.previous": "Precedent",
+  "finder.next": "Suivant",
+  "finder.noResults": "Aucun fournisseur ou solution correspondant.",
+  "finder.resourceSolutions": "Solutions",
+  "finder.resourceBriefs": "Briefs de solution",
+  "finder.resourceGuides": "Guides de solution",
+  "finder.resourceKb": "Articles base de connaissances",
+  "pager.itemsStatus": "{shown} / {total} {resource}",
+  "pager.resourceSolutions": "solutions",
+  "pager.resourceGuides": "guides de solution",
+  "pager.resourceBriefs": "briefs de solution",
+  "pager.resourceKbArticles": "articles base de connaissances",
+  "finder.tierRegular": "Membre VAN",
+  "finder.tierStrategic": "Strategique",
+  "finder.tierNonMember": "Non membre VAN"
+};
 const useStateKeyPrefix = "$s";
 function useState(...args) {
   const autoKey = typeof args[args.length - 1] === "string" ? args.pop() : void 0;
@@ -1194,56 +1512,8 @@ function useState(...args) {
   return state;
 }
 const messages = {
-  en: {
-    "nav.program": "Program",
-    "nav.vanFinder": "VAN Finder",
-    "nav.solutions": "Solutions",
-    "common.theme": "Theme",
-    "common.locale": "Language",
-    "common.all": "All",
-    "common.search": "Search",
-    "common.clear": "Clear",
-    "finder.title": "VAN Finder",
-    "finder.includeNonMembers": "Include non VAN members",
-    "finder.searchPlaceholder": "Type a member or solution name",
-    "finder.resultsCount": "{count} match your search",
-    "finder.perPage": "Per page",
-    "finder.pageStatus": "Page {page} of {totalPages}",
-    "finder.previous": "Previous",
-    "finder.next": "Next",
-    "finder.noResults": "No matching vendor or solution found.",
-    "finder.resourceSolutions": "Solutions",
-    "finder.resourceBriefs": "Solution briefs",
-    "finder.resourceGuides": "Solution guides",
-    "finder.resourceKb": "Knowledge base articles",
-    "finder.tierRegular": "VAN member",
-    "finder.tierStrategic": "Strategic"
-  },
-  fr: {
-    "nav.program": "Programme",
-    "nav.vanFinder": "Recherche VAN",
-    "nav.solutions": "Solutions",
-    "common.theme": "Theme",
-    "common.locale": "Langue",
-    "common.all": "Tous",
-    "common.search": "Rechercher",
-    "common.clear": "Effacer",
-    "finder.title": "Recherche VAN",
-    "finder.includeNonMembers": "Inclure les non-membres VAN",
-    "finder.searchPlaceholder": "Saisissez un nom de membre ou de solution",
-    "finder.resultsCount": "{count} resultat(s)",
-    "finder.perPage": "Par page",
-    "finder.pageStatus": "Page {page} sur {totalPages}",
-    "finder.previous": "Precedent",
-    "finder.next": "Suivant",
-    "finder.noResults": "Aucun fournisseur ou solution correspondant.",
-    "finder.resourceSolutions": "Solutions",
-    "finder.resourceBriefs": "Briefs de solution",
-    "finder.resourceGuides": "Guides de solution",
-    "finder.resourceKb": "Articles base de connaissances",
-    "finder.tierRegular": "Membre VAN",
-    "finder.tierStrategic": "Strategique"
-  }
+  en: messages$2,
+  fr: messages$1
 };
 function useL10n() {
   const locale = useState("locale", () => "en");
@@ -1313,10 +1583,10 @@ const _sfc_main$2 = /* @__PURE__ */ defineComponent({
         }, {
           default: withCtx((_, _push2, _parent2, _scopeId) => {
             if (_push2) {
-              _push2(`Vates VAN`);
+              _push2(`${ssrInterpolate(unref(t)("layout.brand"))}`);
             } else {
               return [
-                createTextVNode("Vates VAN")
+                createTextVNode(toDisplayString(unref(t)("layout.brand")), 1)
               ];
             }
           }),
@@ -1380,7 +1650,7 @@ const _sfc_main$2 = /* @__PURE__ */ defineComponent({
       _push(ssrRenderComponent(_component_NuxtPage, null, null, _parent));
       _push(`</main>`);
       if (!unref(isAccessPage)) {
-        _push(`<footer class="footer border-t border-base-300 bg-base-100"><div class="mx-auto flex min-h-16 w-[min(1080px,92vw)] items-center text-base-content/70"><p>Vates Alliance Network (VAN)</p></div></footer>`);
+        _push(`<footer class="footer border-t border-base-300 bg-base-100"><div class="mx-auto flex min-h-16 w-[min(1080px,92vw)] items-center text-base-content/70"><p>${ssrInterpolate(unref(t)("layout.footer"))}</p></div></footer>`);
       } else {
         _push(`<!---->`);
       }
@@ -1408,8 +1678,8 @@ const _sfc_main$1 = {
     const statusText = _error.statusMessage ?? (is404 ? "Page Not Found" : "Internal Server Error");
     const description = _error.message || _error.toString();
     const stack = void 0;
-    const _Error404 = defineAsyncComponent(() => import('./error-404-qHHvoH-o.mjs'));
-    const _Error = defineAsyncComponent(() => import('./error-500-B-D_km6Z.mjs'));
+    const _Error404 = defineAsyncComponent(() => import('./error-404-C898_Lqg.mjs'));
+    const _Error = defineAsyncComponent(() => import('./error-500-B0IotNdx.mjs'));
     const ErrorTemplate = is404 ? _Error404 : _Error;
     return (_ctx, _push, _parent, _attrs) => {
       _push(ssrRenderComponent(unref(ErrorTemplate), mergeProps({ status: unref(status), statusText: unref(statusText), statusCode: unref(status), statusMessage: unref(statusText), description: unref(description), stack: unref(stack) }, _attrs), null, _parent));
@@ -1490,5 +1760,5 @@ let entry;
 }
 const entry_default = ((ssrContext) => entry(ssrContext));
 
-export { __nuxt_component_0 as _, useL10n as a, useRouter as b, useNuxtApp as c, asyncDataDefaults as d, entry_default as default, createError as e, fetchDefaults as f, useRoute as u };
+export { __nuxt_component_0 as _, useRoute as a, useRouter as b, useNuxtApp as c, asyncDataDefaults as d, entry_default as default, createError as e, fetchDefaults as f, useL10n as u };
 //# sourceMappingURL=server.mjs.map

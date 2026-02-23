@@ -183,7 +183,7 @@ declare global {
   export type { Component, ComponentPublicInstance, ComputedRef, DirectiveBinding, ExtractDefaultPropTypes, ExtractPropTypes, ExtractPublicPropTypes, InjectionKey, PropType, Ref, MaybeRef, MaybeRefOrGetter, VNode, WritableComputedRef } from 'vue'
   import('vue')
   // @ts-ignore
-  export type { Locale } from '../../composables/useL10n'
+  export type { Locale, MessageDict } from '../../composables/useL10n'
   import('../../composables/useL10n')
 }
 // for vue template auto import

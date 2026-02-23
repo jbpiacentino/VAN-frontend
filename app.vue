@@ -7,9 +7,9 @@
       <div
         class="mx-auto flex w-[min(1080px,92vw)] flex-wrap items-center justify-between gap-4 py-2"
       >
-        <NuxtLink to="/" class="btn btn-ghost px-2 text-lg font-bold tracking-[0.02em]"
-          >Vates VAN</NuxtLink
-        >
+        <NuxtLink to="/" class="btn btn-ghost px-2 text-lg font-bold tracking-[0.02em]">{{
+          t('layout.brand')
+        }}</NuxtLink>
         <nav class="flex flex-wrap gap-2">
           <NuxtLink to="/program" class="btn btn-ghost btn-sm">{{ t('nav.program') }}</NuxtLink>
           <NuxtLink to="/van-finder" class="btn btn-ghost btn-sm">{{
@@ -45,7 +45,7 @@
 
     <footer v-if="!isAccessPage" class="footer border-t border-base-300 bg-base-100">
       <div class="mx-auto flex min-h-16 w-[min(1080px,92vw)] items-center text-base-content/70">
-        <p>Vates Alliance Network (VAN)</p>
+        <p>{{ t('layout.footer') }}</p>
       </div>
     </footer>
   </div>

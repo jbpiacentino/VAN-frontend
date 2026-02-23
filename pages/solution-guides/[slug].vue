@@ -5,29 +5,29 @@
   <section v-else-if="guide" class="space-y-6">
     <div class="hero rounded-box bg-base-300">
       <div class="hero-content w-full flex-col items-start gap-3 px-6 py-8">
-        <p class="text-xs uppercase tracking-wide text-primary">Solution guide</p>
+        <p class="text-xs uppercase tracking-wide text-primary">{{ t('guide.label') }}</p>
         <h1 class="text-4xl font-bold">{{ guide.title }}</h1>
-        <p class="text-base-content/70">{{ guide.summary || 'No summary available.' }}</p>
+        <p class="text-base-content/70">{{ guide.summary || t('common.noSummary') }}</p>
       </div>
     </div>
 
     <article v-if="hasGuideAccess" class="card border border-base-300 bg-base-100">
       <div class="card-body">
-        <h2 class="card-title">Guide content</h2>
+        <h2 class="card-title">{{ t('guide.content') }}</h2>
         <MarkdownContent v-if="guide.body" :source="guide.body" />
-        <p v-else>No guide body available.</p>
+        <p v-else>{{ t('guide.noBody') }}</p>
       </div>
     </article>
     <article v-else class="card border border-base-300 bg-base-100">
       <div class="card-body space-y-4">
-        <h2 class="card-title">Access this solution guide</h2>
+        <h2 class="card-title">{{ t('guide.accessTitle') }}</h2>
         <p class="text-sm text-base-content/70">
-          Please share your contact details to unlock the full guide content.
+          {{ t('guide.accessIntro') }}
         </p>
 
         <form class="grid gap-3 md:grid-cols-2" @submit.prevent="unlockGuide">
           <label class="form-control">
-            <span class="label-text">Full name</span>
+            <span class="label-text">{{ t('guide.fullName') }}</span>
             <input
               v-model.trim="form.fullName"
               required
@@ -38,7 +38,7 @@
           </label>
 
           <label class="form-control">
-            <span class="label-text">Business email</span>
+            <span class="label-text">{{ t('guide.businessEmail') }}</span>
             <input
               v-model.trim="form.email"
               required
@@ -49,7 +49,7 @@
           </label>
 
           <label class="form-control">
-            <span class="label-text">Company</span>
+            <span class="label-text">{{ t('guide.company') }}</span>
             <input
               v-model.trim="form.company"
               required
@@ -60,7 +60,7 @@
           </label>
 
           <label class="form-control">
-            <span class="label-text">Job title</span>
+            <span class="label-text">{{ t('guide.jobTitle') }}</span>
             <input
               v-model.trim="form.jobTitle"
               required
@@ -71,20 +71,20 @@
           </label>
 
           <label class="form-control md:col-span-2">
-            <span class="label-text">Country (optional)</span>
+            <span class="label-text">{{ t('guide.countryOptional') }}</span>
             <input v-model.trim="form.country" type="text" class="input input-bordered" />
           </label>
 
           <label class="label md:col-span-2 cursor-pointer justify-start gap-2">
             <input v-model="form.optIn" type="checkbox" class="checkbox checkbox-sm" />
-            <span class="label-text"> I agree to be contacted about this solution guide. </span>
+            <span class="label-text">{{ t('guide.optIn') }}</span>
           </label>
 
           <p v-if="formError" class="text-sm text-error md:col-span-2">{{ formError }}</p>
 
           <div class="md:col-span-2">
             <button class="btn btn-primary" :disabled="submitting" type="submit">
-              {{ submitting ? 'Submitting...' : 'Unlock guide content' }}
+              {{ submitting ? t('guide.submitting') : t('guide.unlock') }}
             </button>
           </div>
         </form>
@@ -92,7 +92,7 @@
     </article>
 
     <section class="space-y-3">
-      <h2 class="text-2xl font-bold">Related Solutions</h2>
+      <h2 class="text-2xl font-bold">{{ t('guide.relatedSolutions') }}</h2>
       <div v-if="solutions.length" class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         <NuxtLink
           v-for="item in solutions"
@@ -103,22 +103,22 @@
           <div class="card-body">
             <h3 class="card-title text-lg">{{ item.name }}</h3>
             <p v-if="item.vendor?.slug" class="text-sm text-base-content/70">
-              by
+              {{ t('common.by') }}
               <span class="font-medium">{{ item.vendor.name }}</span>
             </p>
             <p class="text-sm text-base-content/80">
-              {{ item.shortDescription || 'No summary available.' }}
+              {{ item.shortDescription || t('common.noSummary') }}
             </p>
           </div>
         </NuxtLink>
       </div>
       <div v-else class="alert border border-base-300 bg-base-100">
-        <span>No related solutions.</span>
+        <span>{{ t('guide.noRelatedSolutions') }}</span>
       </div>
     </section>
 
     <section class="space-y-3">
-      <h2 class="text-2xl font-bold">Products</h2>
+      <h2 class="text-2xl font-bold">{{ t('guide.products') }}</h2>
       <div v-if="products.length" class="flex flex-wrap gap-2">
         <span
           v-for="product in products"
@@ -129,17 +129,18 @@
         </span>
       </div>
       <div v-else class="alert border border-base-300 bg-base-100">
-        <span>No related products.</span>
+        <span>{{ t('guide.noRelatedProducts') }}</span>
       </div>
     </section>
   </section>
 
   <div v-else class="alert border border-base-300 bg-base-100">
-    <span>Solution guide not found.</span>
+    <span>{{ t('guide.notFound') }}</span>
   </div>
 </template>
 
 <script setup lang="ts">
+  const { t } = useL10n();
   const route = useRoute();
   const slug = computed(() => String(route.params.slug || ''));
   const { data, pending, error } = await useFetch(() => `/api/solution-guides/${slug.value}`);
@@ -296,7 +297,7 @@
     } catch (err: any) {
       if (showErrors) {
         formError.value =
-          err?.data?.statusMessage || err?.message || 'Unable to submit your request.';
+          err?.data?.statusMessage || err?.message || t('guide.formSubmitError');
       }
       return false;
     }
@@ -305,11 +306,11 @@
   async function unlockGuide() {
     formError.value = '';
     if (!form.fullName || !form.email || !form.company || !form.jobTitle) {
-      formError.value = 'Please fill all required fields.';
+      formError.value = t('guide.formRequired');
       return;
     }
     if (!isValidEmail(form.email)) {
-      formError.value = 'Please provide a valid email address.';
+      formError.value = t('guide.formInvalidEmail');
       return;
     }
 
@@ -349,7 +350,8 @@
   });
 
   useServerSeoMeta({
-    title: () => (guide.value?.title ? `${guide.value.title} | Solution Guide` : 'Solution Guide'),
-    description: () => guide.value?.summary || 'Solution guide details and related resources.',
+    title: () =>
+      guide.value?.title ? `${guide.value.title} | ${t('guide.label')}` : t('guide.seoFallbackTitle'),
+    description: () => guide.value?.summary || t('guide.seoDescription'),
   });
 </script>

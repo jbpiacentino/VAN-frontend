@@ -30,6 +30,9 @@ declare module "nitropack/types" {
     '/api/solutions/:slug': {
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/solutions/[slug].get').default>>>>
     }
+    '/api/static-pages/:slug': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/static-pages/[slug].get').default>>>>
+    }
     '/api/van-finder/vendors': {
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/van-finder/vendors.get').default>>>>
     }

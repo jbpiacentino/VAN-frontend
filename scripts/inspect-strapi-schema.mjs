@@ -138,6 +138,7 @@ async function main() {
     'compatibility-records',
     'products',
     'VAN-members',
+    'static-pages',
   ];
   const collections = args.collections?.length ? args.collections : defaultCollections;
 

@@ -14,7 +14,15 @@
     </label>
     <div class="ml-auto flex items-center gap-2">
       <p class="text-sm text-base-content/70">
-        {{ t('finder.pageStatus', { page, totalPages }) }}
+        <slot
+          name="status"
+          :page="page"
+          :page-size="pageSize"
+          :total-pages="totalPages"
+          :total-items="totalItems"
+        >
+          {{ t('finder.pageStatus', { page, totalPages }) }}
+        </slot>
       </p>
       <div class="join">
         <button
@@ -44,10 +52,12 @@ const props = withDefaults(
     page: number;
     pageSize: number;
     totalPages: number;
+    totalItems?: number;
     pageSizeOptions?: number[];
     showPageSize?: boolean;
   }>(),
   {
+    totalItems: 0,
     pageSizeOptions: () => [10, 20, 50],
     showPageSize: true,
   }
